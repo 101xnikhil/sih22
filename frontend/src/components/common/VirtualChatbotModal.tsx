@@ -2,26 +2,136 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   MessageSquare, X, Send, Bot, User, Sparkles, Volume2, VolumeX, 
   MapPin, AlertTriangle, Activity, Waves, Layers, RotateCcw,
-  Compass, ShieldCheck, ChevronRight, Zap
+  Compass, ShieldCheck, ChevronRight, Zap, Search, Globe, Mountain,
+  CloudRain, ShieldAlert, ArrowUpRight, BookOpen, Filter
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useMockTelemetry } from '../../hooks/useMockTelemetry';
+
+interface LocationProfile {
+  id: string;
+  name: string;
+  region: 'Himalayas' | 'Western Ghats' | 'Garhwal' | 'Railway / Highway';
+  state: string;
+  riskLevel: 'CRITICAL' | 'HIGH' | 'MODERATE' | 'LOW';
+  coordinates: string;
+  elevation: string;
+  soilType: string;
+  bedrock: string;
+  triggerRainfallThreshold: string;
+  recurrencePeriod: string;
+  historicalDisasters: string;
+  recurringCause: string;
+  mitigationStrategy: string;
+}
 
 interface ChatMessage {
   id: string;
   sender: 'bot' | 'user';
   text: string;
   timestamp: string;
-  locationCard?: {
-    name: string;
-    state: string;
-    riskLevel: 'CRITICAL' | 'HIGH' | 'MODERATE' | 'LOW';
-    recurringCause: string;
-    coordinates: string;
-    soilType: string;
-  };
+  locationCard?: LocationProfile;
   liveTelemetryCard?: boolean;
 }
+
+const REGIONAL_LOCATIONS: LocationProfile[] = [
+  {
+    id: 'loc-wayanad',
+    name: 'Wayanad (Chooralmala & Meppadi)',
+    region: 'Western Ghats',
+    state: 'Kerala',
+    riskLevel: 'CRITICAL',
+    coordinates: '11.5434° N, 76.1362° E',
+    elevation: '700 – 1,150 m MSL',
+    soilType: 'Lateritic clay-sand with high hydraulic conductivity',
+    bedrock: 'Charnockite & Hornblende Gneiss',
+    triggerRainfallThreshold: '> 250 mm / 24 hours',
+    recurrencePeriod: 'Every 2 – 4 years during extreme monsoon spells',
+    historicalDisasters: 'July 2024 Mega Debris Avalanche (400+ casualties), 2019 Puthumala Landslide',
+    recurringCause: 'Hyper-concentrated torrential cloudbursts saturating porous laterite overburden resting on smooth, impermeable sloping bedrock.',
+    mitigationStrategy: 'Borehole piezometers, deep subsurface horizontal drainage pipes, and community early warning sirens.',
+  },
+  {
+    id: 'loc-shimla',
+    name: 'Shimla — Solan Corridor (NH-5 & Sector 7)',
+    region: 'Himalayas',
+    state: 'Himachal Pradesh',
+    riskLevel: 'CRITICAL',
+    coordinates: '31.1048° N, 77.1734° E',
+    elevation: '1,800 – 2,200 m MSL',
+    soilType: 'Colluvial talus and fractured micaceous silt',
+    bedrock: 'Jutogh Group Phyllites and Quartzites',
+    triggerRainfallThreshold: '> 140 mm / 24 hours',
+    recurrencePeriod: 'Annual recurring event during July–August monsoons',
+    historicalDisasters: 'August 2023 Summer Hill Shiv Temple slide, multiple NH-5 blockades at Chakki Mor',
+    recurringCause: 'Steep road widening cutting away natural toe resistance, high antecedent pore-water pressure, and overloaded building terraces.',
+    mitigationStrategy: 'Reinforced soil retaining walls, micropiles, toe-buttress gabions, and LoRa edge tiltmeters.',
+  },
+  {
+    id: 'loc-konkan',
+    name: 'Konkan Railway Ghat Cutting Zone',
+    region: 'Railway / Highway',
+    state: 'Maharashtra / Goa',
+    riskLevel: 'HIGH',
+    coordinates: '17.2934° N, 73.4124° E',
+    elevation: '150 – 600 m MSL',
+    soilType: 'Weathered red clayey laterite',
+    bedrock: 'Stratified Deccan Traps Basalt',
+    triggerRainfallThreshold: '> 180 mm / 24 hours',
+    recurrencePeriod: 'Recurring every monsoon season',
+    historicalDisasters: 'Periodic monsoon boulders & rotational mudslides disrupting Mumbai–Goa train traffic',
+    recurringCause: 'High pore-water pressure along basalt lithological contacts during continuous Western Ghat deluges.',
+    mitigationStrategy: 'Automated railway track signal interlocks, high-tensile rockfall netting, and slope sensor arrays.',
+  },
+  {
+    id: 'loc-mandi',
+    name: 'Mandi — Pandoh — Aut Gorge (NH-3)',
+    region: 'Himalayas',
+    state: 'Himachal Pradesh',
+    riskLevel: 'HIGH',
+    coordinates: '31.7088° N, 76.9318° E',
+    elevation: '850 – 1,400 m MSL',
+    soilType: 'Loose alluvial & fluvio-glacial boulders',
+    bedrock: 'Granitic gneiss and mica-schist',
+    triggerRainfallThreshold: '> 160 mm / 24 hours',
+    recurrencePeriod: '1 – 2 years during heavy monsoon swells',
+    historicalDisasters: 'July–August 2023 Beas river deluge sweeping away NH-3 carriageways and tunnel approaches',
+    recurringCause: 'Aggressive river toe scouring by the swollen Beas River liquefying saturated overburden slopes.',
+    mitigationStrategy: 'Heavy rip-rap river armouring, rock bolt anchoring, and acoustic emission displacement sensors.',
+  },
+  {
+    id: 'loc-joshimath',
+    name: 'Joshimath & Chamoli Subsidence Belt',
+    region: 'Garhwal',
+    state: 'Uttarakhand',
+    riskLevel: 'CRITICAL',
+    coordinates: '30.5564° N, 79.5637° E',
+    elevation: '1,890 m MSL',
+    soilType: 'Ancient glacial moraine deposits & loose boulders',
+    bedrock: 'Vaikrita Group High-grade Gneiss and Schist',
+    triggerRainfallThreshold: '> 100 mm / 24 hours or sudden glacial outburst',
+    recurrencePeriod: 'Continuous progressive creep with monsoon acceleration',
+    historicalDisasters: 'January 2023 citywide structural subsidence crisis; February 2021 Rishiganga flash flood',
+    recurringCause: 'City built on ancient landslide debris; uncontrolled wastewater infiltration creating internal hydrostatic lubrication.',
+    mitigationStrategy: 'Comprehensive citywide subsurface drainage masterplan and long-range InSAR/LoRa monitoring.',
+  },
+  {
+    id: 'loc-sikkim',
+    name: 'Sikkim Lifeline Corridor (NH-10 & Teesta Valley)',
+    region: 'Railway / Highway',
+    state: 'Sikkim / West Bengal',
+    riskLevel: 'CRITICAL',
+    coordinates: '27.3389° N, 88.6065° E',
+    elevation: '400 – 1,700 m MSL',
+    soilType: 'Mica-rich weathered clay and river talus',
+    bedrock: 'Daling Series Chlorite Schist and Phyllite',
+    triggerRainfallThreshold: '> 150 mm / 24 hours',
+    recurrencePeriod: 'Multiple occurrences every single monsoon',
+    historicalDisasters: 'October 2023 South Lhonak GLOF flash flood destroying NH-10; frequent monsoon cuts at 29th Mile',
+    recurringCause: 'Extreme tectonic fracturing, fragile young Himalayan strata, and intense orographic precipitation.',
+    mitigationStrategy: 'Flexible rockfall drapery, river training gabion spurs, and fiber-optic strain sensor cables.',
+  },
+];
 
 const PRESET_QUESTIONS = [
   { label: '📍 High-Risk Landslide Locations', prompt: 'Which specific locations and corridors in India are at highest risk for landslides?' },
@@ -31,53 +141,14 @@ const PRESET_QUESTIONS = [
   { label: '🚨 What are the evacuation protocols?', prompt: 'What are the tiered emergency protocols and evacuation triggers when critical risk is detected?' },
 ];
 
-const LOCATION_DATABASE = [
-  {
-    name: 'Wayanad (Chooralmala & Meppadi)',
-    state: 'Kerala (Western Ghats)',
-    riskLevel: 'CRITICAL' as const,
-    recurringCause: 'Extreme hyper-concentrated rainfall (>300mm/24h) saturating lateritic soil over impermeable basalt bedrock, causing massive debris flows.',
-    coordinates: '11.5434° N, 76.1362° E',
-    soilType: 'Lateritic clay-sand with high hydraulic conductivity',
-  },
-  {
-    name: 'Shimla — Solan Corridor (NH-5)',
-    state: 'Himachal Pradesh (Himalayas)',
-    riskLevel: 'CRITICAL' as const,
-    recurringCause: 'Steep road-cutting removing toe support, combined with high antecedent pore-water pressure and seismic fragility.',
-    coordinates: '31.1048° N, 77.1734° E',
-    soilType: 'Colluvial debris and fractured phyllite bedrock',
-  },
-  {
-    name: 'Konkan Railway Ghat Section',
-    state: 'Maharashtra / Goa (Western Ghats)',
-    riskLevel: 'HIGH' as const,
-    recurringCause: 'Steep overburden rock-soil cuts during intense continuous monsoon deluges triggering sudden rotational track blockages.',
-    coordinates: '17.2934° N, 73.4124° E',
-    soilType: 'Red laterite and weathered Deccan basalt',
-  },
-  {
-    name: 'Mandi — Pandoh — Kullu (NH-3)',
-    state: 'Himachal Pradesh (Himalayas)',
-    riskLevel: 'HIGH' as const,
-    recurringCause: 'Beas river toe-erosion during cloudburst events liquefying saturated slope strata.',
-    coordinates: '31.7088° N, 76.9318° E',
-    soilType: 'Granitic gneiss and mica-schist talus',
-  },
-  {
-    name: 'Chamoli & Joshimath Belt',
-    state: 'Uttarakhand (Garhwal Himalayas)',
-    riskLevel: 'CRITICAL' as const,
-    recurringCause: 'Old landslide debris foundation, lack of sub-surface drainage, and hydrostatic pressure loading from glacier-fed torrents.',
-    coordinates: '30.5564° N, 79.5637° E',
-    soilType: 'Glacio-fluvial moraine and fractured quartzites',
-  },
-];
-
 export default function VirtualChatbotModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'chat' | 'locations'>('chat');
   const [isTtsEnabled, setIsTtsEnabled] = useState(false);
   const [inputQuery, setInputQuery] = useState('');
+  const [selectedRegionFilter, setSelectedRegionFilter] = useState<string>('ALL');
+  const [locationSearchTerm, setLocationSearchTerm] = useState('');
+  
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'msg-welcome',
@@ -91,8 +162,10 @@ export default function VirtualChatbotModal() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isOpen]);
+    if (activeTab === 'chat') {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isOpen, activeTab]);
 
   // Speech synthesis helper
   const speakText = (text: string) => {
@@ -109,6 +182,7 @@ export default function VirtualChatbotModal() {
     const query = (textToSend || inputQuery).trim();
     if (!query) return;
 
+    setActiveTab('chat');
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
       sender: 'user',
@@ -125,20 +199,61 @@ export default function VirtualChatbotModal() {
     }, 450);
   };
 
+  const selectLocationForAnalysis = (loc: LocationProfile) => {
+    setActiveTab('chat');
+    const userMsg: ChatMessage = {
+      id: `user-${Date.now()}`,
+      sender: 'user',
+      text: `Analyze specific landslide vulnerability and recurrence for ${loc.name}`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+    setMessages((prev) => [...prev, userMsg]);
+
+    setTimeout(() => {
+      const responseText = `**Comprehensive Geotechnical Profile: ${loc.name}**\n\n• **State / Region**: ${loc.state} (${loc.region})\n• **Risk Classification**: **${loc.riskLevel}**\n• **Geographic Coordinates**: ${loc.coordinates} (Elevation: ${loc.elevation})\n• **Soil Stratigraphy**: ${loc.soilType}\n• **Bedrock Formation**: ${loc.bedrock}\n• **Critical Rainfall Trigger**: ${loc.triggerRainfallThreshold}\n• **Recurrence Frequency**: ${loc.recurrencePeriod}\n• **Key Recurring Cause**: ${loc.recurringCause}\n• **Recommended Mitigation**: ${loc.mitigationStrategy}`;
+
+      const botMsg: ChatMessage = {
+        id: `bot-${Date.now()}`,
+        sender: 'bot',
+        text: responseText,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        locationCard: loc,
+      };
+
+      setMessages((prev) => [...prev, botMsg]);
+      speakText(responseText);
+    }, 400);
+  };
+
   const generateBotResponse = (query: string) => {
     const q = query.toLowerCase();
     let responseText = '';
-    let locationCard: ChatMessage['locationCard'] = undefined;
+    let locationCard: LocationProfile | undefined = undefined;
     let liveTelemetryCard = false;
 
+    // Check if query directly matches any known location
+    const matchedLoc = REGIONAL_LOCATIONS.find((l) => 
+      q.includes(l.name.toLowerCase()) || 
+      (l.name.includes('Wayanad') && q.includes('wayanad')) ||
+      (l.name.includes('Shimla') && (q.includes('shimla') || q.includes('solan'))) ||
+      (l.name.includes('Konkan') && (q.includes('konkan') || q.includes('railway'))) ||
+      (l.name.includes('Mandi') && (q.includes('mandi') || q.includes('kullu'))) ||
+      (l.name.includes('Joshimath') && (q.includes('joshimath') || q.includes('chamoli'))) ||
+      (l.name.includes('Sikkim') && (q.includes('sikkim') || q.includes('teesta')))
+    );
+
+    if (matchedLoc) {
+      locationCard = matchedLoc;
+      responseText = `**Location Intelligence Profile: ${matchedLoc.name}**\n\n• **Risk Level**: **${matchedLoc.riskLevel}**\n• **Coordinates**: ${matchedLoc.coordinates} (${matchedLoc.elevation})\n• **Soil / Geology**: ${matchedLoc.soilType} over ${matchedLoc.bedrock}\n• **Trigger Rainfall**: ${matchedLoc.triggerRainfallThreshold}\n• **Recurrence Cycle**: ${matchedLoc.recurrencePeriod}\n\n**Recurring Cause:** ${matchedLoc.recurringCause}\n\n**Mitigation Strategy:** ${matchedLoc.mitigationStrategy}`;
+    }
     // 1. Current Situation / Live Telemetry
-    if (q.includes('situation') || q.includes('current') || q.includes('live') || q.includes('right now') || q.includes('status')) {
-      const moisture = state?.telemetry.moisture.toFixed(1) || '38.4';
-      const rain = state?.telemetry.rain.toFixed(1) || '0.0';
-      const tilt = state?.telemetry.tilt.toFixed(2) || '12.40';
-      const fos = state?.risk.factorOfSafety.toFixed(2) || '1.82';
-      const riskScore = state ? Math.round(state.risk.riskScore * 100) : 18;
-      const riskLevel = state?.risk.riskLevel || 'LOW';
+    else if (q.includes('situation') || q.includes('current') || q.includes('live') || q.includes('right now') || q.includes('status')) {
+      const moisture = state?.currentReading ? state.currentReading.soil_moisture_pct.toFixed(1) : '38.4';
+      const rain = state?.currentReading ? state.currentReading.rainfall_pct.toFixed(1) : '0.0';
+      const tilt = state?.currentReading ? state.currentReading.tilt_angle.toFixed(2) : '12.40';
+      const fos = state?.currentRisk ? state.currentRisk.fos_estimate.toFixed(2) : '1.82';
+      const riskScore = state?.currentRisk ? Math.round(state.currentRisk.risk_score * 100) : 18;
+      const riskLevel = state?.currentRisk ? state.currentRisk.risk_level.toUpperCase() : 'LOW';
 
       liveTelemetryCard = true;
       responseText = `**Current Geotechnical Situation (Station LG-N01 · Sector 7):**\n\n• **Overall Risk Level**: **${riskLevel}** (${riskScore}% Hazard Score)\n• **Volumetric Soil Moisture**: **${moisture}% VWC**\n• **Precipitation Intensity**: **${rain}%**\n• **Slope Dip / Tilt Angle**: **${tilt}°**\n• **Bishop Factor of Safety (FoS)**: **${fos}**\n\n${
@@ -150,17 +265,9 @@ export default function VirtualChatbotModal() {
       }`;
     }
     // 2. Specific Locations / Where Landslides Happen
-    else if (q.includes('where') || q.includes('location') || q.includes('corridor') || q.includes('place') || q.includes('wayanad') || q.includes('shimla') || q.includes('kerala') || q.includes('himalaya') || q.includes('spot')) {
-      if (q.includes('wayanad') || q.includes('kerala')) {
-        locationCard = LOCATION_DATABASE[0];
-        responseText = `**Wayanad (Meppadi & Chooralmala), Kerala:**\nWayanad sits on the steep Western Ghats scarp. The 2024 catastrophic disaster occurred when **300mm+ of continuous rainfall** saturated loose laterite topsoil over smooth, impermeable charnockite bedrock, creating an uncontrollable debris avalanche.`;
-      } else if (q.includes('shimla') || q.includes('himachal')) {
-        locationCard = LOCATION_DATABASE[1];
-        responseText = `**Shimla — Solan Corridor (NH-5), Himachal Pradesh:**\nOne of the most vulnerable Himalayan highways. Unplanned hill slope excavation, toe removal for road widening, and blocked natural culverts cause frequent shear displacement whenever heavy monsoon rain increases soil weight and pore pressure.`;
-      } else {
-        locationCard = LOCATION_DATABASE[0];
-        responseText = `**High-Risk Landslide Corridors in India:**\n\n1. **North-Western Himalayas**: Shimla, Mandi, Kullu-Manali (NH-3), Chamoli, Joshimath, Kedarnath Valley.\n2. **Western Ghats**: Wayanad (Kerala), Idukki, Konkan Railway Ghats (Maharashtra/Goa).\n3. **North-Eastern Ranges**: Shillong Plateau, Dima Hasao, Sikkim (NH-10).\n\nOver **12.6% of India's landmass** is prone to rainfall-induced landslides due to steep topography, fragile geology, and intense monsoon cloudbursts.`;
-      }
+    else if (q.includes('where') || q.includes('location') || q.includes('corridor') || q.includes('place') || q.includes('spot') || q.includes('india')) {
+      locationCard = REGIONAL_LOCATIONS[0];
+      responseText = `**Major High-Risk Landslide Corridors in India:**\n\n1. **North-Western Himalayas**: Shimla — Solan NH-5, Mandi — Pandoh NH-3, Kinnaur NH-05.\n2. **Western Ghats Scarp**: Wayanad (Chooralmala), Idukki (Munnar), Konkan Railway Ghat cuts.\n3. **Garhwal Himalayas**: Chamoli, Joshimath Subsidence Belt, Kedarnath Valley.\n4. **Eastern Himalayas & North-East**: Sikkim (NH-10 Teesta Valley), Dima Hasao.\n\nOver **12.6% of India's landmass (0.42 million sq km)** is landslide-prone due to fragile young orogeny, steep relief, and intense monsoon cloudbursts. Click the **'Location Explorer'** tab above to inspect any sector.`;
     }
     // 3. Recurring Causes / Why Landslides Happen Repeatedly
     else if (q.includes('recur') || q.includes('why') || q.includes('cause') || q.includes('reason') || q.includes('repeated')) {
@@ -200,6 +307,14 @@ export default function VirtualChatbotModal() {
     }
   };
 
+  const filteredLocations = REGIONAL_LOCATIONS.filter((loc) => {
+    const matchesRegion = selectedRegionFilter === 'ALL' || loc.region === selectedRegionFilter;
+    const matchesSearch = loc.name.toLowerCase().includes(locationSearchTerm.toLowerCase()) || 
+                          loc.state.toLowerCase().includes(locationSearchTerm.toLowerCase()) ||
+                          loc.soilType.toLowerCase().includes(locationSearchTerm.toLowerCase());
+    return matchesRegion && matchesSearch;
+  });
+
   return (
     <>
       {/* ── Floating Chatbot Widget Trigger Button ────────────── */}
@@ -238,7 +353,7 @@ export default function VirtualChatbotModal() {
 
       {/* ── Chatbot Modal Window ─────────────────────────────── */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[460px] h-[620px] max-h-[85vh] z-50 bg-[#0c101d]/95 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-slide-up">
+        <div className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[500px] h-[660px] max-h-[88vh] z-50 bg-[#0c101d]/95 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-slide-up">
           {/* Header */}
           <div className="p-4 border-b border-white/10 bg-white/[0.02] flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -275,7 +390,7 @@ export default function VirtualChatbotModal() {
                 )}
                 title={isTtsEnabled ? 'Voice narration active (Click to mute)' : 'Enable voice narration for presentation'}
               >
-                {isTtsEnabled ? <Volume2 className="w-4 h-4 text-orange-400" /> : <VolumeX className="w-4 h-4" />}
+                {isTtsEnabled ? <Volume2 className="w-4 h-4 text-orange-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
               </button>
 
               <button
@@ -288,127 +403,256 @@ export default function VirtualChatbotModal() {
             </div>
           </div>
 
-          {/* Preset Question Pills */}
-          <div className="px-3 py-2 border-b border-white/5 bg-black/20 flex gap-1.5 overflow-x-auto no-scrollbar">
-            {PRESET_QUESTIONS.map((pq, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleSend(pq.prompt)}
-                className="shrink-0 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/5 text-[10px] font-mono text-slate-300 hover:text-orange-300 transition-colors"
-              >
-                {pq.label}
-              </button>
-            ))}
+          {/* Navigation Sub-Tabs: Chat vs Location Explorer */}
+          <div className="flex items-center border-b border-white/10 bg-black/40 px-3 py-1.5 gap-2 text-xs font-mono">
+            <button
+              onClick={() => setActiveTab('chat')}
+              className={clsx(
+                'flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all font-bold',
+                activeTab === 'chat'
+                  ? 'bg-gradient-to-r from-orange-500 to-rose-600 text-slate-950 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              )}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>Interactive Chat</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('locations')}
+              className={clsx(
+                'flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all font-bold',
+                activeTab === 'locations'
+                  ? 'bg-gradient-to-r from-orange-500 to-rose-600 text-slate-950 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              )}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>Location Risk Database ({REGIONAL_LOCATIONS.length})</span>
+            </button>
           </div>
 
-          {/* Messages Stream */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 font-sans text-xs">
-            {messages.map((msg) => {
-              const isBot = msg.sender === 'bot';
-              return (
-                <div
-                  key={msg.id}
-                  className={clsx('flex gap-2.5', isBot ? 'items-start' : 'items-end justify-end')}
-                >
-                  {isBot && (
-                    <div className="w-7 h-7 rounded-xl bg-orange-950/80 border border-orange-500/40 flex items-center justify-center shrink-0 mt-0.5">
-                      <Bot className="w-4 h-4 text-orange-400" />
-                    </div>
-                  )}
+          {/* ── TAB 1: Chat Stream ────────────────────────────── */}
+          {activeTab === 'chat' && (
+            <>
+              {/* Preset Question Pills */}
+              <div className="px-3 py-2 border-b border-white/5 bg-black/20 flex gap-1.5 overflow-x-auto no-scrollbar">
+                {PRESET_QUESTIONS.map((pq, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSend(pq.prompt)}
+                    className="shrink-0 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/5 text-[10px] font-mono text-slate-300 hover:text-orange-300 transition-colors"
+                  >
+                    {pq.label}
+                  </button>
+                ))}
+              </div>
 
-                  <div className={clsx('space-y-2 max-w-[85%]', isBot ? 'text-left' : 'text-right')}>
+              {/* Messages Stream */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 font-sans text-xs">
+                {messages.map((msg) => {
+                  const isBot = msg.sender === 'bot';
+                  return (
                     <div
+                      key={msg.id}
+                      className={clsx('flex gap-2.5', isBot ? 'items-start' : 'items-end justify-end')}
+                    >
+                      {isBot && (
+                        <div className="w-7 h-7 rounded-xl bg-orange-950/80 border border-orange-500/40 flex items-center justify-center shrink-0 mt-0.5">
+                          <Bot className="w-4 h-4 text-orange-400" />
+                        </div>
+                      )}
+
+                      <div className={clsx('space-y-2 max-w-[88%]', isBot ? 'text-left' : 'text-right')}>
+                        <div
+                          className={clsx(
+                            'p-3.5 rounded-2xl leading-relaxed whitespace-pre-line shadow-md',
+                            isBot
+                              ? 'bg-[#13192b] text-slate-200 border border-white/10'
+                              : 'bg-gradient-to-r from-orange-500 to-rose-600 text-slate-950 font-medium'
+                          )}
+                        >
+                          {msg.text}
+
+                          {/* Optional Live Telemetry Mini-Card */}
+                          {msg.liveTelemetryCard && state && (
+                            <div className="mt-3 p-2.5 rounded-xl bg-black/50 border border-white/10 space-y-1.5 font-mono text-[10px]">
+                              <div className="flex items-center justify-between text-slate-400">
+                                <span>STATION: LG-N01</span>
+                                <span className="text-emerald-400 font-bold">LIVE TELEMETRY</span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-center pt-1">
+                                <div className="p-1.5 rounded bg-slate-900 border border-slate-800">
+                                  <span className="text-slate-400 block text-[9px]">MOISTURE VWC</span>
+                                  <strong className="text-slate-100">{state.currentReading.soil_moisture_pct.toFixed(1)}%</strong>
+                                </div>
+                                <div className="p-1.5 rounded bg-slate-900 border border-slate-800">
+                                  <span className="text-slate-400 block text-[9px]">BISHOP FoS</span>
+                                  <strong className={state.currentRisk.fos_estimate < 1.0 ? 'text-red-400' : 'text-emerald-400'}>
+                                    {state.currentRisk.fos_estimate.toFixed(2)}
+                                  </strong>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Optional Location Profile Card */}
+                          {msg.locationCard && (
+                            <div className="mt-3 p-3.5 rounded-2xl bg-black/60 border border-orange-500/40 space-y-2 font-mono text-[10px] text-slate-300 text-left shadow-lg">
+                              <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                                <div className="flex items-center gap-1.5 text-orange-300 font-bold text-xs">
+                                  <MapPin className="w-4 h-4 text-orange-400" />
+                                  <span>{msg.locationCard.name}</span>
+                                </div>
+                                <span className={clsx(
+                                  'px-2 py-0.5 rounded-full text-[9px] font-bold border',
+                                  msg.locationCard.riskLevel === 'CRITICAL' ? 'bg-red-950 text-red-300 border-red-800' : 'bg-amber-950 text-amber-300 border-amber-800'
+                                )}>
+                                  {msg.locationCard.riskLevel}
+                                </span>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-2 text-[9px] text-slate-400">
+                                <div><strong className="text-slate-200">GPS:</strong> {msg.locationCard.coordinates}</div>
+                                <div><strong className="text-slate-200">Elevation:</strong> {msg.locationCard.elevation}</div>
+                                <div><strong className="text-slate-200">Trigger Rain:</strong> {msg.locationCard.triggerRainfallThreshold}</div>
+                                <div><strong className="text-slate-200">Recurrence:</strong> {msg.locationCard.recurrencePeriod}</div>
+                              </div>
+
+                              <div className="text-slate-300 font-sans text-xs pt-1 border-t border-white/5 space-y-1">
+                                <div><strong className="text-orange-400 font-mono text-[10px]">Geology:</strong> {msg.locationCard.soilType} over {msg.locationCard.bedrock}</div>
+                                <div><strong className="text-orange-400 font-mono text-[10px]">Disasters:</strong> {msg.locationCard.historicalDisasters}</div>
+                                <div><strong className="text-orange-400 font-mono text-[10px]">Mitigation:</strong> {msg.locationCard.mitigationStrategy}</div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <span className="text-[9px] font-mono text-slate-400 block px-1">
+                          {msg.timestamp}
+                        </span>
+                      </div>
+
+                      {!isBot && (
+                        <div className="w-7 h-7 rounded-xl bg-slate-800 border border-white/10 flex items-center justify-center shrink-0">
+                          <User className="w-4 h-4 text-slate-300" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input Box */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSend();
+                }}
+                className="p-3 border-t border-white/10 bg-white/[0.01] flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  placeholder="Ask about live situation, Wayanad, Shimla, recurring triggers..."
+                  value={inputQuery}
+                  onChange={(e) => setInputQuery(e.target.value)}
+                  className="flex-1 bg-slate-950 border border-slate-700/80 rounded-2xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans"
+                />
+                <button
+                  type="submit"
+                  disabled={!inputQuery.trim()}
+                  className="w-10 h-10 rounded-2xl bg-gradient-to-r from-orange-500 to-rose-500 hover:opacity-95 disabled:opacity-40 text-slate-950 flex items-center justify-center shadow-md transition-all shrink-0"
+                  title="Send message"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
+            </>
+          )}
+
+          {/* ── TAB 2: Location Risk Database ────────────────── */}
+          {activeTab === 'locations' && (
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 font-sans text-xs">
+              {/* Region Filter Bar & Search */}
+              <div className="space-y-2.5">
+                <div className="relative">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <input
+                    type="text"
+                    placeholder="Search locations, soil, states (e.g. Wayanad, Shimla, Konkan)..."
+                    value={locationSearchTerm}
+                    onChange={(e) => setLocationSearchTerm(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                  />
+                </div>
+
+                <div className="flex gap-1 overflow-x-auto no-scrollbar font-mono text-[10px]">
+                  {['ALL', 'Western Ghats', 'Himalayas', 'Garhwal', 'Railway / Highway'].map((reg) => (
+                    <button
+                      key={reg}
+                      onClick={() => setSelectedRegionFilter(reg)}
                       className={clsx(
-                        'p-3.5 rounded-2xl leading-relaxed whitespace-pre-line shadow-md',
-                        isBot
-                          ? 'bg-[#13192b] text-slate-200 border border-white/10'
-                          : 'bg-gradient-to-r from-orange-500 to-rose-600 text-slate-950 font-medium'
+                        'px-2.5 py-1 rounded-lg border shrink-0 transition-colors',
+                        selectedRegionFilter === reg
+                          ? 'bg-orange-950/80 text-orange-300 border-orange-500/50 font-bold'
+                          : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
                       )}
                     >
-                      {msg.text}
-
-                      {/* Optional Live Telemetry Mini-Card */}
-                      {msg.liveTelemetryCard && state && (
-                        <div className="mt-3 p-2.5 rounded-xl bg-black/50 border border-white/10 space-y-1.5 font-mono text-[10px]">
-                          <div className="flex items-center justify-between text-slate-400">
-                            <span>STATION: LG-N01</span>
-                            <span className="text-emerald-400 font-bold">10s TELEMETRY</span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-2 text-center pt-1">
-                            <div className="p-1.5 rounded bg-slate-900 border border-slate-800">
-                              <span className="text-slate-400 block text-[9px]">MOISTURE VWC</span>
-                              <strong className="text-slate-100">{state.telemetry.moisture.toFixed(1)}%</strong>
-                            </div>
-                            <div className="p-1.5 rounded bg-slate-900 border border-slate-800">
-                              <span className="text-slate-400 block text-[9px]">BISHOP FoS</span>
-                              <strong className={state.risk.factorOfSafety < 1.0 ? 'text-red-400' : 'text-emerald-400'}>
-                                {state.risk.factorOfSafety.toFixed(2)}
-                              </strong>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Optional Location Profile Card */}
-                      {msg.locationCard && (
-                        <div className="mt-3 p-3 rounded-xl bg-black/50 border border-orange-500/30 space-y-1.5 font-mono text-[10px] text-slate-300 text-left">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1.5 text-orange-300 font-bold">
-                              <MapPin className="w-3.5 h-3.5 text-orange-400" />
-                              <span>{msg.locationCard.name}</span>
-                            </div>
-                            <span className="px-1.5 py-0.5 rounded bg-red-950 text-red-300 border border-red-800 text-[9px] font-bold">
-                              {msg.locationCard.riskLevel}
-                            </span>
-                          </div>
-                          <div className="text-slate-400 text-[9px]">{msg.locationCard.state} · {msg.locationCard.coordinates}</div>
-                          <div className="text-slate-300 font-sans text-[11px] pt-1">
-                            <strong>Recurring Cause:</strong> {msg.locationCard.recurringCause}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <span className="text-[9px] font-mono text-slate-400 block px-1">
-                      {msg.timestamp}
-                    </span>
-                  </div>
-
-                  {!isBot && (
-                    <div className="w-7 h-7 rounded-xl bg-slate-800 border border-white/10 flex items-center justify-center shrink-0">
-                      <User className="w-4 h-4 text-slate-300" />
-                    </div>
-                  )}
+                      {reg}
+                    </button>
+                  ))}
                 </div>
-              );
-            })}
-            <div ref={messagesEndRef} />
-          </div>
+              </div>
 
-          {/* Input Box */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
-            className="p-3 border-t border-white/10 bg-white/[0.01] flex items-center gap-2"
-          >
-            <input
-              type="text"
-              placeholder="Ask about live situation, Wayanad, Shimla, recurring triggers..."
-              value={inputQuery}
-              onChange={(e) => setInputQuery(e.target.value)}
-              className="flex-1 bg-slate-950 border border-slate-700/80 rounded-2xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans"
-            />
-            <button
-              type="submit"
-              disabled={!inputQuery.trim()}
-              className="w-10 h-10 rounded-2xl bg-gradient-to-r from-orange-500 to-rose-500 hover:opacity-95 disabled:opacity-40 text-slate-950 flex items-center justify-center shadow-md transition-all shrink-0"
-              title="Send message"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </form>
+              {/* Location Cards List */}
+              <div className="space-y-3">
+                {filteredLocations.map((loc) => (
+                  <div
+                    key={loc.id}
+                    className="p-3.5 rounded-2xl bg-[#13192b] border border-white/10 hover:border-orange-500/40 transition-all space-y-2 group shadow-md"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <div className="flex items-center gap-1.5 font-bold text-slate-100 text-xs">
+                          <MapPin className="w-3.5 h-3.5 text-orange-400" />
+                          <span>{loc.name}</span>
+                        </div>
+                        <div className="text-[10px] font-mono text-slate-400 mt-0.5">
+                          {loc.state} &middot; {loc.coordinates} ({loc.elevation})
+                        </div>
+                      </div>
+
+                      <span className={clsx(
+                        'px-2 py-0.5 rounded-full text-[9px] font-mono font-bold border uppercase shrink-0',
+                        loc.riskLevel === 'CRITICAL' ? 'bg-red-950 text-red-300 border-red-800' : 'bg-amber-950 text-amber-300 border-amber-800'
+                      )}>
+                        {loc.riskLevel}
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                      {loc.recurringCause}
+                    </p>
+
+                    <div className="pt-1.5 border-t border-white/5 flex items-center justify-between font-mono text-[10px]">
+                      <span className="text-orange-400 font-medium">
+                        🌧️ Trigger: {loc.triggerRainfallThreshold}
+                      </span>
+
+                      <button
+                        onClick={() => selectLocationForAnalysis(loc)}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold transition-all shadow-sm"
+                      >
+                        <span>Analyze</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

@@ -252,6 +252,7 @@ Sih22/
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── dashboard/          # UI Panels (SensorCards, RiskCard, LiveCharts, AIExplanation, PhysicalDemoPanel, SecurityPanel)
+│   │   │   ├── common/             # Global Widgets (VirtualChatbotModal, StatusBadge)
 │   │   │   └── layout/             # Header, Sidebar, Footer, Navigation
 │   │   ├── hooks/                  # useMockTelemetry (Live WebSocket & Mock State Synchronization)
 │   │   ├── pages/                  # SPA Views (Dashboard, SensorStation, Alerts, Analytics, Map, Settings, About)

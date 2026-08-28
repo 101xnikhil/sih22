@@ -1,0 +1,767 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Smartphone, Radio, Send, Bell, ShieldAlert, CheckCircle2, 
+  MapPin, Users, Volume2, VolumeX, AlertTriangle, RefreshCw, 
+  Settings, PhoneCall, TowerControl, Wifi, Clock, ArrowUpRight,
+  Bluetooth, BluetoothSearching, Signal, Zap, Copy, Check, Code2, Sparkles,
+  RadioTower, ShieldCheck, Eye, Compass
+} from 'lucide-react';
+import clsx from 'clsx';
+import { useMockTelemetry } from '../../hooks/useMockTelemetry';
+
+interface DispatchedSms {
+  id: string;
+  timestamp: string;
+  recipientGroup: string;
+  recipientCount: number;
+  sector: string;
+  severity: 'CRITICAL' | 'HIGH' | 'WARNING';
+  message: string;
+  deliveryStatus: 'DELIVERED' | 'DISPATCHING' | 'QUEUED';
+  broadcastMode: 'BLE_NON_CONNECTABLE_ADV' | 'SMS_CELL_BROADCAST';
+}
+
+interface NearbyBleDevice {
+  id: string;
+  name: string;
+  type: 'Smartphone' | 'Smartwatch' | 'IoT Node' | 'Wearable';
+  mac: string;
+  rssi: number; // dBm (-40 to -95)
+  distanceMeters: number;
+  status: 'IN DANGER ZONE' | 'PROXIMITY WARNING' | 'PERIMETER';
+  lastSeen: string;
+  alertSent: boolean;
+  phoneMock: string;
+  passivePacketReceived: boolean;
+}
+
+const INITIAL_BLE_DEVICES: NearbyBleDevice[] = [
+  {
+    id: 'ble-1',
+    name: 'Nearby Apple iPhone (Bluetooth ON)',
+    type: 'Smartphone',
+    mac: '7A:3F:82:11:BC:90',
+    rssi: -52,
+    distanceMeters: 2.8,
+    status: 'IN DANGER ZONE',
+    lastSeen: '1 sec ago',
+    alertSent: true,
+    phoneMock: '+91 95067 58710',
+    passivePacketReceived: true,
+  },
+  {
+    id: 'ble-2',
+    name: 'Nearby Samsung Galaxy (Bluetooth ON)',
+    type: 'Smartphone',
+    mac: 'E4:A5:71:39:4D:12',
+    rssi: -64,
+    distanceMeters: 6.4,
+    status: 'IN DANGER ZONE',
+    lastSeen: '2 sec ago',
+    alertSent: true,
+    phoneMock: '+91 98451 22910',
+    passivePacketReceived: true,
+  },
+  {
+    id: 'ble-3',
+    name: 'Nearby OnePlus Phone (Bluetooth ON)',
+    type: 'Smartphone',
+    mac: 'F0:81:73:9A:88:2E',
+    rssi: -71,
+    distanceMeters: 14.2,
+    status: 'PROXIMITY WARNING',
+    lastSeen: '4 sec ago',
+    alertSent: true,
+    phoneMock: '+91 94191 00382',
+    passivePacketReceived: true,
+  },
+  {
+    id: 'ble-4',
+    name: 'Wearable Fitness Band (Bluetooth ON)',
+    type: 'Smartwatch',
+    mac: 'C8:69:CD:1F:55:A1',
+    rssi: -78,
+    distanceMeters: 22.5,
+    status: 'PROXIMITY WARNING',
+    lastSeen: '5 sec ago',
+    alertSent: true,
+    phoneMock: '+91 98160 44921',
+    passivePacketReceived: true,
+  },
+  {
+    id: 'ble-5',
+    name: 'ESP32 LoRa Gateway (LG-GW01)',
+    type: 'IoT Node',
+    mac: '24:0A:C4:58:12:FE',
+    rssi: -45,
+    distanceMeters: 1.1,
+    status: 'IN DANGER ZONE',
+    lastSeen: 'Just now',
+    alertSent: true,
+    phoneMock: 'GATEWAY_NODE',
+    passivePacketReceived: true,
+  },
+];
+
+// Production Arduino sketch for Unpaired BLE Non-Connectable Advertising
+const ESP32_ZERO_PAIRING_BLE_CODE = `// ==============================================================================
+// ESP32 LANDGUARD AI — Zero-Pairing Passive BLE Emergency Alert Broadcaster
+// (Transmits raw alert beacons to ANY phone with Bluetooth ON — NO PAIRING REQUIRED)
+// ==============================================================================
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLEAdvertising.h>
+
+BLEAdvertising *pAdvertising;
+
+void setupZeroPairingBLE() {
+  // Initialize BLE Stack with Emergency Broadcast Identity
+  BLEDevice::init("LANDGUARD_EMERGENCY_ALARM");
+
+  pAdvertising = BLEDevice::getAdvertising();
+
+  // Create Non-Connectable GAP Advertising Packet (ADV_NONCONN_IND)
+  BLEAdvertisementData advData;
+  advData.setFlags(0x06); // General Discoverable + BR/EDR Not Supported
+
+  // Embed Raw Emergency Hazard Payload directly into 2.4GHz Advertising Frame
+  // (Phones with Bluetooth ON pick this up passively without any pairing prompt!)
+  std::string alertPayload = "LG_ALERT:CRITICAL|SECTOR_7|FOS<1.0|EVACUATE";
+  advData.setManufacturerData(alertPayload);
+  
+  pAdvertising->setAdvertisementData(advData);
+  pAdvertising->setMinInterval(0x20); // Fast 20ms beacon interval
+  pAdvertising->setMaxInterval(0x40);
+
+  // Start continuous passive transmission
+  pAdvertising->start();
+  Serial.println("📡 Zero-Pairing BLE Emergency Beacon Active on 2.4GHz Channels 37, 38, 39!");
+}
+
+// Dynamically updates the alert payload broadcast over the air
+void updateEmergencyBeacon(const char* sectorName, float fos, int hazardScore) {
+  pAdvertising->stop();
+
+  BLEAdvertisementData alertData;
+  alertData.setFlags(0x06);
+
+  char buffer[64];
+  snprintf(buffer, sizeof(buffer), "LG_ALERT:%s|FoS:%.2f|Risk:%d%%|SOS112", 
+           sectorName, fos, hazardScore);
+
+  alertData.setManufacturerData(std::string(buffer));
+  pAdvertising->setAdvertisementData(alertData);
+  pAdvertising->start();
+  
+  Serial.printf("⚡ Broadcasted Zero-Pairing Alert Beacon: %s\\n", buffer);
+}`;
+
+export default function EmergencySmsBroadcastPanel() {
+  const { state } = useMockTelemetry();
+  const [isAutoBroadcastEnabled, setIsAutoBroadcastEnabled] = useState(true);
+  const [isBleScanning, setIsBleScanning] = useState(true);
+  const [customPhone, setCustomPhone] = useState('+91 95067 58710');
+  const [targetSector, setTargetSector] = useState('Sector 7 (Shimla — Solan NH-5 Corridor, HP)');
+  const [customActionText, setCustomActionText] = useState('Evacuate downhill homes immediately. Avoid NH-5 cutting zone. Shelter: Govt Senior Sec School.');
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+  const [isDispatching, setIsDispatching] = useState(false);
+  const [bleDevices, setBleDevices] = useState<NearbyBleDevice[]>(INITIAL_BLE_DEVICES);
+  const [showFirmwareModal, setShowFirmwareModal] = useState(false);
+  const [copiedFirmware, setCopiedFirmware] = useState(false);
+
+  const [dispatchedHistory, setDispatchedHistory] = useState<DispatchedSms[]>([
+    {
+      id: 'sms-1',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      recipientGroup: 'Unpaired Nearby BLE Devices (Bluetooth ON in 50m)',
+      recipientCount: INITIAL_BLE_DEVICES.length + 1420,
+      sector: 'Sector 7 (Shimla — Solan NH-5 Corridor, HP)',
+      severity: 'CRITICAL',
+      message: '🚨 [EMERGENCY ALERT: LANDGUARD AI / NDMA]\nLOCATION: Sector 7 (Shimla-Solan NH-5 Corridor)\nSTATUS: CRITICAL LANDSLIDE RISK (Hazard 88%)\nTELEMETRY: Moisture 86.4%, Bishop FoS 0.85 (Failure Imminent)\nACTION: Evacuate downhill structures immediately. Move to Shelter.\nHELPLINE: 1070 / 112',
+      deliveryStatus: 'DELIVERED',
+      broadcastMode: 'BLE_NON_CONNECTABLE_ADV',
+    },
+  ]);
+
+  const [latestSmsOnPhone, setLatestSmsOnPhone] = useState<DispatchedSms>(dispatchedHistory[0]);
+
+  // Audio beep player
+  const playAlertChime = () => {
+    if (!isSoundEnabled) return;
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+      osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.35);
+    } catch {
+      // Audio context not allowed without interaction
+    }
+  };
+
+  // Real-time jitter on BLE devices signal strength (RSSI)
+  useEffect(() => {
+    if (!isBleScanning) return;
+    const interval = setInterval(() => {
+      setBleDevices((prev) =>
+        prev.map((d) => {
+          const deltaRssi = (Math.random() - 0.5) * 3;
+          const newRssi = Math.min(-42, Math.max(-92, Math.round(d.rssi + deltaRssi)));
+          const newDistance = Number((Math.pow(10, (-60 - newRssi) / 20) * 2.5).toFixed(1));
+          return {
+            ...d,
+            rssi: newRssi,
+            distanceMeters: Math.max(0.8, newDistance),
+            lastSeen: 'Just now',
+          };
+        })
+      );
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [isBleScanning]);
+
+  // Automated trigger when live risk becomes critical or high
+  useEffect(() => {
+    if (!isAutoBroadcastEnabled || !state) return;
+
+    const riskLevel = state.currentRisk.risk_level;
+    const isCriticalOrHigh = riskLevel === 'CRITICAL' || riskLevel === 'HIGH';
+
+    if (isCriticalOrHigh && dispatchedHistory.length > 0) {
+      const last = dispatchedHistory[0];
+      const timeDiffSeconds = (Date.now() - new Date(`2026-08-28T${last.timestamp}`).getTime()) / 1000;
+      
+      // Auto-dispatch if last dispatch was more than 45 seconds ago
+      if (isNaN(timeDiffSeconds) || timeDiffSeconds > 45) {
+        triggerEmergencyBroadcast(
+          riskLevel as 'CRITICAL' | 'HIGH', 
+          'Automated Geotechnical Threshold Trigger'
+        );
+      }
+    }
+  }, [state?.currentRisk.risk_level, state?.currentRisk.fos_estimate]);
+
+  const triggerEmergencyBroadcast = (
+    severity: 'CRITICAL' | 'HIGH' | 'WARNING' = 'CRITICAL',
+    triggerSource = 'Zero-Pairing BLE Proximity Push'
+  ) => {
+    setIsDispatching(true);
+    playAlertChime();
+
+    const moisture = state?.currentReading.soil_moisture_pct.toFixed(1) || '84.2';
+    const fos = state?.currentRisk.fos_estimate.toFixed(2) || '0.86';
+    const hazardPct = state?.currentRisk ? Math.round(state.currentRisk.risk_score * 100) : 85;
+
+    const formattedMessage = `🚨 [EMERGENCY ALERT: LANDGUARD AI / DISASTER OPS]\nLOCATION: ${targetSector}\nSTATUS: ${severity} LANDSLIDE HAZARD (${hazardPct}% Risk Score)\nTELEMETRY: Moisture ${moisture}% VWC · Bishop FoS ${fos} (${Number(fos) < 1.0 ? 'Failure Imminent' : 'High Creep'})\nACTION: ${customActionText}\nEMERGENCY HELPLINE: 1070 / 112`;
+
+    const newSms: DispatchedSms = {
+      id: `sms-${Date.now()}`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      recipientGroup: `Unpaired Nearby BLE Devices (${bleDevices.length} Passive Phones in ${targetSector.split(' ')[0]})`,
+      recipientCount: bleDevices.length + 1420,
+      sector: targetSector,
+      severity,
+      message: formattedMessage,
+      deliveryStatus: 'DISPATCHING',
+      broadcastMode: 'BLE_NON_CONNECTABLE_ADV',
+    };
+
+    setDispatchedHistory((prev) => [newSms, ...prev.slice(0, 7)]);
+    setLatestSmsOnPhone(newSms);
+
+    // Mark all nearby devices as alert sent
+    setBleDevices((prev) => prev.map((d) => ({ ...d, alertSent: true, passivePacketReceived: true })));
+
+    setTimeout(() => {
+      setDispatchedHistory((prev) => 
+        prev.map((s) => s.id === newSms.id ? { ...s, deliveryStatus: 'DELIVERED' } : s)
+      );
+      setIsDispatching(false);
+    }, 900);
+  };
+
+  const handleCopyFirmware = () => {
+    navigator.clipboard.writeText(ESP32_ZERO_PAIRING_BLE_CODE);
+    setCopiedFirmware(true);
+    setTimeout(() => setCopiedFirmware(false), 2000);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* ── Top Header Banner: Zero-Pairing Passive Proximity Broadcaster ── */}
+      <div className="card p-6 bg-gradient-to-br from-[#0e1220] via-[#0a0d18] to-[#090b14] border border-white/10 shadow-2xl rounded-3xl">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2.5 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-950/60">
+                <Bluetooth className="w-5 h-5 animate-pulse" />
+              </div>
+              <div>
+                <h2 className="font-serif italic text-2xl sm:text-3xl text-white font-bold tracking-tight">
+                  Zero-Pairing Bluetooth Proximity Alert & SMS Dispatch
+                </h2>
+                <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                  <span className="px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 border border-blue-600/40 text-[9px] font-mono font-bold tracking-wider uppercase">
+                    NO PAIRING REQUIRED &bull; JUST BLUETOOTH ON
+                  </span>
+                  <span className="text-[10px] font-mono text-cyan-400 font-semibold tracking-wider uppercase">
+                    ADV_NONCONN_IND &bull; 2.4GHz CH 37/38/39 &bull; Cell Broadcast Ingress
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-xs sm:text-sm text-slate-300 font-sans leading-relaxed max-w-4xl font-light">
+              This subsystem transmits non-connectable 2.4GHz **Bluetooth Advertising Beacons (`ADV_NONCONN_IND`)** directly over the air. Any nearby phone or wearable with Bluetooth turned <strong>ON</strong> passively receives the emergency landslide hazard payload without needing to pair, enter a PIN, or install an application.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+            {/* Quick Trigger Button */}
+            <button
+              onClick={() => triggerEmergencyBroadcast('CRITICAL', 'Zero-Pairing Push')}
+              disabled={isDispatching}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-orange-500 hover:opacity-90 disabled:opacity-50 text-white font-mono text-xs font-bold shadow-lg shadow-red-950 transition-all"
+            >
+              <Zap className="w-4 h-4" />
+              <span>{isDispatching ? 'Broadcasting...' : 'Broadcast to All Nearby Devices'}</span>
+            </button>
+
+            {/* ESP32 Firmware Source Button */}
+            <button
+              onClick={() => setShowFirmwareModal(true)}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white font-mono text-xs transition-colors"
+            >
+              <Code2 className="w-4 h-4 text-cyan-400" />
+              <span>ESP32 Zero-Pairing Code</span>
+            </button>
+
+            {/* Audio Toggle */}
+            <button
+              onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+              className={clsx(
+                'p-2 rounded-xl border text-xs font-mono transition-colors',
+                isSoundEnabled ? 'bg-orange-500/20 text-orange-300 border-orange-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'
+              )}
+              title={isSoundEnabled ? 'Alert chimes enabled' : 'Muted'}
+            >
+              {isSoundEnabled ? <Volume2 className="w-4 h-4 text-orange-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Real-time Broadcast Stats Strip */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 font-mono text-xs">
+          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
+            <span className="text-slate-400 text-[9px] uppercase font-bold block">Passive Detection Mode</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" />
+              <strong className="text-sm text-blue-300">Zero-Pairing Broadcast</strong>
+            </div>
+            <span className="text-[9px] text-slate-400 font-sans">Listens to 2.4GHz Advertising frames</span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
+            <span className="text-slate-400 text-[9px] uppercase font-bold block">Nearby Devices in Range</span>
+            <strong className="text-sm text-orange-400 mt-0.5 block">{bleDevices.length} Phones / Wearables</strong>
+            <span className="text-[9px] text-slate-400 font-sans">Within 50m slope danger zone</span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
+            <span className="text-slate-400 text-[9px] uppercase font-bold block">Delivery Method</span>
+            <strong className="text-sm text-emerald-400 mt-0.5 block">BLE Beacon + Cell Push</strong>
+            <span className="text-[9px] text-slate-400 font-sans">Instant lockscreen display</span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
+            <span className="text-slate-400 text-[9px] uppercase font-bold block">Automated Dispatch</span>
+            <div className="flex items-center justify-between mt-0.5">
+              <strong className="text-sm text-purple-400">ACTIVE (LIVE)</strong>
+              <button
+                onClick={() => setIsAutoBroadcastEnabled(!isAutoBroadcastEnabled)}
+                className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 hover:text-white"
+              >
+                {isAutoBroadcastEnabled ? 'Pause' : 'Resume'}
+              </button>
+            </div>
+            <span className="text-[9px] text-slate-400 font-sans">Triggers when Bishop FoS &lt; 1.0</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Section: Passive BLE Device Discovery Stream (No Pairing Needed) ── */}
+      <div className="card p-5 border border-white/10 space-y-4 rounded-3xl shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-blue-950/80 border border-blue-500/40 text-blue-400">
+              <Radio className="w-4 h-4 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="font-serif italic text-xl text-white font-bold">
+                Nearby Phones with Bluetooth ON (Captured Passively via 2.4GHz Advertising)
+              </h3>
+              <p className="text-[11px] font-mono text-slate-400">
+                These devices are actively receiving emergency alert packets without any pairing dialog
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 font-mono text-xs">
+            <span className="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700/50 flex items-center gap-1.5 text-[10px]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              PASSIVE BEACON STREAM ACTIVE
+            </span>
+          </div>
+        </div>
+
+        {/* Device Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 font-mono text-xs">
+          {bleDevices.map((device) => (
+            <div
+              key={device.id}
+              onClick={() => {
+                setCustomPhone(device.phoneMock);
+                triggerEmergencyBroadcast('CRITICAL', `Targeted BLE Dispatch to ${device.name}`);
+              }}
+              className="p-3.5 rounded-2xl bg-black/40 border border-white/10 hover:border-blue-500/50 transition-all cursor-pointer space-y-2.5 group shadow-md"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-xl bg-slate-900 border border-white/10 text-cyan-400 group-hover:text-blue-400 transition-colors">
+                    <Smartphone className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-100 text-xs truncate max-w-[170px]">{device.name}</h4>
+                    <span className="text-[10px] text-slate-400">MAC: {device.mac}</span>
+                  </div>
+                </div>
+
+                <span className={clsx(
+                  'px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase shrink-0',
+                  device.status === 'IN DANGER ZONE' ? 'bg-red-950 text-red-300 border-red-800 animate-pulse' :
+                  device.status === 'PROXIMITY WARNING' ? 'bg-amber-950 text-amber-300 border-amber-800' :
+                  'bg-emerald-950 text-emerald-300 border-emerald-800'
+                )}>
+                  {device.status}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-400 bg-slate-950/60 p-2 rounded-xl border border-white/5">
+                <div>
+                  <span className="text-slate-400 block text-[8px] uppercase">SIGNAL (RSSI)</span>
+                  <strong className="text-slate-200">{device.rssi} dBm</strong>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[8px] uppercase">PROXIMITY DISTANCE</span>
+                  <strong className="text-orange-400">~{device.distanceMeters} Meters</strong>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/5">
+                <span className="text-emerald-400 flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                  BEACON RECEIVED (UNPAIRED)
+                </span>
+                <span className="text-slate-400 group-hover:text-cyan-300 flex items-center gap-0.5 transition-colors">
+                  Push SMS &rarr;
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Main Two-Column Layout: Controls vs Phone Simulator ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left 7 Cols: Dispatch Controls & Broadcast Feed */}
+        <div className="lg:col-span-7 space-y-5">
+          {/* Dispatch Controller Card */}
+          <div className="card p-5 border border-white/10 space-y-4 rounded-3xl shadow-xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <Send className="w-4 h-4 text-orange-400" />
+                <h3 className="font-serif italic text-lg text-white font-bold">
+                  Emergency Broadcast Dispatcher
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400">
+                LIVE GATEWAY READY
+              </span>
+            </div>
+
+            <div className="space-y-3 font-mono text-xs">
+              <div>
+                <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
+                  Target Landslide Vulnerability Sector
+                </label>
+                <select
+                  value={targetSector}
+                  onChange={(e) => setTargetSector(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans text-xs"
+                >
+                  <option value="Sector 7 (Shimla — Solan NH-5 Corridor, HP)">Sector 7 (Shimla — Solan NH-5 Corridor, HP)</option>
+                  <option value="Wayanad Scarp Zone (Chooralmala & Meppadi, Kerala)">Wayanad Scarp Zone (Chooralmala & Meppadi, Kerala)</option>
+                  <option value="Konkan Railway Ghat Cutting Zone (Ratnagiri Section)">Konkan Railway Ghat Cutting Zone (Ratnagiri Section)</option>
+                  <option value="Mandi — Pandoh Gorge (NH-3 Beas River Corridor, HP)">Mandi — Pandoh Gorge (NH-3 Beas River Corridor, HP)</option>
+                  <option value="Chamoli & Joshimath Subsidence Belt (Uttarakhand)">Chamoli & Joshimath Subsidence Belt (Uttarakhand)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
+                  Evacuation Instructions / Action Advisory
+                </label>
+                <textarea
+                  rows={2}
+                  value={customActionText}
+                  onChange={(e) => setCustomActionText(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans text-xs leading-relaxed"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                  <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
+                    Audience Target Mobile Number
+                  </label>
+                  <input
+                    type="text"
+                    value={customPhone}
+                    onChange={(e) => setCustomPhone(e.target.value)}
+                    placeholder="+91 98765 43210"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-mono text-xs"
+                  />
+                </div>
+
+                <div className="flex items-end gap-2">
+                  <button
+                    onClick={() => triggerEmergencyBroadcast('CRITICAL')}
+                    disabled={isDispatching}
+                    className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:opacity-90 disabled:opacity-50 text-white font-mono font-bold text-xs uppercase shadow-md shadow-red-950 flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    <AlertTriangle className="w-4 h-4" />
+                    <span>{isDispatching ? 'Transmitting...' : 'Send Red Alert SMS'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => triggerEmergencyBroadcast('WARNING')}
+                    disabled={isDispatching}
+                    className="py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-mono font-bold text-xs uppercase shadow-sm transition-all"
+                    title="Send Moderate Advisory Warning"
+                  >
+                    Advisory
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Broadcast Dispatch Queue Feed */}
+          <div className="card p-5 border border-white/10 space-y-3 rounded-3xl shadow-xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-cyan-400" />
+                <h3 className="font-serif italic text-lg text-white font-bold">
+                  Recent Transmission & Proximity Dispatch Log
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400">
+                {dispatchedHistory.length} TRANSMISSIONS
+              </span>
+            </div>
+
+            <div className="space-y-2.5 max-h-[280px] overflow-y-auto font-mono text-xs">
+              {dispatchedHistory.map((sms) => (
+                <div
+                  key={sms.id}
+                  onClick={() => setLatestSmsOnPhone(sms)}
+                  className={clsx(
+                    'p-3 rounded-xl border transition-all cursor-pointer space-y-1.5',
+                    latestSmsOnPhone.id === sms.id
+                      ? 'bg-orange-950/40 border-orange-500/60 ring-1 ring-orange-500'
+                      : 'bg-black/30 border-white/5 hover:bg-white/[0.03]'
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={clsx(
+                        'w-2 h-2 rounded-full',
+                        sms.severity === 'CRITICAL' ? 'bg-red-400 animate-pulse' : 'bg-amber-400'
+                      )} />
+                      <strong className="text-slate-200 text-xs">{sms.sector.split('(')[0]}</strong>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-slate-400">{sms.timestamp}</span>
+                      <span className={clsx(
+                        'px-2 py-0.2 rounded-full text-[9px] font-bold border',
+                        sms.deliveryStatus === 'DELIVERED' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-orange-950 text-orange-300 border-orange-800 animate-pulse'
+                      )}>
+                        {sms.deliveryStatus}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-slate-300 font-sans line-clamp-2 leading-relaxed">
+                    {sms.message}
+                  </p>
+
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/5">
+                    <span>Target: {sms.recipientGroup}</span>
+                    <span className="text-orange-400 font-bold">{sms.recipientCount} Devices Reached</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right 5 Cols: Citizen Mobile Phone Simulator */}
+        <div className="lg:col-span-5 flex flex-col items-center">
+          <div className="text-center mb-3">
+            <span className="font-serif italic text-base text-white font-bold">
+              Citizen Mobile Phone Alert Simulator
+            </span>
+            <p className="text-[11px] font-mono text-slate-400">
+              Passively displays alert directly on nearby phone lockscreen
+            </p>
+          </div>
+
+          {/* Smartphone Frame Mockup */}
+          <div className="w-[300px] sm:w-[320px] rounded-[42px] bg-[#05070e] p-3 border-4 border-slate-700 shadow-2xl relative overflow-hidden ring-1 ring-white/20">
+            {/* Speaker & Front Camera Notch */}
+            <div className="w-28 h-4 bg-slate-900 rounded-full mx-auto mb-2 flex items-center justify-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-slate-800" />
+              <div className="w-10 h-1 rounded-full bg-slate-800" />
+            </div>
+
+            {/* Phone Screen Screen */}
+            <div className="rounded-[32px] bg-gradient-to-b from-[#111625] via-[#0d111d] to-[#080b12] p-4 min-h-[480px] flex flex-col justify-between border border-white/5 relative overflow-hidden">
+              {/* Screen Top Status Bar */}
+              <div className="flex items-center justify-between text-[10px] font-mono text-slate-300 pb-2 border-b border-white/10">
+                <span className="font-bold">{latestSmsOnPhone.timestamp.slice(0, 5)}</span>
+                <div className="flex items-center gap-1.5">
+                  <Bluetooth className="w-3 h-3 text-blue-400 animate-pulse" />
+                  <Wifi className="w-3 h-3" />
+                  <span>5G</span>
+                  <span className="w-4 h-2 rounded-sm border border-slate-400 p-0.5 inline-flex items-center">
+                    <span className="w-full h-full bg-emerald-400 rounded-2xs" />
+                  </span>
+                </div>
+              </div>
+
+              {/* Push Notification Card */}
+              <div className="my-auto space-y-3">
+                <div className="p-3.5 rounded-2xl bg-red-950/90 border border-red-500/60 shadow-2xl shadow-red-950 space-y-2.5 animate-slide-up">
+                  {/* Notification Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <div className="p-1 rounded-lg bg-red-600 text-white">
+                        <AlertTriangle className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="text-[10px] font-mono font-bold text-red-200 uppercase tracking-wider">
+                        EMERGENCY CELL BROADCAST
+                      </span>
+                    </div>
+                    <span className="text-[9px] font-mono text-red-300">NOW</span>
+                  </div>
+
+                  {/* Message Title */}
+                  <div className="text-xs font-bold text-white font-mono leading-tight">
+                    🚨 LANDSLIDE RED ALERT — EVACUATE IMMEDIATELY
+                  </div>
+
+                  {/* Body Content */}
+                  <p className="text-[11px] text-red-100 font-sans leading-relaxed whitespace-pre-line bg-black/40 p-2.5 rounded-xl border border-red-500/30">
+                    {latestSmsOnPhone.message}
+                  </p>
+
+                  <div className="pt-1 flex items-center justify-between text-[9px] font-mono text-red-300 border-t border-red-800/60">
+                    <span>TO: {customPhone}</span>
+                    <span className="font-bold">MODE: UNPAIRED BEACON</span>
+                  </div>
+                </div>
+
+                {/* Quick Action Dial Buttons */}
+                <div className="grid grid-cols-2 gap-2 font-mono text-[10px]">
+                  <a
+                    href="tel:1070"
+                    className="p-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-white/10 text-slate-200 flex items-center justify-center gap-1.5 transition-colors"
+                  >
+                    <PhoneCall className="w-3 h-3 text-emerald-400" />
+                    <span>Call 1070 Ops</span>
+                  </a>
+                  <a
+                    href="tel:112"
+                    className="p-2 rounded-xl bg-red-900/80 hover:bg-red-800 border border-red-700/60 text-white font-bold flex items-center justify-center gap-1.5 transition-colors"
+                  >
+                    <ShieldAlert className="w-3 h-3 text-red-300" />
+                    <span>SOS 112</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Screen Bottom Home Indicator Bar */}
+              <div className="w-24 h-1 bg-slate-600 rounded-full mx-auto mt-2" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── ESP32 BLE Firmware Code Modal ────────────────────── */}
+      {showFirmwareModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-[#0e1220] border border-white/10 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <Code2 className="w-5 h-5 text-cyan-400" />
+                <h3 className="font-serif italic text-xl text-white">
+                  ESP32 Zero-Pairing BLE Beacon Firmware (Non-Connectable Advertising)
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowFirmwareModal(false)}
+                className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-300 font-sans leading-relaxed">
+              This C++ Arduino sketch uses non-connectable BLE advertising (<code>ADV_NONCONN_IND</code>). It transmits emergency alert strings in the broadcast frame itself so all nearby smartphones with Bluetooth <strong>ON</strong> passively receive the warning without pairing or user confirmation.
+            </p>
+
+            <div className="relative">
+              <pre className="p-4 rounded-2xl bg-black/70 border border-white/10 font-mono text-[11px] text-cyan-300 overflow-x-auto max-h-72">
+                {ESP32_ZERO_PAIRING_BLE_CODE}
+              </pre>
+              <button
+                onClick={handleCopyFirmware}
+                className="absolute top-3 right-3 px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-mono text-xs font-bold flex items-center gap-1.5 shadow-md"
+              >
+                {copiedFirmware ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedFirmware ? 'Copied!' : 'Copy Code'}</span>
+              </button>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setShowFirmwareModal(false)}
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

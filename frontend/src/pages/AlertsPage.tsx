@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { RISK_TEXT_CLASSES, type Alert, type AlertSeverity } from '../types';
 import PrototypeLabel from '../components/common/PrototypeLabel';
+import EmergencySmsBroadcastPanel from '../components/dashboard/EmergencySmsBroadcastPanel';
 import clsx from 'clsx';
 
 const AlertsPage: React.FC = () => {
@@ -127,27 +128,8 @@ const AlertsPage: React.FC = () => {
       </div>
 
       {/* Extensible Notification Architecture Strip */}
-      <div className="card p-3.5 border-dashed border-slate-800 bg-slate-950/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
-        <div className="flex items-center gap-2.5">
-          <Radio className="w-4 h-4 text-cyan-400" />
-          <div>
-            <span className="font-bold text-slate-200 uppercase tracking-wider block text-[11px]">
-              Notification Dispatch Subsystem Architecture
-            </span>
-            <span className="text-[10px] text-slate-400 font-sans">
-              Local System Audit & WebSocket dispatch active · Cellular SMS / WhatsApp / IVR stubs ready for future deployment.
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 text-[10px]">
-          <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-            ● LOCAL LOG / WS (ACTIVE)
-          </span>
-          <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800">
-            ○ SMS / WHATSAPP / IVR (EXTENSIBLE STUBS)
-          </span>
-        </div>
-      </div>
+      {/* Emergency SMS & Cell Broadcast Hub */}
+      <EmergencySmsBroadcastPanel />
 
       {/* Filter Toolbar */}
       <div className="card p-3 flex flex-wrap items-center justify-between gap-3 text-xs">

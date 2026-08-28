@@ -19,11 +19,13 @@ sleep 1
 
 # 2. Start FastAPI Backend in background
 echo "• Starting FastAPI Backend on http://127.0.0.1:8000..."
-cd "$PROJECT_ROOT/backend"
-if [ -d ".venv" ]; then
-  source .venv/bin/activate
+if [ -d "$PROJECT_ROOT/venv" ]; then
+  source "$PROJECT_ROOT/venv/bin/activate"
+elif [ -d "$PROJECT_ROOT/backend/.venv" ]; then
+  source "$PROJECT_ROOT/backend/.venv/bin/activate"
 fi
-uvicorn app.main:app --host 0.0.0.0 --port 8000 &
+cd "$PROJECT_ROOT/backend"
+PYTHONPATH="$PROJECT_ROOT:$PROJECT_ROOT/backend" python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
 
 # Wait for backend health check
