@@ -87,17 +87,17 @@ const AlertsPage: React.FC = () => {
   return (
     <div className="space-y-6 pb-12">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-900 border border-slate-800 rounded-lg p-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-md">
         <div>
           <div className="flex items-center gap-2">
             <ShieldAlert className="w-5 h-5 text-orange-400" />
-            <h1 className="text-xl font-bold font-mono text-slate-100 uppercase">Alert & Incident Center (Phase 12)</h1>
+            <h1 className="text-xl font-bold font-mono text-slate-100 uppercase">Alert & Incident Command Center</h1>
           </div>
           <p className="text-xs text-slate-400 mt-1 font-sans">
             Real-time threshold violation logs, hazard trigger reasons, and audit workflow for landslide warning events.
           </p>
         </div>
-        <PrototypeLabel text="SIH 2026 Prototype" />
+        <PrototypeLabel text="Incident Dispatch Active" />
       </div>
 
       {/* Incident Metrics Bar */}

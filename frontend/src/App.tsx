@@ -7,6 +7,7 @@ import AlertsPage from './pages/AlertsPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import RiskMapPage from './pages/RiskMapPage';
 import SettingsPage from './pages/SettingsPage';
+import AboutPage from './pages/AboutPage';
 import { useMockTelemetry } from './hooks/useMockTelemetry';
 import type { Alert } from './types';
 
@@ -26,6 +27,7 @@ const App: React.FC = () => {
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/map" element={<RiskMapPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

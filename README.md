@@ -254,7 +254,7 @@ Sih22/
 │   │   │   ├── dashboard/          # UI Panels (SensorCards, RiskCard, LiveCharts, AIExplanation, PhysicalDemoPanel, SecurityPanel)
 │   │   │   └── layout/             # Header, Sidebar, Footer, Navigation
 │   │   ├── hooks/                  # useMockTelemetry (Live WebSocket & Mock State Synchronization)
-│   │   ├── pages/                  # SPA Views (Dashboard, SensorStation, Alerts, Analytics, Map, Settings)
+│   │   ├── pages/                  # SPA Views (Dashboard, SensorStation, Alerts, Analytics, Map, Settings, About)
 │   │   ├── types/                  # TypeScript Interfaces & Enums
 │   │   └── config.ts               # Dynamic API/WebSocket URL Resolver
 │   ├── package.json                # Frontend NPM Dependencies

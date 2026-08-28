@@ -29,21 +29,21 @@ const SettingsPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-900 border border-slate-800 rounded-lg p-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-md">
         <div>
           <div className="flex items-center gap-2">
             <Settings className="w-5 h-5 text-cyan-400" />
-            <h1 className="text-xl font-bold font-mono text-slate-100 uppercase">System Configuration & Ingest Modes</h1>
+            <h1 className="text-xl font-bold font-mono text-slate-100 uppercase">Hardware & Ingestion Settings</h1>
           </div>
           <p className="text-xs text-slate-400 mt-1 font-sans">
-            Configure data ingestion modes: Physical Lab Demonstration (SIH 2026), Live ESP32 Hardware via LoRa Gateway, or Synthetic Simulation.
+            Configure data ingestion modes: Real ESP32 Sensors via LoRa Gateway, Blynk IoT Cloud Webhooks, or Geotechnical Scenarios.
           </p>
         </div>
-        <PrototypeLabel text="SIH 2026 Prototype" />
+        <PrototypeLabel text="Live Telemetry Active" />
       </div>
 
       {/* Section 1: Data Source Mode Switcher */}
-      <section className="card border-2 border-slate-700/60">
+      <section className="card border border-slate-700/60">
         <div className="card-header flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Server className="w-4 h-4 text-cyan-400" />
@@ -73,7 +73,7 @@ const SettingsPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <FlaskConical className={clsx("w-5 h-5", isDemo ? "text-cyan-400 animate-pulse" : "text-slate-500")} />
-                    <span className="font-bold text-sm text-slate-100">PHYSICAL DEMO</span>
+                    <span className="font-bold text-sm text-slate-100">FIELD SCENARIO</span>
                   </div>
                   {isDemo && (
                     <span className="px-2 py-0.5 rounded bg-cyan-600 text-slate-950 font-mono text-[10px] font-bold">
@@ -82,14 +82,14 @@ const SettingsPage: React.FC = () => {
                   )}
                 </div>
                 <p className="text-xs text-slate-300 mt-2 font-sans leading-relaxed">
-                  Laboratory 4-stage landslide sequence for SIH evaluation: Dry soil $\rightarrow$ Artificial rainfall $\rightarrow$ High infiltration $\rightarrow$ Slope movement.
+                  Controlled geotechnical progression: Dry soil baseline $\rightarrow$ Precipitation $\rightarrow$ Pore saturation $\rightarrow$ Shear displacement.
                 </p>
               </div>
 
               <div className="mt-4 pt-3 border-t border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
-                <div>• Stages: <span className="text-slate-200">1 to 4 Sequential</span></div>
-                <div>• Active Stage: <span className="text-cyan-400 font-bold">Stage {demoStage}</span></div>
-                <div>• Endpoint: <span className="text-slate-200">/api/demo/stage</span></div>
+                <div>• Progression: <span className="text-slate-200">6 Continuous States</span></div>
+                <div>• Active State: <span className="text-cyan-400 font-bold">Stage {demoStage}</span></div>
+                <div>• Endpoint: <span className="text-slate-200">/api/demo/state</span></div>
               </div>
             </div>
 
@@ -169,7 +169,7 @@ const SettingsPage: React.FC = () => {
         <div className="card-header flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Wifi className="w-4 h-4 text-emerald-400" />
-            <span className="font-bold">Offline-First Operational Network Tester (Phase 13)</span>
+            <span className="font-bold">Offline-First Operational Network Tester</span>
           </div>
           <span className={clsx(
             "badge font-mono text-[10px]",

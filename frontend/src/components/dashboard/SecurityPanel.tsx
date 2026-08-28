@@ -53,7 +53,7 @@ export default function SecurityPanel({ events, onSimulateReplay, onSimulateUnau
       <div className="card-header border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2 text-slate-200">
           <ShieldCheck className="w-4 h-4 text-cyan-400" />
-          <span className="font-bold">Edge Cybersecurity & Replay Guard (Phase 14)</span>
+          <span className="font-bold">Edge Cybersecurity & Replay Defense Guard</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1">

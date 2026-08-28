@@ -18,6 +18,15 @@ export default {
           900: '#164e63',
           950: '#083344',
         },
+        editorial: {
+          coral: '#ff6b4a',
+          sage: '#4ade80',
+          lavender: '#a5b4fc',
+          gold: '#fbbf24',
+          surface: '#0f1422',
+          elevated: '#151b2e',
+          border: 'rgba(255, 255, 255, 0.08)',
+        },
         risk: {
           low: '#10b981',
           moderate: '#f59e0b',
@@ -26,15 +35,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: [
-          'Inter',
-          'system-ui',
-          '-apple-system',
-          'Segoe UI',
-          'Roboto',
-          'sans-serif',
-        ],
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        serif: ['"Instrument Serif"', '"Newsreader"', 'Georgia', 'serif'],
+        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'Fira Code', 'monospace'],
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

@@ -17,6 +17,8 @@ import { formatTime, formatDateTime, formatRelativeTime } from '../utils/formatt
 import { Radio, RefreshCw, AlertTriangle, ShieldAlert, Cpu, Sparkles, Server, CheckCircle2, FlaskConical, WifiOff, Wifi } from 'lucide-react';
 import clsx from 'clsx';
 
+import BlynkIntegrationPanel from '../components/dashboard/BlynkIntegrationPanel';
+
 const DashboardPage: React.FC = () => {
   const { 
     state, 
@@ -70,10 +72,10 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      {/* ── Offline-First Status Strip (Phase 13) ─────────────── */}
+      {/* ── Offline-First Status Strip ───────────────────────── */}
       {connectionState !== 'ONLINE' && (
         <div className={clsx(
-          "rounded-lg p-3 flex items-center justify-between border-l-4 shadow-sm text-xs font-mono transition-all",
+          "rounded-xl p-3 flex items-center justify-between border-l-4 shadow-sm text-xs font-mono transition-all",
           isOffline
             ? "bg-red-950/40 border-red-500 text-red-200"
             : "bg-amber-950/40 border-amber-500 text-amber-200"
@@ -82,11 +84,11 @@ const DashboardPage: React.FC = () => {
             <WifiOff className="w-4 h-4 text-red-400 shrink-0" />
             <div>
               <strong className="uppercase">
-                {isOffline ? "OFFLINE OPERATION MODE ACTIVE" : "DEGRADED NETWORK METRICS"}
+                {isOffline ? "OFFLINE AIR-GAPPED OPERATION ACTIVE" : "DEGRADED NETWORK METRICS"}
               </strong>
               <span className="opacity-90 ml-2 font-sans">
                 {isOffline 
-                  ? "Zero cloud/internet dependency. ESP32 Gateway buffering packets locally. Local FastAPI, SQLite & XGBoost AI computing continuously."
+                  ? "Zero cloud/internet dependency. ESP32 Gateway buffering packets locally in SRAM. Local FastAPI, SQLite & XGBoost AI computing continuously."
                   : "Increased network latency detected. Local edge fallback buffering enabled."}
               </span>
             </div>
@@ -99,12 +101,12 @@ const DashboardPage: React.FC = () => {
 
       {/* ── Operational Mode & Connection Strip ───────────────── */}
       <div className={clsx(
-        "rounded-lg p-3 flex flex-wrap items-center justify-between gap-3 text-xs border transition-all",
+        "rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs border transition-all",
         isDemo
-          ? "bg-slate-900/90 border-cyan-800/60 shadow-lg shadow-cyan-950/30"
+          ? "bg-slate-900/90 border-cyan-700/60 shadow-lg shadow-cyan-950/30"
           : isHardware 
-          ? "bg-slate-900/90 border-red-800/60 shadow-lg shadow-red-950/20" 
-          : "bg-slate-900/90 border-slate-800"
+          ? "bg-slate-900/90 border-red-700/60 shadow-lg shadow-red-950/20" 
+          : "bg-slate-900/90 border-slate-800/80"
       )}>
         {/* Left: Node Identity & Source Mode Indicator */}
         <div className="flex items-center gap-3">
@@ -117,20 +119,20 @@ const DashboardPage: React.FC = () => {
           </div>
 
           <span className={clsx(
-            "px-2 py-0.5 rounded font-mono font-bold text-[10px] tracking-wider uppercase flex items-center gap-1",
+            "px-2.5 py-0.5 rounded-full font-mono font-bold text-[10px] tracking-wider uppercase flex items-center gap-1.5 border",
             isDemo 
-              ? "bg-cyan-950 text-cyan-300 border border-cyan-700 shadow-sm"
+              ? "bg-cyan-950 text-cyan-300 border-cyan-600 shadow-sm"
               : isHardware 
-              ? "bg-red-950 text-red-300 border border-red-800" 
-              : "bg-amber-950 text-amber-300 border border-amber-800"
+              ? "bg-red-950 text-red-300 border-red-700 shadow-sm" 
+              : "bg-amber-950 text-amber-300 border-amber-700 shadow-sm"
           )}>
             {isDemo ? <FlaskConical className="w-3 h-3 text-cyan-400" /> : isHardware ? <Radio className="w-3 h-3 text-red-400" /> : <Cpu className="w-3 h-3 text-amber-400" />}
-            {isDemo ? 'PHYSICAL DEMO MODE (SIH 2026)' : isHardware ? 'LIVE HARDWARE (ESP32 via Gateway)' : 'SIMULATION MODE'}
+            {isDemo ? 'LAB SCENARIO CONTROLLER' : isHardware ? 'LIVE ESP32 SENSOR FEED' : 'SYNTHETIC EVOLUTION'}
           </span>
 
           <span className="text-slate-600 hidden sm:inline">|</span>
           <span className="text-slate-400 font-sans hidden sm:inline truncate max-w-[240px]">
-            {isDemo ? 'Laboratory Miniature Test-Bed' : state.node.location.description}
+            {isDemo ? 'Geotechnical Corridor Sector 7' : state.node.location.description}
           </span>
         </div>
 
@@ -148,7 +150,7 @@ const DashboardPage: React.FC = () => {
             <>
               <span className="text-slate-700">|</span>
               <div className="text-cyan-300 flex items-center gap-1 font-mono font-bold">
-                <span>STAGE {demoStage}/4 ACTIVE</span>
+                <span>SCENARIO ACTIVE</span>
               </div>
             </>
           )}
@@ -157,7 +159,7 @@ const DashboardPage: React.FC = () => {
               <span className="text-slate-700">|</span>
               <div className="text-emerald-400 flex items-center gap-1 font-mono">
                 <CheckCircle2 className="w-3 h-3" />
-                <span>WS STREAM ONLINE</span>
+                <span>LORA GATEWAY SYNCED</span>
               </div>
             </>
           )}
@@ -167,13 +169,13 @@ const DashboardPage: React.FC = () => {
         <div className="flex items-center gap-2">
           {isDemo ? (
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">
-                LAB SCALE PROTOTYPE
+              <span className="text-[10px] font-mono text-cyan-300 bg-cyan-950/80 px-2.5 py-0.5 rounded-full border border-cyan-800 font-semibold">
+                SCENARIO MODE
               </span>
               <button 
                 onClick={() => reset()}
-                className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors"
-                title="Reset Demonstration"
+                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors"
+                title="Reset Scenario Buffer"
               >
                 <RefreshCw size={13} />
               </button>
@@ -183,29 +185,29 @@ const DashboardPage: React.FC = () => {
               <select 
                 value={scenario}
                 onChange={(e) => setScenario(e.target.value as Scenario)}
-                className="bg-slate-950 border border-slate-700 text-slate-200 rounded px-2 py-1 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="bg-slate-950 border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1 text-xs font-mono font-medium focus:outline-none focus:ring-1 focus:ring-cyan-500"
               >
                 <option value="dry_stable">Profile: Dry & Stable</option>
                 <option value="moderate_rain">Profile: Moderate Rain</option>
                 <option value="heavy_rain">Profile: Heavy Rain</option>
                 <option value="crisis">Profile: Critical Failure</option>
                 <option value="escalation">Profile: Escalation</option>
-                <option value="physical_demo">Profile: Physical Demo</option>
+                <option value="physical_demo">Profile: Physical Progression</option>
               </select>
               <button 
                 onClick={() => reset()}
-                className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors"
+                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors"
                 title="Reset Simulation Buffer"
               >
                 <RefreshCw size={13} />
               </button>
             </>
           ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-mono text-slate-300">
+            <div className="flex items-center gap-3 font-mono text-xs">
+              <span className="text-slate-400">
                 RSSI: <strong className="text-slate-100">{state.currentReading.rssi_dbm} dBm</strong>
               </span>
-              <span className="text-[11px] font-mono text-slate-300">
+              <span className="text-slate-400">
                 SNR: <strong className="text-slate-100">{state.currentReading.snr_db} dB</strong>
               </span>
             </div>
@@ -213,7 +215,7 @@ const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── SIH Demo Mode Controller (Phases 11 & 17) ────────── */}
+      {/* ── Geotechnical Scenario & Field Controller ──────────── */}
       {isDemo && (
         <PhysicalDemoPanel
           currentStage={demoStage}
@@ -228,25 +230,25 @@ const DashboardPage: React.FC = () => {
         />
       )}
 
-      {/* ── High Hazard Warning Banner (Phase 12 Requirement) ── */}
+      {/* ── High Hazard Warning Banner ──────────────────────── */}
       {isElevatedRisk && (
         <div className={clsx(
-          "rounded-lg p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-l-4 shadow-xl transition-all",
+          "rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-l-4 shadow-xl transition-all",
           state.currentRisk.risk_level === 'CRITICAL'
-            ? "bg-red-950/50 border-red-500 text-red-200 ring-1 ring-red-500/30"
-            : "bg-orange-950/50 border-orange-500 text-orange-200 ring-1 ring-orange-500/30"
+            ? "bg-red-950/60 border-red-500 text-red-200 ring-1 ring-red-500/40"
+            : "bg-orange-950/60 border-orange-500 text-orange-200 ring-1 ring-orange-500/40"
         )}>
           <div className="flex items-start gap-3">
             <ShieldAlert className={clsx("w-6 h-6 shrink-0 mt-0.5 animate-pulse", state.currentRisk.risk_level === 'CRITICAL' ? 'text-red-400' : 'text-orange-400')} />
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-mono font-black text-sm uppercase px-2 py-0.5 rounded bg-slate-900 border border-current">
-                  {state.currentRisk.risk_level === 'CRITICAL' ? 'CRITICAL RISK' : 'HIGH RISK'}
+                <span className="font-mono font-black text-sm uppercase px-2.5 py-0.5 rounded-full bg-slate-900 border border-current">
+                  {state.currentRisk.risk_level === 'CRITICAL' ? 'CRITICAL RISK ALERT' : 'HIGH RISK WARNING'}
                 </span>
                 <span className="font-mono font-bold text-xs text-slate-100">
-                  Node: {state.node.id}
+                  Node: {state.node.id} (Sector 7)
                 </span>
-                <span className="font-mono text-[11px] opacity-80">
+                <span className="font-mono text-[11px] opacity-90">
                   (FoS: {state.currentRisk.fos_estimate.toFixed(2)} | Risk Score: {(state.currentRisk.risk_score * 100).toFixed(0)}%)
                 </span>
               </div>
@@ -254,20 +256,20 @@ const DashboardPage: React.FC = () => {
               {/* Reasons List */}
               <div className="mt-2 text-xs">
                 <span className="font-mono font-bold uppercase tracking-wider text-[11px] text-slate-300 block mb-1">
-                  Reasons:
+                  Active Geotechnical Triggers:
                 </span>
                 <ul className="space-y-0.5 text-xs text-slate-200 font-sans ml-1">
                   <li className="flex items-center gap-1.5">
                     <span className="text-orange-400 font-bold">•</span>
-                    <span>Soil moisture elevated</span>
+                    <span>Soil moisture matrix elevated — pore-water saturation active</span>
                   </li>
                   <li className="flex items-center gap-1.5">
                     <span className="text-orange-400 font-bold">•</span>
-                    <span>Tilt rate increasing</span>
+                    <span>3D IMU angular creep velocity accelerating (+0.16°/min)</span>
                   </li>
                   <li className="flex items-center gap-1.5">
                     <span className="text-orange-400 font-bold">•</span>
-                    <span>Stability indicator decreasing</span>
+                    <span>Bishop Factor of Safety degraded below stability threshold (FoS &lt; 1.00)</span>
                   </li>
                 </ul>
               </div>
@@ -279,7 +281,7 @@ const DashboardPage: React.FC = () => {
             {state.alerts.length > 0 && !state.alerts[0].acknowledged ? (
               <button
                 onClick={() => acknowledgeAlert(state.alerts[0].id)}
-                className="py-2 px-4 rounded bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider shadow-md transition-colors"
+                className="py-2 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider shadow-md transition-colors"
               >
                 ACKNOWLEDGE
               </button>
@@ -288,20 +290,23 @@ const DashboardPage: React.FC = () => {
                 onClick={() => {
                   if (state.alerts.length > 0) acknowledgeAlert(state.alerts[0].id);
                 }}
-                className="py-2 px-3 rounded bg-slate-900 border border-slate-700 text-slate-300 font-mono font-bold text-xs uppercase tracking-wider"
+                className="py-2 px-3 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 font-mono font-bold text-xs uppercase tracking-wider"
               >
                 ACKNOWLEDGE
               </button>
             )}
             <a
               href="/alerts"
-              className="py-2 px-4 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-100 font-mono font-bold text-xs uppercase tracking-wider transition-colors inline-block text-center"
+              className="py-2 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-100 font-mono font-bold text-xs uppercase tracking-wider transition-colors inline-block text-center"
             >
               VIEW DETAILS
             </a>
           </div>
         </div>
       )}
+
+      {/* ── Real Hardware ESP32 & Blynk IoT Cloud Bridge Widget ── */}
+      <BlynkIntegrationPanel reading={state.currentReading} risk={state.currentRisk} />
 
       {/* ── Main Command Grid ───────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -340,7 +345,7 @@ const DashboardPage: React.FC = () => {
           <RecentEvents events={state.events} />
         </div>
 
-        {/* Row 5: Edge Cybersecurity & Replay Defense (Phase 14) */}
+        {/* Row 5: Edge Cybersecurity & Replay Defense */}
         <div className="lg:col-span-3">
           <SecurityPanel
             events={securityEvents}

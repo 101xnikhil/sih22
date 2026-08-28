@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import VirtualChatbotModal from '../common/VirtualChatbotModal';
 
 interface LayoutProps {
   alertCount?: number;
@@ -30,6 +31,8 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
         return 'Geographic Risk Map';
       case '/settings':
         return 'System Configuration & Simulation';
+      case '/about':
+        return 'About LANDGUARD AI';
       default:
         return 'LANDGUARD AI Control Room';
     }
@@ -57,13 +60,25 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
         <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
           <Outlet />
         </main>
-        <footer className="border-t border-slate-800/80 bg-slate-950/90 px-4 py-2.5 text-center text-xs font-mono text-slate-500">
+        
+        {/* Global Virtual Chatbot AI Assistant */}
+        <VirtualChatbotModal />
+
+        <footer className="border-t border-slate-800/80 bg-slate-950/90 px-6 py-3 text-xs font-mono text-slate-400">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
-            <span>LANDGUARD AI · SIH 2026 Prototype</span>
-            <span className="text-amber-400/90 font-medium">
-              Prototype — requires field calibration and geotechnical validation before operational deployment.
-            </span>
-            <span>Edge LoRa & XGBoost Ensemble</span>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span className="font-bold text-slate-200">LANDGUARD AI</span>
+              <span className="text-slate-400">· Geotechnical Early Warning System</span>
+            </div>
+            <div className="text-slate-400 text-[11px]">
+              Edge LoRa Gateway &middot; Physics Limit Equilibrium &middot; XGBoost SHAP Engine
+            </div>
+            <div className="flex items-center gap-3 text-[11px] text-slate-400">
+              <span>Blynk IoT Cloud Ready</span>
+              <span>&bull;</span>
+              <span className="text-emerald-400 font-semibold">100% Operational</span>
+            </div>
           </div>
         </footer>
       </div>
