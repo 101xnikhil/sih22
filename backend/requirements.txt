@@ -9,3 +9,4 @@ websockets>=11.0.0
 numpy>=1.22.0
 pyjwt>=2.8.0
 python-multipart>=0.0.9
+psycopg2-binary>=2.9.9

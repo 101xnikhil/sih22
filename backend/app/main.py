@@ -71,8 +71,8 @@ async def lifespan(app: FastAPI):
         # 3. Seed initial history if empty
         telemetry_count = db.query(Telemetry).filter(Telemetry.node_id == settings.DEFAULT_NODE_ID).count()
         if telemetry_count == 0:
-            logger.info("Seeding initial baseline telemetry buffer (30 data points)...")
-            for _ in range(30):
+            logger.info("Seeding initial baseline telemetry buffer (5 data points)...")
+            for _ in range(5):
                 reading_payload = mock_generator.generate_reading(scenario="dry_stable")
                 await telemetry_service.process_and_store_telemetry(db=db, data=reading_payload)
 

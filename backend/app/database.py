@@ -1,18 +1,45 @@
+import os
+import logging
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from app.config import settings
 
-# SQLite connection with thread checking disabled for FastAPI async workers
-engine = create_engine(
-    settings.DATABASE_URL,
-    connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {},
-    pool_pre_ping=True,
-)
+logger = logging.getLogger("landguard.database")
 
-# Enable WAL mode & busy timeout for concurrent SQLite reads and writes
-@event.listens_for(engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
-    if "sqlite" in settings.DATABASE_URL:
+# ─────────────────────────────────────────────────────────────
+# Normalize Database URL (Supports Neon PostgreSQL & SQLite)
+# ─────────────────────────────────────────────────────────────
+raw_db_url = settings.DATABASE_URL.strip()
+
+# Neon / Heroku / AWS often provide "postgres://" which SQLAlchemy 2.0 requires as "postgresql://"
+if raw_db_url.startswith("postgres://"):
+    normalized_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
+else:
+    normalized_db_url = raw_db_url
+
+is_postgres = "postgresql" in normalized_db_url
+is_sqlite = "sqlite" in normalized_db_url
+
+if is_postgres:
+    logger.info("Configuring PostgreSQL / Neon Serverless DB connection pool...")
+    engine = create_engine(
+        normalized_db_url,
+        pool_pre_ping=True,      # Tests connection before use (auto-reconnects when Neon wakes up)
+        pool_recycle=300,        # Recycle connections every 5 minutes for Neon auto-suspend
+        pool_size=10,            # Active connection pool size
+        max_overflow=20,         # Maximum burst overflow connections
+    )
+else:
+    logger.info("Configuring local SQLite database engine with WAL mode...")
+    engine = create_engine(
+        normalized_db_url,
+        connect_args={"check_same_thread": False},
+        pool_pre_ping=True,
+    )
+
+    # Enable WAL mode & busy timeout for concurrent SQLite reads and writes
+    @event.listens_for(engine, "connect")
+    def set_sqlite_pragma(dbapi_connection, connection_record):
         cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA journal_mode=WAL;")
         cursor.execute("PRAGMA busy_timeout=5000;")
@@ -20,18 +47,23 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
         cursor.close()
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
 
 
 def init_db():
-    """Create tables and execute migrations if needed."""
+    """Create all model tables and execute schema migrations if needed."""
     try:
         import app.models  # Ensure all model classes are registered with Base metadata
-    except Exception:
-        pass
-    Base.metadata.create_all(bind=engine)
-    if "sqlite" in settings.DATABASE_URL:
+    except Exception as e:
+        logger.warning(f"Model import error: {e}")
+
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info(f"Database schema initialized successfully on {engine.url.drivername}")
+    except Exception as e:
+        logger.error(f"Error creating database tables: {e}")
+
+    if is_sqlite:
         from sqlalchemy import text
         with engine.connect() as conn:
             for col_sql in [
