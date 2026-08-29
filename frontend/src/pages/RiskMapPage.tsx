@@ -55,30 +55,30 @@ const RiskMapPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 flex flex-col h-[calc(100vh-7.5rem)]">
+    <div className="space-y-4 flex flex-col h-[calc(100vh-8.5rem)] font-sans">
       {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-900 border border-slate-800 rounded-lg p-3 shrink-0">
-        <div className="flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-cyan-400" />
+      <div className="card p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0">
+        <div className="flex items-center gap-2.5">
+          <MapPin className="w-5 h-5 text-blue-600" />
           <div>
-            <h1 className="text-base font-bold font-mono text-slate-100 uppercase">Geospatial Slope Risk Map</h1>
-            <p className="text-[11px] text-slate-400 font-sans">
+            <h1 className="text-base font-bold text-[#0f172a] uppercase tracking-tight">Geospatial Slope Risk Map</h1>
+            <p className="text-xs text-slate-500">
               Georeferenced monitoring stations, physical slope inclination sectors, and early warning boundaries.
             </p>
           </div>
         </div>
-        <PrototypeLabel text="GIS Spatial Node Mapping — Single Node Prototype" />
+        <PrototypeLabel text="GIS Spatial Node Mapping" />
       </div>
 
       {/* Main Map + Inspector Split */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4 min-h-0">
         {/* Map Viewport (3 cols) */}
-        <div className="lg:col-span-3 relative rounded-lg overflow-hidden border border-slate-800 shadow-md h-full flex flex-col">
+        <div className="lg:col-span-3 relative rounded-2xl overflow-hidden border border-[#e5e9f2] shadow-sm h-full flex flex-col bg-white">
           <MapContainer 
             center={position} 
             zoom={14} 
             scrollWheelZoom={true} 
-            style={{ height: '100%', width: '100%', backgroundColor: '#090d16' }}
+            style={{ height: '100%', width: '100%' }}
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -89,7 +89,7 @@ const RiskMapPage: React.FC = () => {
                 <div className="p-1 text-slate-900 font-sans min-w-[180px]">
                   <div className="font-bold text-xs flex justify-between items-center border-b pb-1 mb-1">
                     <span>{node.name}</span>
-                    <span className="font-mono text-cyan-700 font-bold">{node.id}</span>
+                    <span className="font-mono text-blue-700 font-bold">{node.id}</span>
                   </div>
                   <div className="text-[10px] text-slate-600 mb-2">{node.location.description}</div>
                   <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px] font-mono">
@@ -102,7 +102,7 @@ const RiskMapPage: React.FC = () => {
                     <span className="text-slate-500">FoS Ratio:</span>
                     <span className="font-bold text-slate-800">{currentRisk.fos_estimate.toFixed(2)}</span>
                     <span className="text-slate-500">Soil Moisture:</span>
-                    <span className="font-bold text-cyan-700">{currentReading.soil_moisture_pct.toFixed(1)}%</span>
+                    <span className="font-bold text-blue-700">{currentReading.soil_moisture_pct.toFixed(1)}%</span>
                     <span className="text-slate-500">Precipitation:</span>
                     <span className="font-bold text-blue-700">{currentReading.rainfall_24h_mm.toFixed(1)} mm</span>
                   </div>
@@ -112,34 +112,34 @@ const RiskMapPage: React.FC = () => {
           </MapContainer>
 
           {/* Map Floating Legend */}
-          <div className="absolute bottom-4 right-4 z-[1000] bg-slate-950/90 backdrop-blur border border-slate-800 rounded p-3 shadow-xl font-mono text-xs">
+          <div className="absolute bottom-4 right-4 z-[1000] bg-white/95 backdrop-blur-xs border border-slate-200 rounded-xl p-3 shadow-lg font-sans text-xs">
             <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
               Hazard Tier Legend
             </h4>
-            <div className="space-y-1.5 text-[11px]">
+            <div className="space-y-1 text-[11px] font-medium">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <span className="text-slate-200">LOW (0.00 – 0.25)</span>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />
+                <span className="text-slate-700">LOW (0.00 – 0.25)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <span className="text-slate-200">MODERATE (0.25 – 0.50)</span>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#f59e0b]" />
+                <span className="text-slate-700">MODERATE (0.25 – 0.50)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
-                <span className="text-slate-200">HIGH (0.50 – 0.75)</span>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#f97316]" />
+                <span className="text-slate-700">HIGH (0.50 – 0.75)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                <span className="text-slate-200">CRITICAL (0.75 – 1.00)</span>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />
+                <span className="text-slate-700">CRITICAL (0.75 – 1.00)</span>
               </div>
             </div>
           </div>
 
           {/* Map Floating Coordinates Tag */}
-          <div className="absolute top-4 left-4 z-[1000] bg-slate-950/90 border border-slate-800 rounded px-2.5 py-1.5 shadow-lg text-[10px] font-mono text-slate-300">
-            <div>COORDINATES: <strong className="text-cyan-400">{node.location.lat.toFixed(6)}° N, {node.location.lng.toFixed(6)}° E</strong></div>
-            <div className="text-slate-400">ELEVATION: {node.location.altitude_m}m ASL · SECTOR 7</div>
+          <div className="absolute top-4 left-4 z-[1000] bg-white/95 border border-slate-200 rounded-xl px-3 py-2 shadow-md text-xs text-slate-700 font-sans">
+            <div>Coordinates: <strong className="text-blue-600 font-mono">{node.location.lat.toFixed(6)}° N, {node.location.lng.toFixed(6)}° E</strong></div>
+            <div className="text-slate-500 text-[11px]">Elevation: {node.location.altitude_m}m ASL · Sector 7</div>
           </div>
         </div>
 
@@ -147,87 +147,87 @@ const RiskMapPage: React.FC = () => {
         <div className="card flex flex-col justify-between overflow-y-auto">
           <div>
             <div className="card-header flex items-center justify-between">
-              <span>Station Telemetry Inspector</span>
-              <span className="badge badge-low text-[10px]">Active</span>
+              <span className="font-bold text-xs uppercase tracking-wider text-slate-800">Station Inspector</span>
+              <span className="badge badge-elite text-[10px]">Active</span>
             </div>
             
-            <div className="card-body space-y-4 text-xs font-mono">
+            <div className="card-body p-4 space-y-4 text-xs">
               {/* Selected Node Identity */}
-              <div className="bg-slate-950/80 p-2.5 rounded border border-slate-800">
-                <div className="text-[10px] text-slate-500 uppercase font-semibold">Monitoring Station</div>
-                <div className="text-sm font-bold text-slate-100 mt-0.5">{node.name}</div>
-                <div className="text-[11px] text-cyan-400 font-bold mt-0.5">{node.id}</div>
+              <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <div className="text-[10px] text-slate-400 uppercase font-bold">Monitoring Station</div>
+                <div className="text-sm font-bold text-slate-900 mt-0.5">{node.name}</div>
+                <div className="text-xs text-blue-600 font-bold font-mono mt-0.5">{node.id}</div>
               </div>
 
               {/* Live Hazard Score */}
-              <div className="p-2.5 bg-slate-950/80 rounded border border-slate-800">
-                <div className="flex justify-between items-center text-[10px] text-slate-400 uppercase font-semibold">
-                  <span>Current Stability Rating</span>
+              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="flex justify-between items-center text-[10px] text-slate-500 uppercase font-bold">
+                  <span>Stability Rating</span>
                   <span className={clsx("font-bold", RISK_TEXT_CLASSES[currentRisk.risk_level])}>
                     {currentRisk.risk_level}
                   </span>
                 </div>
-                <div className="flex items-baseline justify-between mt-1">
-                  <span className={clsx("text-2xl font-black", RISK_TEXT_CLASSES[currentRisk.risk_level])}>
+                <div className="flex items-baseline justify-between mt-1 font-mono">
+                  <span className={clsx("text-2xl font-extrabold", RISK_TEXT_CLASSES[currentRisk.risk_level])}>
                     {(currentRisk.risk_score * 100).toFixed(0)}%
                   </span>
-                  <span className="text-slate-400 text-xs">FoS: <strong className="text-slate-200">{currentRisk.fos_estimate.toFixed(2)}</strong></span>
+                  <span className="text-slate-500 text-xs font-sans">FoS: <strong className="text-slate-800 font-mono">{currentRisk.fos_estimate.toFixed(2)}</strong></span>
                 </div>
               </div>
 
               {/* Physical Sensor Readouts */}
-              <div className="space-y-2 pt-2 border-t border-slate-800">
+              <div className="space-y-2 pt-2 border-t border-slate-100">
                 <div className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">
                   Live Sensor Channels
                 </div>
                 
-                <div className="flex justify-between items-center py-1 border-b border-slate-800/60">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    <Droplets className="w-3.5 h-3.5 text-cyan-400" /> Soil Moisture:
+                <div className="flex justify-between items-center py-1.5 border-b border-slate-100">
+                  <span className="text-slate-600 flex items-center gap-1.5 font-medium">
+                    <Droplets className="w-3.5 h-3.5 text-blue-600" /> Soil Moisture:
                   </span>
-                  <span className="font-bold text-slate-100">{currentReading.soil_moisture_pct.toFixed(1)}%</span>
+                  <span className="font-bold text-slate-900 font-mono">{currentReading.soil_moisture_pct.toFixed(1)}%</span>
                 </div>
 
-                <div className="flex justify-between items-center py-1 border-b border-slate-800/60">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    <CloudRain className="w-3.5 h-3.5 text-blue-400" /> 24h Rain:
+                <div className="flex justify-between items-center py-1.5 border-b border-slate-100">
+                  <span className="text-slate-600 flex items-center gap-1.5 font-medium">
+                    <CloudRain className="w-3.5 h-3.5 text-blue-600" /> 24h Rain:
                   </span>
-                  <span className="font-bold text-slate-100">{currentReading.rainfall_24h_mm.toFixed(1)} mm</span>
+                  <span className="font-bold text-slate-900 font-mono">{currentReading.rainfall_24h_mm.toFixed(1)} mm</span>
                 </div>
 
-                <div className="flex justify-between items-center py-1 border-b border-slate-800/60">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    <Mountain className="w-3.5 h-3.5 text-emerald-400" /> Slope Angle:
+                <div className="flex justify-between items-center py-1.5 border-b border-slate-100">
+                  <span className="text-slate-600 flex items-center gap-1.5 font-medium">
+                    <Mountain className="w-3.5 h-3.5 text-emerald-600" /> Slope Angle:
                   </span>
-                  <span className="font-bold text-slate-100">{formatDegrees(currentReading.tilt_angle)}</span>
+                  <span className="font-bold text-slate-900 font-mono">{formatDegrees(currentReading.tilt_angle)}</span>
                 </div>
 
-                <div className="flex justify-between items-center py-1 border-b border-slate-800/60">
-                  <span className="text-slate-400 flex items-center gap-1.5">
-                    <Activity className="w-3.5 h-3.5 text-amber-400" /> Creep Rate:
+                <div className="flex justify-between items-center py-1.5 border-b border-slate-100">
+                  <span className="text-slate-600 flex items-center gap-1.5 font-medium">
+                    <Activity className="w-3.5 h-3.5 text-orange-600" /> Creep Rate:
                   </span>
-                  <span className="font-bold text-slate-100">{currentReading.tilt_rate.toFixed(3)} °/m</span>
+                  <span className="font-bold text-slate-900 font-mono">{currentReading.tilt_rate.toFixed(3)} °/m</span>
                 </div>
               </div>
 
               {/* Radio & Power */}
-              <div className="space-y-1.5 pt-2 border-t border-slate-800 text-[11px]">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">LoRa Link RSSI:</span>
-                  <span className="text-slate-200 font-bold">{formatRSSI(currentReading.rssi_dbm)}</span>
+              <div className="space-y-1.5 pt-2 border-t border-slate-100 text-[11px]">
+                <div className="flex justify-between font-mono">
+                  <span className="text-slate-500 font-sans">LoRa Link RSSI:</span>
+                  <span className="text-slate-800 font-bold">{formatRSSI(currentReading.rssi_dbm)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Battery Level:</span>
-                  <span className="text-slate-200 font-bold">{currentReading.battery_pct}% ({formatBattery(currentReading.battery_mv)})</span>
+                <div className="flex justify-between font-mono">
+                  <span className="text-slate-500 font-sans">Battery Level:</span>
+                  <span className="text-slate-800 font-bold">{currentReading.battery_pct}% ({formatBattery(currentReading.battery_mv)})</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Side Panel Footer */}
-          <div className="px-3.5 py-2 bg-slate-950 border-t border-slate-800 text-[10px] font-mono text-slate-400 flex justify-between">
-            <span>LAST SEEN: {formatTimeShort(currentReading.timestamp)}</span>
-            <span className="text-emerald-400">SYNCED</span>
+          <div className="px-4 py-2 bg-slate-50 border-t border-[#f1f5f9] text-[10px] text-slate-500 flex justify-between font-sans">
+            <span>Last seen: {formatTimeShort(currentReading.timestamp)}</span>
+            <span className="text-emerald-600 font-semibold">Synced</span>
           </div>
         </div>
       </div>

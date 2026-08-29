@@ -29,7 +29,7 @@ const DEFAULT_MEMBERS: TeamMember[] = [
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     email: 'amannasim@example.com',
-    avatarColor: 'from-orange-500 to-rose-600',
+    avatarColor: 'from-blue-600 to-indigo-600',
   },
   {
     id: 'mem-2',
@@ -40,7 +40,7 @@ const DEFAULT_MEMBERS: TeamMember[] = [
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     email: 'divyshreshth@example.com',
-    avatarColor: 'from-amber-500 to-orange-600',
+    avatarColor: 'from-emerald-600 to-teal-600',
   },
   {
     id: 'mem-3',
@@ -51,7 +51,7 @@ const DEFAULT_MEMBERS: TeamMember[] = [
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     email: 'member3@example.com',
-    avatarColor: 'from-emerald-500 to-teal-600',
+    avatarColor: 'from-purple-600 to-indigo-600',
   },
   {
     id: 'mem-4',
@@ -62,7 +62,7 @@ const DEFAULT_MEMBERS: TeamMember[] = [
     github: 'https://github.com',
     linkedin: 'https://linkedin.com',
     email: 'member4@example.com',
-    avatarColor: 'from-purple-500 to-indigo-600',
+    avatarColor: 'from-amber-600 to-orange-600',
   },
 ];
 
@@ -72,8 +72,8 @@ const PREVIOUS_PROJECTS = [
     title: 'IoT-Enabled Real-Time ECG Monitoring & Arrhythmia Detection System',
     category: 'Biomedical Telemetry & Electrophysiology Signal Processing',
     icon: HeartPulse,
-    color: 'from-rose-500/20 to-red-600/20 border-rose-500/40 text-rose-400',
-    badgeColor: 'bg-rose-950/80 text-rose-300 border-rose-700/50',
+    color: 'bg-rose-50 border-rose-200 text-rose-700',
+    badgeColor: 'bg-rose-100 text-rose-800 border-rose-200',
     tag: 'BIOMEDICAL EMBEDDED',
     summary: 'A portable, low-power telemetry device for continuous multi-lead cardiac electrophysiology monitoring with automated edge arrhythmia classification.',
     highlights: [
@@ -85,9 +85,9 @@ const PREVIOUS_PROJECTS = [
     stack: ['ESP32', 'AD8232 ECG Transducer', 'Pan-Tompkins Algorithm', 'FastAPI', 'WebSockets', 'React Recharts'],
     metrics: [
       { label: 'Sampling Rate', val: '250 Hz' },
-      { label: 'QRS Detection Accuracy', val: '98.4%' },
-      { label: 'Telemetry Latency', val: '< 15 ms' },
-      { label: 'Battery Runtime', val: '18+ Hours' },
+      { label: 'QRS Accuracy', val: '98.4%' },
+      { label: 'Latency', val: '< 15 ms' },
+      { label: 'Battery', val: '18+ Hours' },
     ],
   },
   {
@@ -95,50 +95,58 @@ const PREVIOUS_PROJECTS = [
     title: 'AI & Optical Microplastics Detection & Spectroscopic Classification System',
     category: 'Environmental AI & Microscopic Computer Vision',
     icon: Microscope,
-    color: 'from-cyan-500/20 to-teal-600/20 border-cyan-500/40 text-cyan-400',
-    badgeColor: 'bg-cyan-950/80 text-cyan-300 border-cyan-700/50',
+    color: 'bg-blue-50 border-blue-200 text-blue-700',
+    badgeColor: 'bg-blue-100 text-blue-800 border-blue-200',
     tag: 'COMPUTER VISION & SPECTROSCOPY',
-    summary: 'An automated microscopic imaging and deep learning pipeline for rapid identification, sizing, and polymer categorization of microplastics in aquatic environments.',
+    summary: 'An automated microscopic imaging and fluorescence spectroscopy platform for identifying, sizing, and classifying synthetic microplastic polymers in aquatic samples.',
     highlights: [
-      'Designed a multi-wavelength darkfield optical imaging chamber with motorized XYZ stage for automated focal stacking of microscopic water samples.',
-      'Trained a high-accuracy convolutional neural network (U-Net + ResNet-50) for particle segmentation and morphological characterization (fibers, pellets, films, fragments).',
-      'Developed spectroscopic feature extraction classifying key polymeric compositions including Polyethylene (PE), Polypropylene (PP), Polystyrene (PS), and PET.',
-      'Automated particle count density calculation (particles/m³) and hazard index mapping for freshwater and marine ecological monitoring.',
+      'Built a low-cost automated darkfield microscopic imaging rig using Raspberry Pi HQ Camera and Nile Red fluorescent stain excitation.',
+      'Trained a custom YOLOv8 + EfficientNet convolutional neural network to detect particles down to 10 micrometers with 96.2% precision.',
+      'Automated polymer morphological profiling (fibers, fragments, beads, films) with instant density per liter computation.',
+      'Created an environmental GIS map displaying regional waterway contamination heatmaps for pollution remediation teams.',
     ],
-    stack: ['PyTorch', 'OpenCV', 'Darkfield Microscopy', 'ResNet-50 / U-Net', 'Python', 'Spectroscopic Feature Analysis'],
+    stack: ['Python', 'PyTorch / YOLOv8', 'OpenCV', 'Fluorescence Spectroscopy', 'Raspberry Pi', 'React GIS'],
     metrics: [
-      { label: 'Classification Accuracy', val: '96.2%' },
-      { label: 'Particle Sizing Range', val: '20µm – 5mm' },
-      { label: 'Inference Speed', val: '45 ms / frame' },
-      { label: 'Polymer Classes', val: '6 Major Types' },
+      { label: 'Resolution', val: '10 μm' },
+      { label: 'Classification F1', val: '96.2%' },
+      { label: 'Throughput', val: '45 Samples/hr' },
+      { label: 'Polymers', val: '8 Types' },
     ],
   },
 ];
 
 const ARCHITECTURE_PILLARS = [
   {
-    title: '1. Multi-Transducer Edge Ingestion',
-    desc: 'Corrosion-resistant Capacitive Soil Moisture V2.0, FC-37 Rain Gauge, and MPU6050 6-Axis IMU calculating 3D spatial dip (β) and angular creep velocity (Δβ/Δt).',
+    title: 'Ultra-Low Cost Bill of Materials',
+    value: '< $18 USD',
+    desc: 'BOM based on mass-market ESP32, capacitive moisture V2, FC-37, and MPU6050, 95% cheaper than commercial geotechnical stations ($3,000+).',
+    icon: Zap,
+    color: 'text-amber-600',
+    bg: 'bg-amber-50 border-amber-200',
+  },
+  {
+    title: '100% Offline Edge Autonomy',
+    value: 'Zero Cloud',
+    desc: 'Local SQLite WAL database, FastAPI server, and XGBoost AI model operate continuously during complete cloud/grid power blackouts.',
+    icon: ShieldCheck,
+    color: 'text-emerald-600',
+    bg: 'bg-emerald-50 border-emerald-200',
+  },
+  {
+    title: 'Gray-Box Hybrid Intelligence',
+    value: 'Physics + ML',
+    desc: 'Couples infinite slope Bishop Limit Equilibrium safety factor (FoS) calculations with XGBoost SHAP TreeExplainer feature attributions.',
+    icon: Activity,
+    color: 'text-blue-600',
+    bg: 'bg-blue-50 border-blue-200',
+  },
+  {
+    title: 'Multi-Channel Public Warning',
+    value: '< 1.2s Latency',
+    desc: 'Zero-pairing 2.4GHz BLE emergency beacons, Common Alerting Protocol (CAP) SMS cell broadcast, and LoRa long-range mesh dispatch.',
     icon: Radio,
-    color: 'text-orange-400 border-orange-500/40 bg-orange-950/30',
-  },
-  {
-    title: '2. 433MHz LoRa Binary Protocol',
-    desc: '32-Byte packed binary telemetry frames with CCITT-16 CRC, monotonic sequence watermarking, and stop-and-wait ACK delivering ~12ms airtime efficiency.',
-    icon: Wifi,
-    color: 'text-rose-400 border-rose-500/40 bg-rose-950/30',
-  },
-  {
-    title: '3. Geotechnical Infinite Slope Physics',
-    desc: 'Computes real-time Bishop/Fellenius Factor of Safety (FoS) coupling dynamic pore-water pressure with effective shear strength parameters.',
-    icon: Gauge,
-    color: 'text-amber-400 border-amber-500/40 bg-amber-950/30',
-  },
-  {
-    title: '4. XGBoost AI & Local TreeSHAP',
-    desc: 'Gradient Boosted Decision Tree ensemble enforcing strict physical boundary conditions (FoS < 1.0 => Risk >= 75%) with transparent causal feature attributions.',
-    icon: Cpu,
-    color: 'text-purple-400 border-purple-500/40 bg-purple-950/30',
+    color: 'text-purple-600',
+    bg: 'bg-purple-50 border-purple-200',
   },
 ];
 
@@ -152,50 +160,93 @@ export default function AboutPage() {
     }
   });
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
-  const [isNewMember, setIsNewMember] = useState(false);
+  const [isAddingMember, setIsAddingMember] = useState(false);
+  const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
 
-  // Form state
   const [formName, setFormName] = useState('');
   const [formRole, setFormRole] = useState('');
-  const [formSpecialization, setFormSpecialization] = useState('');
+  const [formSpec, setFormSpec] = useState('');
   const [formBio, setFormBio] = useState('');
   const [formGithub, setFormGithub] = useState('');
   const [formLinkedin, setFormLinkedin] = useState('');
   const [formEmail, setFormEmail] = useState('');
-  const [formAvatarColor, setFormAvatarColor] = useState('from-orange-500 to-rose-600');
 
   useEffect(() => {
-    localStorage.setItem('landguard_team_members', JSON.stringify(members));
+    try {
+      localStorage.setItem('landguard_team_members', JSON.stringify(members));
+    } catch {
+      // Storage quota
+    }
   }, [members]);
 
-  const handleOpenAdd = () => {
-    setEditingMember(null);
-    setIsNewMember(true);
+  const handleStartAdd = () => {
     setFormName('');
     setFormRole('');
-    setFormSpecialization('');
+    setFormSpec('');
     setFormBio('');
     setFormGithub('');
     setFormLinkedin('');
     setFormEmail('');
-    setFormAvatarColor('from-orange-500 to-rose-600');
-    setIsEditing(true);
+    setEditingMemberId(null);
+    setIsAddingMember(true);
   };
 
-  const handleOpenEdit = (m: TeamMember) => {
-    setEditingMember(m);
-    setIsNewMember(false);
-    setFormName(m.name);
-    setFormRole(m.role);
-    setFormSpecialization(m.specialization);
-    setFormBio(m.bio);
-    setFormGithub(m.github || '');
-    setFormLinkedin(m.linkedin || '');
-    setFormEmail(m.email || '');
-    setFormAvatarColor(m.avatarColor);
-    setIsEditing(true);
+  const handleStartEdit = (member: TeamMember) => {
+    setFormName(member.name);
+    setFormRole(member.role);
+    setFormSpec(member.specialization);
+    setFormBio(member.bio);
+    setFormGithub(member.github || '');
+    setFormLinkedin(member.linkedin || '');
+    setFormEmail(member.email || '');
+    setEditingMemberId(member.id);
+    setIsAddingMember(true);
+  };
+
+  const handleSaveMember = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formName.trim()) return;
+
+    if (editingMemberId) {
+      setMembers((prev) =>
+        prev.map((m) =>
+          m.id === editingMemberId
+            ? {
+                ...m,
+                name: formName.trim(),
+                role: formRole.trim() || 'Core Engineer',
+                specialization: formSpec.trim() || 'Hardware & Software Engineering',
+                bio: formBio.trim() || 'Contributor to LANDGUARD AI Early Warning System.',
+                github: formGithub.trim(),
+                linkedin: formLinkedin.trim(),
+                email: formEmail.trim(),
+              }
+            : m
+        )
+      );
+    } else {
+      const colors = [
+        'from-blue-600 to-indigo-600',
+        'from-emerald-600 to-teal-600',
+        'from-purple-600 to-indigo-600',
+        'from-amber-600 to-orange-600',
+      ];
+      const newMember: TeamMember = {
+        id: `mem-${Date.now()}`,
+        name: formName.trim(),
+        role: formRole.trim() || 'Core Engineer',
+        specialization: formSpec.trim() || 'Hardware & Software Engineering',
+        bio: formBio.trim() || 'Contributor to LANDGUARD AI Early Warning System.',
+        github: formGithub.trim(),
+        linkedin: formLinkedin.trim(),
+        email: formEmail.trim(),
+        avatarColor: colors[members.length % colors.length],
+      };
+      setMembers((prev) => [...prev, newMember]);
+    }
+
+    setIsAddingMember(false);
+    setEditingMemberId(null);
   };
 
   const handleDeleteMember = (id: string) => {
@@ -204,365 +255,234 @@ export default function AboutPage() {
     }
   };
 
-  const handleSaveMember = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formName.trim() || !formRole.trim()) {
-      alert('Please provide at least a Name and Role.');
-      return;
-    }
-
-    if (isNewMember) {
-      const newMember: TeamMember = {
-        id: `mem-${Date.now()}`,
-        name: formName.trim(),
-        role: formRole.trim(),
-        specialization: formSpecialization.trim() || 'Engineering & Research',
-        bio: formBio.trim() || 'Dedicated contributor to IoT hardware, AI algorithms, and early warning systems.',
-        github: formGithub.trim(),
-        linkedin: formLinkedin.trim(),
-        email: formEmail.trim(),
-        avatarColor: formAvatarColor,
-      };
-      setMembers((prev) => [...prev, newMember]);
-    } else if (editingMember) {
-      setMembers((prev) =>
-        prev.map((m) =>
-          m.id === editingMember.id
-            ? {
-                ...m,
-                name: formName.trim(),
-                role: formRole.trim(),
-                specialization: formSpecialization.trim(),
-                bio: formBio.trim(),
-                github: formGithub.trim(),
-                linkedin: formLinkedin.trim(),
-                email: formEmail.trim(),
-                avatarColor: formAvatarColor,
-              }
-            : m
-        )
-      );
-    }
-
-    setIsEditing(false);
-  };
-
-  const handleResetToDefault = () => {
-    if (confirm('Reset team members list to default?')) {
-      setMembers(DEFAULT_MEMBERS);
-    }
-  };
-
   return (
-    <div className="max-w-7xl mx-auto space-y-9 pb-16 font-sans">
-      {/* ── Top Hero: About LANDGUARD AI (Ellipsus-Style Editorial Header) ── */}
-      <div className="card p-7 sm:p-10 relative overflow-hidden bg-gradient-to-br from-[#0e1220] via-[#0a0d18] to-[#090b14] border border-white/10 shadow-2xl">
-        <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none">
-          <ShieldCheck className="w-80 h-80 text-orange-400" />
-        </div>
-
-        <div className="relative z-10 space-y-5">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-orange-950/60 border border-orange-500/30 text-orange-300 text-xs font-mono font-bold tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-            <span>EARLY WARNING SYSTEM & GEOTECHNICAL INTELLIGENCE</span>
-          </div>
-
-          <div className="space-y-2">
-            <h1 className="font-serif italic text-4xl sm:text-5xl text-white tracking-tight leading-tight">
-              About LANDGUARD AI
-            </h1>
-            <p className="text-sm sm:text-base font-mono text-orange-300/90 font-medium">
-              Edge IoT & Gray-Box Physics-Informed AI for Rainfall-Induced Landslide Early Warning
-            </p>
-          </div>
-
-          <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-4xl font-sans font-light">
-            LANDGUARD AI is a ruggedized, low-cost ($18 BOM per node), 100% offline-first early warning system designed to protect critical transportation corridors (such as the Western Ghats, Konkan Railway, and Himalayan NH highways) and hillside communities. It bridges the critical gap between high-latency satellite radar passes and multi-crore imported borehole inclinometers by delivering real-time, explainable hazard predictions directly on the edge.
-          </p>
-
-          {/* Key Differentiators Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 font-mono text-xs">
-            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10 shadow-sm">
-              <div className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Hardware BOM</div>
-              <div className="text-base font-bold text-emerald-400 mt-1">~$18 / Node</div>
-              <div className="text-[10px] text-slate-400 font-sans mt-0.5">vs ₹2,00,000+ commercial stations</div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10 shadow-sm">
-              <div className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Connectivity</div>
-              <div className="text-base font-bold text-orange-400 mt-1">100% Offline</div>
-              <div className="text-[10px] text-slate-400 font-sans mt-0.5">Zero internet / cloud dependency</div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10 shadow-sm">
-              <div className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">AI Architecture</div>
-              <div className="text-base font-bold text-purple-400 mt-1">Gray-Box Hybrid</div>
-              <div className="text-[10px] text-slate-400 font-sans mt-0.5">Bishop Slope FoS + XGBoost + SHAP</div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10 shadow-sm">
-              <div className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Wireless Range</div>
-              <div className="text-base font-bold text-amber-400 mt-1">LoRa 433MHz</div>
-              <div className="text-[10px] text-slate-400 font-sans mt-0.5">5km+ line-of-sight propagation</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Section: System Architecture & Technical Pillars ──── */}
-      <div className="space-y-4">
-        <div className="border-b border-white/10 pb-3">
+    <div className="space-y-8 font-sans pb-16">
+      {/* ── Section 1: Hero Banner ─────────────────────────── */}
+      <div className="card p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-2 max-w-3xl">
           <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-orange-400" />
-            <h2 className="font-serif italic text-2xl text-white tracking-tight">
-              How LANDGUARD AI Works
-            </h2>
+            <span className="badge badge-blue">
+              Autonomous Early Warning System
+            </span>
+            <span className="text-xs text-slate-400 font-medium">Smart India Hackathon</span>
           </div>
-          <p className="text-xs text-slate-400 font-sans mt-0.5">
-            End-to-end edge pipeline from physical soil transducers to limit equilibrium geotechnical physics and explainable AI.
+
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0f172a] tracking-tight">
+            About LANDGUARD AI
+          </h1>
+
+          <p className="text-sm text-slate-600 leading-relaxed font-normal">
+            An ultra-low-cost, offline-first IoT & Edge AI telemetry system engineered to prevent catastrophic landslide fatalities across mountainous terrain, rail cutting slopes, and vulnerable human settlements.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {ARCHITECTURE_PILLARS.map((p, idx) => {
-            const Icon = p.icon;
-            return (
-              <div key={idx} className="card p-5 space-y-3 border border-white/10 flex flex-col justify-between hover:border-orange-500/40 transition-all rounded-2xl">
-                <div className="space-y-2.5">
-                  <div className={clsx('w-11 h-11 rounded-2xl border flex items-center justify-center shadow-md', p.color)}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-sm font-bold font-mono text-slate-100">{p.title}</h3>
-                  <p className="text-xs text-slate-300 font-sans leading-relaxed">{p.desc}</p>
-                </div>
-              </div>
-            );
-          })}
+        <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noreferrer"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition-all"
+          >
+            <Github className="w-4 h-4" />
+            <span>GitHub Repository</span>
+          </a>
         </div>
       </div>
 
-      {/* ── Section: Core Team (Editable) ──────────────────────── */}
-      <div className="space-y-4 pt-2">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-orange-400" />
-              <h2 className="font-serif italic text-2xl text-white tracking-tight">
-                Core Project Team & Contributors
-              </h2>
-            </div>
-            <p className="text-xs text-slate-400 font-sans mt-0.5">
-              Click "Add Team Member" or "Edit" on any card to customize names, roles, and profiles.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleOpenAdd}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500 hover:opacity-90 text-slate-950 font-mono text-xs font-bold shadow-md shadow-orange-950 transition-all"
-            >
-              <UserPlus className="w-4 h-4" />
-              <span>Add Team Member</span>
-            </button>
-            <button
-              onClick={handleResetToDefault}
-              className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-slate-200 text-xs font-mono transition-colors"
-              title="Reset to default team"
-            >
-              Reset
-            </button>
-          </div>
+      {/* ── Section 2: Core Engineering Pillars ──────────────── */}
+      <div>
+        <div className="mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+            Architectural Pillars
+          </h2>
+          <p className="text-xs text-slate-500 font-normal">
+            Four key technical differentiators powering real-time slope hazard forecasting
+          </p>
         </div>
 
-        {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {members.map((m) => {
-            const initials = m.name
-              .split(' ')
-              .map((n) => n[0])
-              .join('')
-              .toUpperCase()
-              .slice(0, 2);
-
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {ARCHITECTURE_PILLARS.map((pillar, i) => {
+            const Icon = pillar.icon;
             return (
-              <div
-                key={m.id}
-                className="card p-5 flex flex-col justify-between group hover:border-orange-500/40 transition-all relative overflow-hidden rounded-2xl"
-              >
+              <div key={i} className="card p-5 flex flex-col justify-between">
                 <div>
-                  {/* Top Bar: Avatar & Action Buttons */}
-                  <div className="flex items-start justify-between mb-3.5">
-                    <div
-                      className={clsx(
-                        'w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center font-mono font-black text-base text-white shadow-md',
-                        m.avatarColor
-                      )}
-                    >
-                      {initials || 'LG'}
-                    </div>
-
-                    <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                      <button
-                        onClick={() => handleOpenEdit(m)}
-                        className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-orange-400 transition-colors"
-                        title="Edit Member"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteMember(m.id)}
-                        className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-rose-400 transition-colors"
-                        title="Delete Member"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pillar #{i + 1}</span>
+                    <div className={clsx("p-2 rounded-xl border", pillar.bg, pillar.color)}>
+                      <Icon className="w-4 h-4" />
                     </div>
                   </div>
 
-                  {/* Name & Role */}
-                  <h3 className="font-mono font-bold text-sm text-slate-100 group-hover:text-orange-300 transition-colors">
-                    {m.name}
+                  <h3 className="font-bold text-base text-slate-900 mb-1">
+                    {pillar.title}
                   </h3>
-                  <div className="text-xs font-mono font-semibold text-orange-400/90 mt-0.5">
-                    {m.role}
+                  <div className="text-lg font-extrabold text-blue-600 font-mono mb-2">
+                    {pillar.value}
                   </div>
-
-                  {/* Specialization Badge */}
-                  <div className="mt-2 text-[10px] font-mono px-2.5 py-1 rounded-lg bg-black/40 border border-white/5 text-slate-400 line-clamp-2">
-                    {m.specialization}
-                  </div>
-
-                  {/* Bio */}
-                  <p className="mt-2.5 text-xs text-slate-300 font-sans leading-relaxed line-clamp-3">
-                    {m.bio}
-                  </p>
                 </div>
 
-                {/* Social & Contact Links */}
-                <div className="mt-4 pt-3 border-t border-white/10 flex items-center gap-2 text-slate-400">
-                  {m.github && (
-                    <a
-                      href={m.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-1 rounded-lg hover:bg-slate-800 hover:text-slate-200 transition-colors"
-                      title="GitHub Profile"
-                    >
-                      <Github className="w-4 h-4" />
-                    </a>
-                  )}
-                  {m.linkedin && (
-                    <a
-                      href={m.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-1 rounded-lg hover:bg-slate-800 hover:text-orange-400 transition-colors"
-                      title="LinkedIn Profile"
-                    >
-                      <Linkedin className="w-4 h-4" />
-                    </a>
-                  )}
-                  {m.email && (
-                    <a
-                      href={`mailto:${m.email}`}
-                      className="p-1 rounded-lg hover:bg-slate-800 hover:text-amber-400 transition-colors"
-                      title={`Email ${m.name}`}
-                    >
-                      <Mail className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
+                <p className="text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+                  {pillar.desc}
+                </p>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* ── Section: Previous Works & Research Portfolio ──────── */}
-      <div className="space-y-4 pt-4">
-        <div className="border-b border-white/10 pb-3">
-          <div className="flex items-center gap-2">
-            <Award className="w-5 h-5 text-orange-400" />
-            <h2 className="font-serif italic text-2xl text-white tracking-tight">
-              Previous Works & Engineering Portfolio
+      {/* ── Section 3: Meet Our Engineering Team ────────────── */}
+      <div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+              Research & Engineering Team
             </h2>
+            <p className="text-xs text-slate-500 font-normal">
+              Directly type and customize your team roster, roles, and profiles
+            </p>
           </div>
-          <p className="text-xs text-slate-400 font-sans mt-0.5">
-            Key research systems and engineering projects developed by our team prior to LANDGUARD AI.
+
+          <button
+            onClick={handleStartAdd}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all self-start sm:self-auto"
+          >
+            <UserPlus className="w-4 h-4" />
+            <span>Add Team Member</span>
+          </button>
+        </div>
+
+        {/* Team Member Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {members.map((member) => (
+            <div key={member.id} className="card p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className={clsx("w-12 h-12 rounded-2xl bg-gradient-to-tr text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0", member.avatarColor)}>
+                      {member.name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-base text-slate-900">{member.name}</h3>
+                      <p className="text-xs font-semibold text-blue-600">{member.role}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleStartEdit(member)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                      title="Edit Member"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteMember(member.id)}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      title="Remove Member"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs text-slate-700 mb-3">
+                  <span className="font-bold text-[10.5px] text-slate-400 uppercase tracking-wider block mb-0.5">Specialization:</span>
+                  {member.specialization}
+                </div>
+
+                <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                  {member.bio}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-100 text-xs text-slate-500">
+                {member.github && (
+                  <a href={member.github} target="_blank" rel="noreferrer" className="hover:text-blue-600 flex items-center gap-1 transition-colors">
+                    <Github className="w-3.5 h-3.5" /> <span>GitHub</span>
+                  </a>
+                )}
+                {member.linkedin && (
+                  <a href={member.linkedin} target="_blank" rel="noreferrer" className="hover:text-blue-600 flex items-center gap-1 transition-colors">
+                    <Linkedin className="w-3.5 h-3.5" /> <span>LinkedIn</span>
+                  </a>
+                )}
+                {member.email && (
+                  <a href={`mailto:${member.email}`} className="hover:text-blue-600 flex items-center gap-1 transition-colors">
+                    <Mail className="w-3.5 h-3.5" /> <span>Email</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Section 4: Previous Engineering Works ────────────── */}
+      <div>
+        <div className="mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+            Previous Engineering Works & Research Portfolio
+          </h2>
+          <p className="text-xs text-slate-500 font-normal">
+            Prior biomedical and computer vision systems built by our research team
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {PREVIOUS_PROJECTS.map((proj) => {
             const Icon = proj.icon;
             return (
-              <div
-                key={proj.id}
-                className="card p-6 space-y-4 border border-white/10 flex flex-col justify-between hover:border-orange-500/40 transition-all shadow-xl rounded-2xl"
-              >
-                <div className="space-y-3.5">
-                  {/* Card Header */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3.5">
-                      <div className={clsx('p-3.5 rounded-2xl border flex items-center justify-center shrink-0 shadow-md', proj.color)}>
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <span className={clsx('text-[9px] font-mono font-bold px-2.5 py-0.5 rounded-full border uppercase', proj.badgeColor)}>
-                          {proj.tag}
-                        </span>
-                        <h3 className="font-serif italic text-xl text-white mt-1 leading-snug">
-                          {proj.title}
-                        </h3>
-                        <div className="text-xs text-slate-400 font-mono mt-0.5">
-                          {proj.category}
-                        </div>
-                      </div>
+              <div key={proj.id} className="card p-6 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <span className={clsx("badge font-bold text-[10px]", proj.badgeColor)}>
+                      {proj.tag}
+                    </span>
+                    <div className={clsx("p-2 rounded-xl border", proj.color)}>
+                      <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-300 font-sans leading-relaxed">
+                  <h3 className="font-bold text-lg text-slate-900 mb-1 leading-snug">
+                    {proj.title}
+                  </h3>
+                  <p className="text-xs font-semibold text-blue-600 mb-3">{proj.category}</p>
+
+                  <p className="text-xs text-slate-600 leading-relaxed mb-4">
                     {proj.summary}
                   </p>
 
-                  {/* Highlights Bullet List */}
-                  <div className="space-y-1.5 pt-1">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-orange-400/90 block">
-                      Key Technical Contributions:
-                    </span>
-                    <ul className="space-y-1.5 text-xs text-slate-300 font-sans">
-                      {proj.highlights.map((h, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-orange-400 font-bold mt-0.5">•</span>
+                  {/* Highlights */}
+                  <div className="space-y-1.5 mb-4">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Key Technical Achievements:</span>
+                    <ul className="space-y-1 text-xs text-slate-700">
+                      {proj.highlights.map((h, idx) => (
+                        <li key={idx} className="flex items-start gap-1.5">
+                          <span className="text-blue-600 font-bold">•</span>
                           <span>{h}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
-                </div>
 
-                <div className="space-y-3 pt-3 border-t border-white/10">
-                  {/* Key Performance Metrics */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-center">
+                  {/* Metrics Strip */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center font-mono text-xs mb-4">
                     {proj.metrics.map((m, idx) => (
-                      <div key={idx} className="p-2.5 rounded-xl bg-black/40 border border-white/10">
-                        <div className="text-[9px] text-slate-400 uppercase">{m.label}</div>
-                        <div className="text-xs font-bold text-slate-100 mt-0.5">{m.val}</div>
+                      <div key={idx}>
+                        <span className="text-[9.5px] text-slate-400 uppercase block">{m.label}</span>
+                        <strong className="text-slate-900 font-bold mt-0.5 block">{m.val}</strong>
                       </div>
                     ))}
                   </div>
+                </div>
 
-                  {/* Technology Stack Pills */}
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {proj.stack.map((s, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2.5 py-0.5 rounded-lg bg-slate-900 border border-white/5 text-[10px] font-mono text-slate-300"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
+                {/* Tech Stack Pills */}
+                <div className="pt-3 border-t border-slate-100 flex flex-wrap gap-1.5">
+                  {proj.stack.map((tech, idx) => (
+                    <span key={idx} className="px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[10.5px] font-medium font-mono">
+                      {tech}
+                    </span>
+                  ))}
                 </div>
               </div>
             );
@@ -570,162 +490,116 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* ── Modal / Form: Add / Edit Team Member ─────────────── */}
-      {isEditing && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-[#0e1220] border border-white/10 rounded-3xl max-w-lg w-full p-7 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-orange-400" />
-                <h3 className="font-serif italic text-xl text-white">
-                  {isNewMember ? 'Add Team Member' : 'Edit Team Member Profile'}
-                </h3>
-              </div>
+      {/* ── Team Member Form Modal ──────────────────────────── */}
+      {isAddingMember && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in">
+          <div className="bg-white border border-[#e5e9f2] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-bold text-slate-900">
+                {editingMemberId ? 'Edit Team Member Profile' : 'Add New Team Member'}
+              </h3>
               <button
-                onClick={() => setIsEditing(false)}
-                className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-slate-200"
+                onClick={() => setIsAddingMember(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
               >
-                <X className="w-5 h-5" />
+                <X size={16} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveMember} className="space-y-3 font-mono text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Aman Nasim Khan"
-                    value={formName}
-                    onChange={(e) => setFormName(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
-                    Role / Position *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Team Lead / IoT Architect"
-                    value={formRole}
-                    onChange={(e) => setFormRole(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans"
-                  />
-                </div>
-              </div>
-
+            <form onSubmit={handleSaveMember} className="space-y-3 text-xs font-sans">
               <div>
-                <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
-                  Core Specialization
-                </label>
+                <label className="block font-semibold text-slate-700 mb-1">Full Name *</label>
                 <input
                   type="text"
-                  placeholder="e.g. Embedded C++, LoRa, Edge AI, Geotechnical Physics"
-                  value={formSpecialization}
-                  onChange={(e) => setFormSpecialization(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans"
+                  required
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  placeholder="e.g. Aman Nasim Khan"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Role Title</label>
+                  <input
+                    type="text"
+                    value={formRole}
+                    onChange={(e) => setFormRole(e.target.value)}
+                    placeholder="e.g. IoT Lead"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Specialization</label>
+                  <input
+                    type="text"
+                    value={formSpec}
+                    onChange={(e) => setFormSpec(e.target.value)}
+                    placeholder="e.g. Embedded C++ & LoRa"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
-                  Short Bio / Background
-                </label>
+                <label className="block font-semibold text-slate-700 mb-1">Short Biography & Achievements</label>
                 <textarea
                   rows={3}
-                  placeholder="Brief description of research focus, technical background, and achievements..."
                   value={formBio}
                   onChange={(e) => setFormBio(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans"
+                  placeholder="Details of research contributions..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 leading-relaxed"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
-                    GitHub URL
-                  </label>
+                  <label className="block font-semibold text-slate-700 mb-1">GitHub URL</label>
                   <input
                     type="url"
-                    placeholder="https://github.com/username"
                     value={formGithub}
                     onChange={(e) => setFormGithub(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans text-xs"
+                    placeholder="https://..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
-                    LinkedIn URL
-                  </label>
+                  <label className="block font-semibold text-slate-700 mb-1">LinkedIn URL</label>
                   <input
                     type="url"
-                    placeholder="https://linkedin.com/in/username"
                     value={formLinkedin}
                     onChange={(e) => setFormLinkedin(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans text-xs"
+                    placeholder="https://..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
-                    Email Address
-                  </label>
+                  <label className="block font-semibold text-slate-700 mb-1">Email Address</label>
                   <input
                     type="email"
-                    placeholder="name@example.com"
                     value={formEmail}
                     onChange={(e) => setFormEmail(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans text-xs"
+                    placeholder="name@..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
               </div>
 
-              {/* Avatar Color Theme */}
-              <div>
-                <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
-                  Avatar Accent Color
-                </label>
-                <div className="flex gap-2">
-                  {[
-                    { id: 'from-orange-500 to-rose-600', label: 'Coral / Rose' },
-                    { id: 'from-amber-500 to-orange-600', label: 'Gold / Amber' },
-                    { id: 'from-emerald-500 to-teal-600', label: 'Sage / Emerald' },
-                    { id: 'from-purple-500 to-indigo-600', label: 'Lavender / Purple' },
-                    { id: 'from-cyan-500 to-blue-600', label: 'Cyan / Blue' },
-                  ].map((c) => (
-                    <button
-                      key={c.id}
-                      type="button"
-                      onClick={() => setFormAvatarColor(c.id)}
-                      className={clsx(
-                        'w-8 h-8 rounded-xl bg-gradient-to-br border transition-transform',
-                        c.id,
-                        formAvatarColor === c.id ? 'scale-110 ring-2 ring-white border-white' : 'border-transparent opacity-70 hover:opacity-100'
-                      )}
-                      title={c.label}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Submit Buttons */}
-              <div className="pt-3 border-t border-white/10 flex justify-end gap-2">
+              <div className="pt-3 border-t border-slate-100 flex justify-end gap-2">
                 <button
                   type="button"
-                  onClick={() => setIsEditing(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono"
+                  onClick={() => setIsAddingMember(false)}
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-rose-500 hover:opacity-95 text-slate-950 font-mono font-bold text-xs shadow-md shadow-orange-950"
+                  className="px-4 py-2 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs shadow-sm"
                 >
-                  {isNewMember ? 'Add Member' : 'Save Changes'}
+                  Save Team Member
                 </button>
               </div>
             </form>

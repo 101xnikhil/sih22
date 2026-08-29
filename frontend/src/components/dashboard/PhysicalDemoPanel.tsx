@@ -50,9 +50,9 @@ const SIH_STATES: SihStateConfig[] = [
     label: 'DRY BASELINE',
     sublabel: 'Dry Soil Nominal Stability',
     riskLevel: 'LOW',
-    riskColor: 'text-emerald-300 border-emerald-500/40 bg-emerald-950/30',
-    dotColor: 'bg-emerald-400',
-    activeGlow: 'ring-2 ring-emerald-500 shadow-xl shadow-emerald-950/60',
+    riskColor: 'text-emerald-800 border-emerald-300 bg-emerald-50',
+    dotColor: 'bg-emerald-500',
+    activeGlow: 'ring-2 ring-emerald-500 shadow-md shadow-emerald-100',
     icon: Mountain,
     expectedMoisture: '18.5%',
     expectedRain: '0 mm/h',
@@ -66,9 +66,9 @@ const SIH_STATES: SihStateConfig[] = [
     label: 'PRECIPITATION',
     sublabel: 'Rain Ingress Commences',
     riskLevel: 'LOW',
-    riskColor: 'text-cyan-300 border-cyan-500/40 bg-cyan-950/30',
-    dotColor: 'bg-cyan-400',
-    activeGlow: 'ring-2 ring-cyan-500 shadow-xl shadow-cyan-950/60',
+    riskColor: 'text-blue-800 border-blue-300 bg-blue-50',
+    dotColor: 'bg-blue-500',
+    activeGlow: 'ring-2 ring-blue-500 shadow-md shadow-blue-100',
     icon: CloudRain,
     expectedMoisture: '38.0%',
     expectedRain: '35 mm/h',
@@ -82,9 +82,9 @@ const SIH_STATES: SihStateConfig[] = [
     label: 'DOWNPOUR',
     sublabel: 'Intense Monsoon Load',
     riskLevel: 'MODERATE',
-    riskColor: 'text-amber-300 border-amber-500/40 bg-amber-950/30',
-    dotColor: 'bg-amber-400',
-    activeGlow: 'ring-2 ring-amber-500 shadow-xl shadow-amber-950/60',
+    riskColor: 'text-amber-800 border-amber-300 bg-amber-50',
+    dotColor: 'bg-amber-500',
+    activeGlow: 'ring-2 ring-amber-500 shadow-md shadow-amber-100',
     icon: CloudRain,
     expectedMoisture: '58.0%',
     expectedRain: '75 mm/h',
@@ -98,9 +98,9 @@ const SIH_STATES: SihStateConfig[] = [
     label: 'SATURATION',
     sublabel: 'Pore-Water Saturation',
     riskLevel: 'HIGH',
-    riskColor: 'text-orange-300 border-orange-500/40 bg-orange-950/30',
-    dotColor: 'bg-orange-400',
-    activeGlow: 'ring-2 ring-orange-500 shadow-xl shadow-orange-950/60',
+    riskColor: 'text-orange-800 border-orange-300 bg-orange-50',
+    dotColor: 'bg-orange-500',
+    activeGlow: 'ring-2 ring-orange-500 shadow-md shadow-orange-100',
     icon: Droplets,
     expectedMoisture: '84.0%',
     expectedRain: '85 mm/h',
@@ -114,9 +114,9 @@ const SIH_STATES: SihStateConfig[] = [
     label: 'DISPLACEMENT',
     sublabel: 'Angular Shear & Creep',
     riskLevel: 'CRITICAL',
-    riskColor: 'text-rose-300 border-rose-500/50 bg-rose-950/40',
+    riskColor: 'text-rose-800 border-rose-300 bg-rose-50',
     dotColor: 'bg-rose-500',
-    activeGlow: 'ring-2 ring-rose-500 shadow-xl shadow-rose-950/60',
+    activeGlow: 'ring-2 ring-rose-500 shadow-md shadow-rose-100',
     icon: Activity,
     expectedMoisture: '91.0%',
     expectedRain: '80 mm/h',
@@ -130,9 +130,9 @@ const SIH_STATES: SihStateConfig[] = [
     label: 'FAILURE ALARM',
     sublabel: 'Limit Equilibrium Failure',
     riskLevel: 'CRITICAL',
-    riskColor: 'text-red-300 border-red-500/60 bg-red-950/50',
+    riskColor: 'text-red-800 border-red-300 bg-red-50',
     dotColor: 'bg-red-500',
-    activeGlow: 'ring-2 ring-red-500 shadow-xl shadow-red-950/80 animate-pulse',
+    activeGlow: 'ring-2 ring-red-500 shadow-lg shadow-red-100 animate-pulse',
     icon: ShieldAlert,
     expectedMoisture: '96.0%',
     expectedRain: '92 mm/h',
@@ -211,37 +211,37 @@ export default function PhysicalDemoPanel({
   const stateIndex = SIH_STATES.findIndex((s) => s.key === resolvedStateKey);
 
   return (
-    <div className="card p-4 space-y-4 border border-slate-700/60 shadow-2xl">
+    <div className="card p-5 space-y-4">
       {/* ── Top Header: Geotechnical Hazard Scenario Controller ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-[#f1f5f9] pb-3.5">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 text-cyan-400 shrink-0 shadow-sm">
+          <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 shrink-0">
             <Sliders className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-sm font-black text-slate-100 uppercase tracking-wider">
+              <h3 className="text-lg font-bold text-[#0f172a] tracking-tight">
                 Geotechnical Scenario & Telemetry Controller
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/50 text-cyan-300 font-mono text-[10px] font-bold tracking-wider">
-                INTERACTIVE SCENARIOS
+              </h3>
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold">
+                Interactive Lab Suite
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5 font-sans">
-              Test dynamic pore-water pressure spikes, shear angle changes, and automated multi-tier emergency response protocols.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Test dynamic pore-water pressure spikes, shear angle changes, and automated emergency response protocols.
             </p>
           </div>
         </div>
 
         {/* Station Mode Indicator */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-950/90 border border-slate-800 text-xs font-mono shrink-0">
-          <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0" />
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 shrink-0">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
           <div>
-            <span className="font-bold text-slate-200 uppercase tracking-wider block text-[11px]">
+            <span className="font-bold text-slate-800 block text-[10.5px]">
               Active Simulation Pipeline
             </span>
-            <span className="text-[10px] text-slate-400 font-sans">
-              Real-time synchronization with Local Physics & XGBoost AI Engine
+            <span className="text-[10px] text-slate-500">
+              Synchronized with Local Physics & XGBoost AI
             </span>
           </div>
         </div>
@@ -249,19 +249,17 @@ export default function PhysicalDemoPanel({
 
       {/* ── 6 Controllable State Buttons ── */}
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
-              Select Geotechnical Condition (Click to test scenario):
-            </span>
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 uppercase">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+            <span>Select Geotechnical Condition (Click to trigger):</span>
           </div>
-          <span className="text-[10px] font-mono text-cyan-400 font-bold">
-            ACTIVE: [{activeStateConfig.label}]
+          <span className="text-xs font-bold text-blue-600">
+            Active: [{activeStateConfig.label}]
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {SIH_STATES.map((s) => {
             const Icon = s.icon;
             const isActive = resolvedStateKey === s.key;
@@ -274,7 +272,7 @@ export default function PhysicalDemoPanel({
                   "p-3 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between relative overflow-hidden group focus:outline-none",
                   isActive
                     ? `${s.riskColor} ${s.activeGlow}`
-                    : "bg-slate-950/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900/80 opacity-75 hover:opacity-100"
+                    : "bg-white border-[#e5e9f2] hover:border-slate-300 hover:bg-slate-50/60"
                 )}
               >
                 {/* Header */}
@@ -282,36 +280,36 @@ export default function PhysicalDemoPanel({
                   <div className="flex items-center justify-between mb-1.5">
                     <span className={clsx("w-2 h-2 rounded-full", s.dotColor, isActive && "animate-ping")} />
                     <span className={clsx(
-                      "text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full uppercase border",
-                      s.riskLevel === 'CRITICAL' ? 'bg-red-950 text-red-300 border-red-800' :
-                      s.riskLevel === 'HIGH' ? 'bg-orange-950 text-orange-300 border-orange-800' :
-                      s.riskLevel === 'MODERATE' ? 'bg-amber-950 text-amber-300 border-amber-800' :
-                      'bg-emerald-950 text-emerald-300 border-emerald-800'
+                      "text-[9px] font-bold px-1.5 py-0.2 rounded-full uppercase border",
+                      s.riskLevel === 'CRITICAL' ? 'bg-red-100 text-red-700 border-red-200' :
+                      s.riskLevel === 'HIGH' ? 'bg-orange-100 text-orange-700 border-orange-200' :
+                      s.riskLevel === 'MODERATE' ? 'bg-amber-100 text-amber-700 border-amber-200' :
+                      'bg-emerald-100 text-emerald-700 border-emerald-200'
                     )}>
                       {s.riskLevel}
                     </span>
                   </div>
 
-                  <div className="font-mono text-xs font-bold text-slate-100 tracking-wide mt-1">
+                  <div className="text-xs font-bold text-slate-900 tracking-tight mt-1">
                     {s.label}
                   </div>
-                  <div className="text-[10px] text-slate-400 font-sans leading-tight mt-0.5 truncate">
+                  <div className="text-[10px] text-slate-500 leading-tight mt-0.5 truncate">
                     {s.sublabel}
                   </div>
                 </div>
 
                 {/* Metrics Preview */}
-                <div className="mt-3 pt-2 border-t border-slate-800/80 text-[9px] font-mono grid grid-cols-2 gap-0.5 text-slate-400">
-                  <div>VWC: <strong className="text-slate-200">{s.expectedMoisture}</strong></div>
-                  <div>Rain: <strong className="text-slate-200">{s.expectedRain}</strong></div>
-                  <div>Tilt: <strong className="text-slate-200">{s.expectedTilt}</strong></div>
-                  <div>FoS: <strong className="text-slate-200">{s.expectedFos}</strong></div>
+                <div className="mt-3 pt-2 border-t border-slate-200/70 text-[9.5px] font-mono grid grid-cols-2 gap-0.5 text-slate-500">
+                  <div>VWC: <strong className="text-slate-800">{s.expectedMoisture}</strong></div>
+                  <div>Rain: <strong className="text-slate-800">{s.expectedRain}</strong></div>
+                  <div>Tilt: <strong className="text-slate-800">{s.expectedTilt}</strong></div>
+                  <div>FoS: <strong className="text-slate-800">{s.expectedFos}</strong></div>
                 </div>
 
                 {/* Active Indicator */}
                 {isActive && (
-                  <div className="mt-2 text-center py-0.5 rounded bg-slate-950 text-[9px] font-mono font-bold text-cyan-300 border border-cyan-700/80 shadow-sm">
-                    ● CURRENT
+                  <div className="mt-2 text-center py-0.5 rounded bg-blue-600 text-[9px] font-bold text-white shadow-xs">
+                    CURRENT ACTIVE
                   </div>
                 )}
               </button>
@@ -320,92 +318,16 @@ export default function PhysicalDemoPanel({
         </div>
       </div>
 
-      {/* ── Active Physics & ML Engine Response Strip ── */}
-      <div className="bg-slate-950/90 border border-slate-800/80 rounded-xl p-3 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5 text-center font-mono shadow-inner">
-        <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
-          <div className="text-[10px] text-slate-400 uppercase font-semibold">Soil Moisture</div>
-          <div className="text-base font-bold text-cyan-400 mt-0.5">
-            {reading.soil_moisture_pct.toFixed(1)}%
-          </div>
-          <div className="text-[9px] text-slate-500">Pore Saturation</div>
-        </div>
-
-        <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
-          <div className="text-[10px] text-slate-400 uppercase font-semibold">Precipitation</div>
-          <div className="text-base font-bold text-sky-400 mt-0.5">
-            {reading.rainfall_pct.toFixed(1)}%
-          </div>
-          <div className="text-[9px] text-slate-500">{reading.rainfall_24h_mm.toFixed(1)} mm / 24h</div>
-        </div>
-
-        <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
-          <div className="text-[10px] text-slate-400 uppercase font-semibold">Slope Incline (Dip)</div>
-          <div className="text-base font-bold text-amber-400 mt-0.5">
-            {reading.tilt_angle.toFixed(2)}°
-          </div>
-          <div className="text-[9px] text-slate-500">3D IMU Spatial</div>
-        </div>
-
-        <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
-          <div className="text-[10px] text-slate-400 uppercase font-semibold">Creep Velocity</div>
-          <div className={clsx("text-base font-bold mt-0.5", Math.abs(reading.tilt_rate) > 0.05 ? "text-red-400" : "text-slate-200")}>
-            {reading.tilt_rate >= 0 ? `+${reading.tilt_rate.toFixed(3)}` : reading.tilt_rate.toFixed(3)}°/m
-          </div>
-          <div className="text-[9px] text-slate-500">Shear Strain Rate</div>
-        </div>
-
-        <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
-          <div className="text-[10px] text-slate-400 uppercase font-semibold">Factor of Safety</div>
-          <div className={clsx(
-            "text-base font-bold mt-0.5",
-            risk.fos_estimate < 1.0 ? "text-red-400 font-black animate-pulse" :
-            risk.fos_estimate < 1.3 ? "text-orange-400" : "text-emerald-400"
-          )}>
-            {risk.fos_estimate.toFixed(2)}
-          </div>
-          <div className="text-[9px] text-slate-500">
-            {risk.fos_estimate < 1.0 ? "FAILURE (FoS < 1)" : "Limit Equilibrium"}
-          </div>
-        </div>
-
-        <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
-          <div className="text-[10px] text-slate-400 uppercase font-semibold">Hazard Probability</div>
-          <div className={clsx(
-            "text-base font-bold mt-0.5",
-            risk.risk_level === 'CRITICAL' ? "text-red-400 font-black" :
-            risk.risk_level === 'HIGH' ? "text-orange-400" :
-            risk.risk_level === 'MODERATE' ? "text-amber-400" : "text-emerald-400"
-          )}>
-            {(risk.risk_score * 100).toFixed(0)}%
-          </div>
-          <div className="text-[9px] text-slate-500">{risk.confidence ? `${(risk.confidence * 100).toFixed(0)}% Confidence` : 'XGBoost AI'}</div>
-        </div>
-
-        <div className="col-span-2 sm:col-span-4 lg:col-span-1 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 flex flex-col justify-center items-center">
-          <div className="text-[10px] text-slate-400 uppercase font-semibold">Hazard Tier</div>
-          <span className={clsx(
-            "font-mono font-black text-xs uppercase px-2.5 py-0.5 rounded-full mt-1 border",
-            risk.risk_level === 'CRITICAL' ? 'bg-red-950 text-red-300 border-red-800 animate-pulse' :
-            risk.risk_level === 'HIGH' ? 'bg-orange-950 text-orange-300 border-orange-800' :
-            risk.risk_level === 'MODERATE' ? 'bg-amber-950 text-amber-300 border-amber-800' :
-            'bg-emerald-950 text-emerald-300 border-emerald-800'
-          )}>
-            {risk.risk_level}
-          </span>
-          <div className="text-[9px] text-slate-500 mt-1">{activeStateConfig.badge}</div>
-        </div>
-      </div>
-
       {/* ── Control Bar + Milestone Event Timeline Row ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-1">
         {/* Left: Interactive Demo Actions */}
-        <div className="bg-slate-950/90 border border-slate-800/80 rounded-xl p-3.5 flex flex-col justify-between space-y-3">
+        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between space-y-3">
           <div>
-            <div className="text-xs font-bold text-slate-200 font-mono uppercase tracking-wider mb-1">
+            <div className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-1">
               Automated Scenario Sequencer
             </div>
-            <p className="text-[11px] text-slate-400 font-sans">
-              Runs the continuous rainfall-to-failure progression automatically across all 6 geotechnical phases.
+            <p className="text-[11px] text-slate-500 font-sans">
+              Runs continuous rainfall-to-failure progression automatically across all 6 geotechnical phases.
             </p>
           </div>
 
@@ -414,14 +336,14 @@ export default function PhysicalDemoPanel({
               onClick={handleStartAuto}
               disabled={isAutoRunning}
               className={clsx(
-                "w-full py-2.5 px-3 rounded-lg font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md",
+                "w-full py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-sm",
                 isAutoRunning
-                  ? "bg-cyan-950 text-cyan-300 border border-cyan-700 animate-pulse cursor-not-allowed"
-                  : "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-cyan-950/50"
+                  ? "bg-blue-100 text-blue-800 border border-blue-300 animate-pulse cursor-not-allowed"
+                  : "bg-[#2563eb] hover:bg-blue-700 text-white"
               )}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>{isAutoRunning ? `Running Scenario Sequence (${countdown}s)...` : 'Run Automated Progression'}</span>
+              <span>{isAutoRunning ? `Running Sequence (${countdown}s)...` : 'Run Automated Progression'}</span>
             </button>
 
             <div className="flex gap-2">
@@ -431,7 +353,7 @@ export default function PhysicalDemoPanel({
                   handleStateClick(SIH_STATES[prevIdx].key);
                 }}
                 disabled={stateIndex <= 0}
-                className="flex-1 py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-40 border border-slate-800 text-slate-300 font-mono text-xs font-medium transition-colors"
+                className="flex-1 py-1.5 px-2 rounded-xl bg-white hover:bg-slate-100 disabled:opacity-40 border border-slate-200 text-slate-700 text-xs font-semibold transition-colors"
               >
                 ◀ Prev Step
               </button>
@@ -441,13 +363,13 @@ export default function PhysicalDemoPanel({
                   handleStateClick(SIH_STATES[nextIdx].key);
                 }}
                 disabled={stateIndex >= SIH_STATES.length - 1}
-                className="flex-1 py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-40 border border-slate-800 text-slate-300 font-mono text-xs font-medium transition-colors"
+                className="flex-1 py-1.5 px-2 rounded-xl bg-white hover:bg-slate-100 disabled:opacity-40 border border-slate-200 text-slate-700 text-xs font-semibold transition-colors"
               >
                 Next Step ▶
               </button>
               <button
                 onClick={onReset}
-                className="py-1.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
+                className="py-1.5 px-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
                 title="Reset to Dry Baseline"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -457,16 +379,16 @@ export default function PhysicalDemoPanel({
         </div>
 
         {/* Right (2 Cols): Event Timeline Milestones */}
-        <div className="lg:col-span-2 bg-slate-950/90 border border-slate-800/80 rounded-xl p-3.5 flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-cyan-400" />
-                <span className="text-xs font-bold text-slate-200 font-mono uppercase tracking-wider">
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-blue-600" />
+                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                   Geotechnical Event Timeline & Thresholds
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-slate-500">
+              <span className="text-[10px] text-slate-500 font-semibold">
                 MONITORING LOG
               </span>
             </div>
@@ -482,28 +404,28 @@ export default function PhysicalDemoPanel({
                   <div
                     key={m.id}
                     className={clsx(
-                      "p-2.5 rounded-lg border text-xs flex flex-col justify-between transition-all",
+                      "p-2.5 rounded-xl border text-xs flex flex-col justify-between transition-all",
                       isTriggered
                         ? isCurrent
-                          ? "bg-cyan-950/50 border-cyan-500/80 text-slate-100 shadow-md shadow-cyan-950/40"
-                          : "bg-slate-900/80 border-slate-700/80 text-slate-300"
-                        : "bg-slate-950/40 border-slate-900 text-slate-600 opacity-50"
+                          ? "bg-blue-100/70 border-blue-400 text-blue-900 shadow-sm"
+                          : "bg-white border-slate-200 text-slate-800"
+                        : "bg-slate-100/60 border-slate-200/60 text-slate-400 opacity-60"
                     )}
                   >
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-mono text-[9px] font-bold text-slate-500">#{idx + 1}</span>
+                        <span className="font-mono text-[9px] font-bold text-slate-400">#{idx + 1}</span>
                         {isTriggered ? (
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                         ) : (
-                          <span className="w-3 h-3 rounded-full border border-slate-700 inline-block" />
+                          <span className="w-3 h-3 rounded-full border border-slate-300 inline-block" />
                         )}
                       </div>
-                      <div className="font-mono font-bold text-[11px] leading-tight text-slate-200">
+                      <div className="font-bold text-[11px] leading-tight text-slate-900">
                         "{m.label}"
                       </div>
                     </div>
-                    <div className="text-[9px] text-slate-400 font-sans mt-1">
+                    <div className="text-[9.5px] text-slate-500 font-sans mt-1">
                       {m.desc}
                     </div>
                   </div>
@@ -513,9 +435,9 @@ export default function PhysicalDemoPanel({
           </div>
 
           {/* Footer Note */}
-          <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
+          <div className="mt-2.5 pt-2 border-t border-slate-200/70 flex items-center justify-between text-[10px] text-slate-500 font-sans">
             <span>Limit Equilibrium Infinite Slope Stability + XGBoost Hybrid Coupling</span>
-            <span className="text-cyan-400 font-semibold uppercase">STATE {stateIndex + 1} OF 6: [{activeStateConfig.label}]</span>
+            <span className="text-blue-600 font-semibold uppercase">STATE {stateIndex + 1} OF 6: [{activeStateConfig.label}]</span>
           </div>
         </div>
       </div>

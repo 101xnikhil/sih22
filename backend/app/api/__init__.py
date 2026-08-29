@@ -6,6 +6,7 @@ from app.api.risk import router as risk_router
 from app.api.alerts import router as alerts_router
 from app.api.demo import router as demo_router
 from app.api.security import router as security_router
+from app.api.blynk import router as blynk_router
 from app.api.websocket import router as ws_router
 
 api_router = APIRouter()
@@ -17,5 +18,6 @@ api_router.include_router(risk_router)
 api_router.include_router(alerts_router)
 api_router.include_router(demo_router)
 api_router.include_router(security_router)
+api_router.include_router(blynk_router)
 
 __all__ = ["api_router", "ws_router"]

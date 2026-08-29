@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, LayoutDashboard, Radio, Bell, BarChart3, Map, Settings, Activity, Wifi, Cpu, Layers, Users, Sparkles } from 'lucide-react';
+import { 
+  BarChart2, Radio, Map, Target, Handshake, Briefcase, 
+  Settings, Bell, Users, Shield, Cpu, Flame, Layers, GitFork
+} from 'lucide-react';
 import clsx from 'clsx';
 
 interface SidebarProps {
@@ -11,114 +14,89 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const location = useLocation();
 
-  const links = [
-    { name: 'Mission Control', path: '/', icon: LayoutDashboard, badge: 'LIVE', category: 'MONITORING' },
-    { name: 'Station Telemetry', path: '/sensor', icon: Radio, category: 'MONITORING' },
-    { name: 'Geospatial Sector GIS', path: '/map', icon: Map, category: 'SPATIAL & FIELD' },
-    { name: 'Alerts & Incidents', path: '/alerts', icon: Bell, badge: 'AUTO', category: 'INTELLIGENCE' },
-    { name: 'Geotechnical Analytics', path: '/analytics', icon: BarChart3, category: 'INTELLIGENCE' },
-    { name: 'Hardware & Blynk IoT', path: '/settings', icon: Settings, category: 'SYSTEM & INTEGRATIONS' },
-    { name: 'About LANDGUARD AI', path: '/about', icon: Users, category: 'ABOUT & INNOVATION' },
+  const navItems = [
+    { name: 'Metrics', path: '/', icon: BarChart2, tooltip: 'Mission Control & Metrics' },
+    { name: 'Station Telemetry', path: '/sensor', icon: GitFork, tooltip: 'Telemetry Nodes' },
+    { name: 'Geospatial Sector GIS', path: '/map', icon: Users, tooltip: 'Geospatial Map' },
+    { name: 'Alerts & Incidents', path: '/alerts', icon: Target, tooltip: 'Alerts & Incidents' },
+    { name: 'Geotechnical Analytics', path: '/analytics', icon: Handshake, tooltip: 'Analytics & Physics' },
+    { name: 'About LANDGUARD AI', path: '/about', icon: Briefcase, tooltip: 'About & Documentation' },
   ];
-
-  const categories = ['MONITORING', 'SPATIAL & FIELD', 'INTELLIGENCE', 'SYSTEM & INTEGRATIONS', 'ABOUT & INNOVATION'];
 
   return (
     <aside
       className={clsx(
-        'fixed top-0 left-0 z-40 h-screen transition-transform bg-[#0a0d18]/95 backdrop-blur-2xl border-r border-white/10 flex flex-col',
-        'w-64',
+        'fixed top-0 left-0 z-40 h-screen transition-transform bg-white border-r border-[#e5e9f2] flex flex-col justify-between items-center py-4',
+        'w-16 sm:w-16',
         isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       )}
     >
-      {/* Brand Header */}
-      <div className="h-16 flex items-center justify-between px-6 border-b border-white/10 bg-white/[0.01]">
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-500 via-rose-500 to-amber-500 p-0.5 shadow-md shadow-orange-950/50 flex items-center justify-center">
-            <div className="w-full h-full bg-[#0a0d18] rounded-[10px] flex items-center justify-center">
-              <Shield className="w-4 h-4 text-orange-400 group-hover:scale-110 transition-transform" />
+      {/* Top Logo */}
+      <div className="flex flex-col items-center gap-6 w-full">
+        <Link to="/" className="group p-1" title="LANDGUARD AI">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#10b981] via-[#06b6d4] to-[#2563eb] p-0.5 shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-full h-full bg-white rounded-[9px] flex items-center justify-center">
+              <span className="font-extrabold text-sm text-[#2563eb] tracking-tighter">LG</span>
             </div>
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-serif text-lg font-bold tracking-tight text-white group-hover:text-orange-300 transition-colors">
-                LANDGUARD
-              </span>
-              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-orange-950/80 text-orange-300 border border-orange-600/40 font-bold">
-                AI
-              </span>
-            </div>
-            <p className="text-[9px] font-mono text-slate-400 tracking-wider">EARLY WARNING OS</p>
           </div>
         </Link>
+
+        {/* Navigation Icons */}
+        <nav className="flex flex-col items-center gap-3 w-full px-2">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => onToggle()}
+                title={item.tooltip}
+                className={clsx(
+                  'w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150 relative group',
+                  isActive
+                    ? 'bg-[#2563eb] text-white shadow-sm shadow-blue-500/30'
+                    : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
+                )}
+              >
+                <Icon className="w-5 h-5 stroke-[2]" />
+                
+                {/* Tooltip on hover */}
+                <span className="absolute left-14 bg-slate-900 text-white text-[11px] font-medium px-2 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-md">
+                  {item.name}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
       </div>
 
-      {/* Navigation List */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-        {categories.map((category) => {
-          const categoryLinks = links.filter((l) => l.category === category);
-          if (categoryLinks.length === 0) return null;
+      {/* Bottom Icons (Settings, Notification Bell, User Avatar) */}
+      <div className="flex flex-col items-center gap-4 w-full px-2">
+        <Link
+          to="/settings"
+          title="Hardware & Settings"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+        >
+          <Settings className="w-5 h-5 stroke-[1.8]" />
+        </Link>
 
-          return (
-            <div key={category} className="space-y-1">
-              <div className="px-3 pb-1 text-[10px] font-mono font-bold tracking-widest text-slate-400 uppercase">
-                {category}
-              </div>
-              {categoryLinks.map((link) => {
-                const Icon = link.icon;
-                const isActive = location.pathname === link.path;
-                return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => onToggle()}
-                    className={clsx(
-                      'flex items-center justify-between px-3 py-2 rounded-xl text-xs font-mono font-medium transition-all group relative overflow-hidden',
-                      isActive
-                        ? 'bg-gradient-to-r from-orange-500/20 via-rose-500/10 to-transparent text-white border-l-2 border-orange-500 font-bold shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
-                    )}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Icon className={clsx(
-                        'w-4 h-4 transition-colors',
-                        isActive ? 'text-orange-400' : 'text-slate-400 group-hover:text-slate-300'
-                      )} />
-                      <span className="tracking-wide">{link.name}</span>
-                    </div>
+        <Link
+          to="/alerts"
+          title="Alerts Center"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors relative"
+        >
+          <Bell className="w-5 h-5 stroke-[1.8]" />
+          <span className="w-2 h-2 rounded-full bg-[#ef4444] absolute top-2 right-2 ring-2 ring-white" />
+        </Link>
 
-                    {link.badge && (
-                      <span className={clsx(
-                        'text-[9px] font-bold px-1.5 py-0.5 rounded-full border',
-                        isActive 
-                          ? 'bg-orange-950/80 text-orange-300 border-orange-500/40' 
-                          : 'bg-slate-900 text-slate-400 border-slate-800'
-                      )}>
-                        {link.badge}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-          );
-        })}
-      </nav>
-
-      {/* Operational Station Footer */}
-      <div className="p-3 border-t border-white/10 bg-[#080a14]">
-        <div className="p-2.5 rounded-xl bg-slate-900/60 border border-white/5 space-y-1.5 font-mono text-[10px]">
-          <div className="flex items-center justify-between text-slate-400">
-            <span>SECTOR GIS</span>
-            <span className="text-slate-200 font-bold">SECTOR 7 (SHIMLA)</span>
-          </div>
-          <div className="flex items-center justify-between text-slate-400">
-            <span>EDGE GATEWAY</span>
-            <span className="text-emerald-400 font-semibold flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              ONLINE (LoRa 433)
-            </span>
-          </div>
+        {/* User Avatar Circle */}
+        <div 
+          className="w-9 h-9 rounded-full bg-gradient-to-tr from-slate-200 to-slate-300 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 cursor-pointer shadow-sm"
+          title="LandGuard Operator"
+        >
+          <span>LG</span>
         </div>
       </div>
     </aside>
