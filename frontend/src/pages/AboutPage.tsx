@@ -453,7 +453,7 @@ export default function AboutPage() {
                   </p>
 
                   {/* Highlights */}
-                  <div className="space-y-1.5 mb-4">
+                  <div className="space-y-1.5">
                     <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Key Technical Achievements:</span>
                     <ul className="space-y-1 text-xs text-slate-700">
                       {proj.highlights.map((h, idx) => (
@@ -464,25 +464,6 @@ export default function AboutPage() {
                       ))}
                     </ul>
                   </div>
-
-                  {/* Metrics Strip */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center font-mono text-xs mb-4">
-                    {proj.metrics.map((m, idx) => (
-                      <div key={idx}>
-                        <span className="text-[9.5px] text-slate-400 uppercase block">{m.label}</span>
-                        <strong className="text-slate-900 font-bold mt-0.5 block">{m.val}</strong>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Tech Stack Pills */}
-                <div className="pt-3 border-t border-slate-100 flex flex-wrap gap-1.5">
-                  {proj.stack.map((tech, idx) => (
-                    <span key={idx} className="px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[10.5px] font-medium font-mono">
-                      {tech}
-                    </span>
-                  ))}
                 </div>
               </div>
             );
