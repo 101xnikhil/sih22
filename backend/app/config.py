@@ -30,6 +30,11 @@ class Settings(BaseSettings):
     DEMO_DISCLAIMER: str = "Controlled laboratory prototype demonstration"
     DEMO_STAGE_INTERVAL_SECONDS: int = 8
 
+    # JWT Authentication & Authorization Settings
+    JWT_SECRET_KEY: str = "landguard-super-secret-jwt-key-sih-2026-auth"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+
     # Cybersecurity & Edge Authorization Settings (Phase 14)
     GATEWAY_API_KEY: str = "landguard-edge-gw-sih2026-key"
     REQUIRE_API_KEY: bool = False

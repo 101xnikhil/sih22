@@ -7,6 +7,7 @@ from sqlalchemy.pool import StaticPool
 from app.database import Base, get_db
 from app.main import app
 from app.models.node import Node
+from app.services.auth_service import auth_service
 from datetime import datetime
 
 # In-memory SQLite database for isolated test execution
@@ -26,7 +27,7 @@ def db_session():
     Base.metadata.create_all(bind=engine)
     session = TestingSessionLocal()
     
-    # Seed default node
+    # 1. Seed default node
     default_node = Node(
         node_id="LG-N01",
         name="Test Slope Monitor Alpha",
@@ -42,6 +43,9 @@ def db_session():
     )
     session.add(default_node)
     session.commit()
+
+    # 2. Seed default authentication users
+    auth_service.seed_default_users(session)
     
     try:
         yield session

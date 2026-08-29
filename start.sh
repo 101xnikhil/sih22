@@ -32,10 +32,11 @@ BACKEND_PID=$!
 sleep 2
 echo "• Backend Health: $(curl -s http://127.0.0.1:8000/api/health || echo 'Starting...')"
 
-# 3. Start React Frontend
+# 3. Start React Frontend with clean cache
 echo "• Starting React Frontend on http://localhost:5173..."
 cd "$PROJECT_ROOT/frontend"
-npm run dev -- --port 5173 &
+rm -rf node_modules/.vite 2>/dev/null || true
+npm run dev -- --port 5173 --force --host &
 FRONTEND_PID=$!
 
 echo ""

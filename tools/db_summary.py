@@ -53,7 +53,21 @@ def inspect_db():
         except Exception as e:
             print(f"  • {table.ljust(22)} : [Error: {e}]")
 
-    # 3. Monitored Nodes
+    # 3. RBAC Users & Credentials
+    if "users" in tables:
+        print(f"\n👤 Registered Authorization Users (RBAC):")
+        print(f"{'-'*89}")
+        try:
+            cursor.execute("SELECT id, username, role, full_name, is_active FROM users ORDER BY id ASC;")
+            rows = cursor.fetchall()
+            print(f"{'ID':<4} | {'Username':<14} | {'Role':<12} | {'Active':<8} | {'Full Name':<30}")
+            print(f"{'-'*89}")
+            for r in rows:
+                print(f"{r[0]:<4} | {r[1]:<14} | {r[2].upper():<12} | {'YES' if r[4] else 'NO':<8} | {str(r[3]):<30}")
+        except Exception as e:
+            print(f"Could not query users: {e}")
+
+    # 4. Monitored Nodes
     if "nodes" in tables:
         print(f"\n🛰️ Monitored Sensor Nodes:")
         print(f"{'-'*89}")
@@ -65,7 +79,7 @@ def inspect_db():
         except Exception as e:
             print(f"Could not query nodes: {e}")
 
-    # 4. Recent Telemetry
+    # 5. Recent Telemetry
     if "telemetry_readings" in tables:
         print(f"\n📡 Recent Telemetry Records (Latest 5 Ingests):")
         print(f"{'-'*89}")
@@ -83,7 +97,7 @@ def inspect_db():
         except Exception as e:
             print(f"Could not query telemetry: {e}")
 
-    # 5. Recent Risk Assessments
+    # 6. Recent Risk Assessments
     if "risk_assessments" in tables:
         print(f"\n🧠 Recent AI & Limit Equilibrium Risk Computations (Latest 5):")
         print(f"{'-'*89}")
@@ -101,7 +115,7 @@ def inspect_db():
         except Exception as e:
             print(f"Could not query risk assessments: {e}")
 
-    # 6. Recent Alerts
+    # 7. Recent Alerts
     if "alerts" in tables:
         print(f"\n🚨 Active & Historic Emergency Alerts (Latest 5):")
         print(f"{'-'*89}")

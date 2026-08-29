@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import DashboardPage from './pages/DashboardPage';
 import SensorNodePage from './pages/SensorNodePage';
@@ -21,6 +21,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout alertCount={unacknowledgedCount} isConnected={isConnected} />}>
+          {/* Primary Routes */}
           <Route path="/" element={<DashboardPage />} />
           <Route path="/sensor" element={<SensorNodePage />} />
           <Route path="/alerts" element={<AlertsPage />} />
@@ -28,6 +29,16 @@ const App: React.FC = () => {
           <Route path="/map" element={<RiskMapPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/about" element={<AboutPage />} />
+
+          {/* Path Aliases for Seamless Navigation */}
+          <Route path="/node" element={<SensorNodePage />} />
+          <Route path="/nodes" element={<SensorNodePage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/metrics" element={<DashboardPage />} />
+          <Route path="/gis" element={<RiskMapPage />} />
+
+          {/* Catch-all Wildcard Route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>

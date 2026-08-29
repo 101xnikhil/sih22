@@ -7,3 +7,5 @@ pytest>=7.4.0
 httpx>=0.24.0
 websockets>=11.0.0
 numpy>=1.22.0
+pyjwt>=2.8.0
+python-multipart>=0.0.9

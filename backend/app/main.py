@@ -11,6 +11,7 @@ from app.models.telemetry import Telemetry
 from app.api import api_router, ws_router
 from app.services.mock_generator import mock_generator
 from app.services.telemetry_service import telemetry_service
+from app.services.auth_service import auth_service
 
 # Configure logging
 logging.basicConfig(
@@ -22,7 +23,7 @@ logger = logging.getLogger("landguard")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan event: create tables, seed default node and initial telemetry history."""
+    """Lifespan event: create tables, seed default users, default node and initial telemetry history."""
     logger.info("Initializing database tables...")
     Base.metadata.create_all(bind=engine)
 
@@ -40,9 +41,14 @@ async def lifespan(app: FastAPI):
                 except Exception:
                     pass
 
-    # Seed default node LG-N01
+    # Seed default users & default node
     db = SessionLocal()
     try:
+        # 1. Seed RBAC Users (admin, operator, analyst, viewer)
+        logger.info("Seeding default authentication accounts...")
+        auth_service.seed_default_users(db)
+
+        # 2. Seed default node LG-N01
         node = db.query(Node).filter(Node.node_id == settings.DEFAULT_NODE_ID).first()
         if not node:
             logger.info(f"Seeding default station node '{settings.DEFAULT_NODE_ID}'...")
@@ -62,7 +68,7 @@ async def lifespan(app: FastAPI):
             db.add(node)
             db.commit()
 
-        # Seed initial history if empty
+        # 3. Seed initial history if empty
         telemetry_count = db.query(Telemetry).filter(Telemetry.node_id == settings.DEFAULT_NODE_ID).count()
         if telemetry_count == 0:
             logger.info("Seeding initial baseline telemetry buffer (30 data points)...")
@@ -83,7 +89,24 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.PROJECT_NAME,
         version=settings.APP_VERSION,
-        description="Autonomous AI-Powered Landslide Early Warning & Monitoring System REST & WebSocket API",
+        description="""
+# 🛡️ LANDGUARD AI — Geotechnical Landslide Monitoring & Early Warning System
+
+### 🔐 Authorization & Security
+This API is protected by **JWT Bearer Token Authentication** and **Role-Based Access Control (RBAC)**:
+- **`admin`**: Full administrative system control, user management, and configuration.
+- **`operator`**: Control room operator (acknowledge alerts, run scenarios, trigger public warning).
+- **`analyst`**: Data analysis and physics explainability access.
+- **`viewer`**: Read-only public hazard telemetry monitoring.
+
+### 🔑 Pre-Seeded Demonstration Accounts:
+- **`admin`** / **`admin123`**
+- **`operator`** / **`operator123`**
+- **`analyst`** / **`analyst123`**
+- **`viewer`** / **`viewer123`**
+
+Click the **Authorize 🔓** button above to authenticate interactively!
+        """,
         lifespan=lifespan,
     )
 
@@ -107,6 +130,7 @@ def create_app() -> FastAPI:
             "system": "LANDGUARD AI Backend",
             "version": settings.APP_VERSION,
             "docs": "/docs",
+            "auth": f"{settings.API_PREFIX}/auth/login",
             "health": f"{settings.API_PREFIX}/health",
             "websocket": "/ws/telemetry",
         }

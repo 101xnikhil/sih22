@@ -20,14 +20,19 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
   const getPageTitle = (pathname: string): string => {
     switch (pathname) {
       case '/':
+      case '/dashboard':
+      case '/metrics':
         return 'Metrics';
       case '/sensor':
+      case '/node':
+      case '/nodes':
         return 'Station Telemetry (LG-N01)';
       case '/alerts':
         return 'Alerts & Incidents';
       case '/analytics':
         return 'Geotechnical Analytics';
       case '/map':
+      case '/gis':
         return 'Geospatial Sector GIS';
       case '/settings':
         return 'Hardware & Integrations';
