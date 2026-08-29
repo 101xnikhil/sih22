@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Universal High-Contrast Selection Style */
+*::selection,
+::selection {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+*::-moz-selection,
+::-moz-selection {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
 @layer base {
   :root {
     --bg-main: #f4f6fa;
