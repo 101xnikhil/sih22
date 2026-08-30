@@ -146,6 +146,7 @@ class AlertService:
                 "alert_id": f"ALT-{alert.id}",
                 "node_id": alert.node_id,
                 "timestamp": alert.timestamp.isoformat(),
+                "severity": alert.severity,
                 "risk_score": alert.risk_score,
                 "risk_level": alert.risk_level,
                 "trigger_reasons": trigger_reasons,

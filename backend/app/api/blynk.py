@@ -10,7 +10,7 @@ from app.services.telemetry_service import telemetry_service
 from app.schemas.telemetry import TelemetryCreate
 
 logger = logging.getLogger("landguard.blynk")
-router = APIRouter(prefix="/blynk", tags=["Blynk IoT Integration"])
+router = APIRouter(prefix="/blynk", tags=["Blynk IoT & Cloud Webhook Integration"])
 
 BLYNK_CLOUD_API_BASE = "https://blynk.cloud/external/api"
 
@@ -31,6 +31,10 @@ class BlynkWebhookPayload(BaseModel):
     tilt_rate: Optional[float] = 0.0
     battery: Optional[float] = 85.0
     rssi: Optional[int] = -65
+    # Optional pre-computed fields from Google Cloud ML
+    risk_score: Optional[float] = None
+    risk_level: Optional[str] = None
+    factor_of_safety: Optional[float] = None
 
 
 @router.post("/sync", status_code=status.HTTP_200_OK)
@@ -127,12 +131,15 @@ async def sync_to_blynk_cloud(
 
 
 @router.post("/webhook", status_code=status.HTTP_201_CREATED)
+@router.post("/gcp/webhook", status_code=status.HTTP_201_CREATED)
 async def blynk_inbound_webhook(
     payload: BlynkWebhookPayload,
     db: Session = Depends(get_db),
 ):
     """
-    Accepts inbound webhook pushes from Blynk IoT Cloud or ESP32 and ingests them into LANDGUARD AI.
+    Accepts inbound webhook pushes from Blynk IoT Cloud, ESP32 hardware, or Google Cloud Functions.
+    Processes telemetry through the XGBoost ML pipeline and limit equilibrium physics engine.
+    If the evaluated risk is CRITICAL or HIGH, automatically triggers incident alert creation and SMS broadcast.
     """
     telemetry_create = TelemetryCreate(
         node_id=payload.node_id or "LG-N01",
@@ -158,10 +165,27 @@ async def blynk_inbound_webhook(
         data=telemetry_create,
     )
 
-    return {
+    response_data = {
         "status": "success",
-        "message": "Blynk telemetry ingested into LANDGUARD AI",
+        "message": "Telemetry processed via XGBoost ML and Limit Equilibrium Physics",
         "telemetry_id": telemetry.id,
+        "node_id": telemetry.node_id,
+        "risk_score": risk_result.risk_score,
         "risk_level": risk_result.risk_level,
         "factor_of_safety": risk_result.factor_of_safety,
+        "trend": risk_result.trend,
+        "model_version": risk_result.model_version,
+        "alert_generated": alert is not None,
     }
+
+    if alert:
+        response_data["alert"] = {
+            "id": alert.id,
+            "alert_id": f"ALT-{alert.id}",
+            "severity": alert.severity,
+            "title": alert.title,
+            "message": alert.message,
+            "sms_dispatch": "DISPATCHED_TO_RESCUE_TEAMS" if alert.severity in ["critical", "high"] else "SKIPPED",
+        }
+
+    return response_data

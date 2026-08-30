@@ -342,7 +342,19 @@ void loop() {
               )}
             >
               <Globe className="w-3.5 h-3.5 inline mr-1" />
-              3. Blynk Cloud Webhook
+              3. Blynk Direct Webhook
+            </button>
+            <button
+              onClick={() => setActiveCodeTab('gcp' as any)}
+              className={clsx(
+                "px-3 py-1.5 rounded-xl font-bold transition-all",
+                activeCodeTab === ('gcp' as any)
+                  ? "bg-purple-600 text-white shadow-2xs"
+                  : "text-slate-600 hover:text-slate-900"
+              )}
+            >
+              <Zap className="w-3.5 h-3.5 inline mr-1" />
+              4. Google Cloud XGBoost Webhook
             </button>
           </div>
 
@@ -386,12 +398,28 @@ void loop() {
           {activeCodeTab === 'webhook' && (
             <div className="space-y-2">
               <p className="text-slate-600">
-                In your Blynk IoT Web Console, navigate to <strong>Settings $\rightarrow$ Webhooks</strong> to forward inbound telemetry to your local LANDGUARD AI gateway:
+                In your Blynk IoT Web Console, navigate to <strong>Settings $\rightarrow$ Webhooks</strong> to forward inbound telemetry directly to your local LANDGUARD AI gateway:
               </p>
               <div className="p-3 bg-white border border-slate-200 rounded-xl font-mono text-xs text-slate-800 space-y-1">
                 <div>• Webhook URL: <strong className="text-blue-700">http://127.0.0.1:8000/api/blynk/webhook</strong></div>
                 <div>• Method: <strong className="text-emerald-700">POST</strong></div>
                 <div>• Content-Type: <strong className="text-slate-700">application/json</strong></div>
+              </div>
+            </div>
+          )}
+
+          {activeCodeTab === ('gcp' as any) && (
+            <div className="space-y-2.5">
+              <p className="text-slate-600">
+                <strong>Google Cloud ML Pipeline Architecture:</strong> Blynk forwards hardware telemetry to Google Cloud Functions running our XGBoost model. The model computes stability indices, evaluates risk, and transmits to the FastAPI backend. If risk is <strong>CRITICAL</strong>, the system instantly generates an emergency alert and sends an <strong>ACTUAL SMS message</strong>.
+              </p>
+              <div className="p-3 bg-white border border-slate-200 rounded-xl font-mono text-xs text-slate-800 space-y-1">
+                <div>• GCP Cloud Function Source: <code className="text-purple-700">cloud/gcp_landguard_function/main.py</code></div>
+                <div>• ML Model: <strong className="text-purple-700">XGBoost 2.0.3 + Bishop Limit Equilibrium (FoS)</strong></div>
+                <div>• Auto-SMS Dispatch: <span className="text-emerald-600 font-bold">Enabled for CRITICAL & HIGH Alerts</span></div>
+              </div>
+              <div className="p-2.5 bg-purple-50 border border-purple-200 rounded-xl text-purple-900 text-[11px] font-mono">
+                Deploy to GCP: <code>cd cloud/gcp_landguard_function && ./deploy.sh YOUR_PROJECT_ID us-central1</code>
               </div>
             </div>
           )}

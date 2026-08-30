@@ -1,12 +1,24 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
+from pydantic import BaseModel
 
 from app.database import get_db
 from app.schemas.alert import AlertResponse, AlertListResponse, AlertAcknowledgeResponse
 from app.services.alert_service import alert_service
+from app.services.alert_dispatcher import alert_dispatcher
+from app.config import settings
 
 router = APIRouter(prefix="/alerts", tags=["Alerts"])
+
+
+class SendSMSRequest(BaseModel):
+    to_phone: str = "+919506758710"
+    message: Optional[str] = None
+    severity: Optional[str] = "CRITICAL"
+    custom_action: Optional[str] = None
+    node_id: Optional[str] = "LG-N01"
+    alert_id: Optional[int] = None
 
 
 def format_alert_response(alert) -> AlertResponse:
@@ -59,6 +71,91 @@ def list_alerts(
         unacknowledged_count=unack_count,
         alerts=formatted_alerts,
     )
+
+
+@router.post("/sms/send", status_code=status.HTTP_200_OK)
+async def send_emergency_sms(
+    payload: SendSMSRequest,
+    db: Session = Depends(get_db),
+):
+    """
+    Directly triggers the actual transmission of an emergency SMS text message
+    to a designated phone number or civil authority responder list.
+    """
+    alert_payload = None
+    if payload.alert_id:
+        alert = alert_service.get_alert_by_id(db=db, alert_id=payload.alert_id)
+        if alert:
+            alert_payload = {
+                "alert_id": f"ALT-{alert.id}",
+                "node_id": alert.node_id,
+                "timestamp": alert.timestamp.isoformat(),
+                "severity": alert.severity,
+                "risk_score": alert.risk_score,
+                "risk_level": alert.risk_level,
+                "trigger_reasons": alert.trigger_reason,
+            }
+
+    if not alert_payload:
+        alert_payload = {
+            "node_id": payload.node_id or "LG-N01",
+            "risk_level": payload.severity.upper() if payload.severity else "CRITICAL",
+            "risk_score": 0.88 if (payload.severity and payload.severity.upper() == "CRITICAL") else 0.65,
+            "trigger_reasons": ["Pore saturation elevated > 75%", "Active slope displacement detected"],
+        }
+
+    dispatch_report = await alert_dispatcher.send_manual_sms(
+        to_phone=payload.to_phone,
+        message=payload.message,
+        severity=payload.severity or "CRITICAL",
+        custom_action=payload.custom_action,
+        alert_payload=alert_payload,
+    )
+
+    return {
+        "status": "success",
+        "message": "Emergency SMS dispatched",
+        "dispatch_report": dispatch_report,
+    }
+
+
+@router.get("/sms/history", status_code=status.HTTP_200_OK)
+def get_sms_dispatch_history(limit: int = Query(default=20, ge=1, le=100)):
+    """Returns recent actual and simulated SMS transmission logs."""
+    history = alert_dispatcher.get_sms_history(limit=limit)
+    return {
+        "count": len(history),
+        "history": history,
+    }
+
+
+@router.get("/sms/config", status_code=status.HTTP_200_OK)
+def get_sms_gateway_configuration():
+    """Returns status and capabilities of the active SMS gateway subsystem."""
+    has_twilio = bool(settings.TWILIO_ACCOUNT_SID and settings.TWILIO_AUTH_TOKEN and settings.TWILIO_FROM_NUMBER)
+    has_fast2sms = bool(settings.FAST2SMS_API_KEY)
+    has_webhook = bool(settings.CUSTOM_SMS_GATEWAY_URL)
+    
+    active_mode = "simulated_console"
+    if has_twilio:
+        active_mode = "twilio_rest_api"
+    elif has_fast2sms:
+        active_mode = "fast2sms_api"
+    elif has_webhook:
+        active_mode = "custom_webhook"
+
+    return {
+        "sms_enabled": settings.SMS_ENABLED,
+        "active_mode": active_mode,
+        "provider_setting": settings.SMS_PROVIDER,
+        "providers_configured": {
+            "twilio": has_twilio,
+            "fast2sms": has_fast2sms,
+            "custom_webhook": has_webhook,
+            "simulator": True,
+        },
+        "emergency_contacts": settings.emergency_phones,
+    }
 
 
 @router.get("/{alert_id}", response_model=AlertResponse)

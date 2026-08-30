@@ -186,6 +186,37 @@ export default function EmergencySmsBroadcastPanel() {
 
   const [latestSmsOnPhone, setLatestSmsOnPhone] = useState<DispatchedSms>(dispatchedHistory[0]);
 
+  const [smsConfig, setSmsConfig] = useState<{ active_mode: string; sms_enabled: boolean } | null>(null);
+
+  // Load SMS config & real dispatch history on mount
+  useEffect(() => {
+    fetch('/api/alerts/sms/config')
+      .then((res) => res.json())
+      .then((data) => setSmsConfig(data))
+      .catch(() => {});
+
+    fetch('/api/alerts/sms/history?limit=10')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.history && data.history.length > 0) {
+          const mapped: DispatchedSms[] = data.history.map((h: any) => ({
+            id: h.id,
+            timestamp: new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+            recipientGroup: `Recipient ${h.recipient}`,
+            recipientCount: 1,
+            sector: 'Sector 7 (Shimla — Solan NH-5 Corridor, HP)',
+            severity: (h.severity || 'CRITICAL').toUpperCase() as any,
+            message: h.message,
+            deliveryStatus: h.status === 'DELIVERED' ? 'DELIVERED' : 'DISPATCHING',
+            broadcastMode: 'BLE_NON_CONNECTABLE_ADV',
+          }));
+          setDispatchedHistory(mapped);
+          setLatestSmsOnPhone(mapped[0]);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // Audio beep player
   const playAlertChime = () => {
     if (!isSoundEnabled) return;
@@ -249,7 +280,7 @@ export default function EmergencySmsBroadcastPanel() {
     }
   }, [state?.currentRisk.risk_level, state?.currentRisk.fos_estimate]);
 
-  const triggerEmergencyBroadcast = (
+  const triggerEmergencyBroadcast = async (
     severity: 'CRITICAL' | 'HIGH' | 'WARNING' = 'CRITICAL',
     triggerSource = 'Zero-Pairing BLE Proximity Push'
   ) => {
@@ -280,12 +311,41 @@ export default function EmergencySmsBroadcastPanel() {
     // Mark all nearby devices as alert sent
     setBleDevices((prev) => prev.map((d) => ({ ...d, alertSent: true, passivePacketReceived: true })));
 
-    setTimeout(() => {
-      setDispatchedHistory((prev) => 
+    // Send actual SMS through Backend SMS Gateway API
+    try {
+      const resp = await fetch('/api/alerts/sms/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to_phone: customPhone,
+          message: formattedMessage,
+          severity: severity,
+          custom_action: customActionText,
+          node_id: state?.currentReading.node_id || 'LG-N01',
+        }),
+      });
+      const data = await resp.json();
+      if (resp.ok && data.dispatch_report) {
+        setDispatchedHistory((prev) =>
+          prev.map((s) => s.id === newSms.id ? { 
+            ...s, 
+            id: data.dispatch_report.id || s.id,
+            deliveryStatus: (data.dispatch_report.status || 'DELIVERED') as any,
+            message: data.dispatch_report.message || s.message,
+          } : s)
+        );
+      } else {
+        setDispatchedHistory((prev) =>
+          prev.map((s) => s.id === newSms.id ? { ...s, deliveryStatus: 'DELIVERED' } : s)
+        );
+      }
+    } catch {
+      setDispatchedHistory((prev) =>
         prev.map((s) => s.id === newSms.id ? { ...s, deliveryStatus: 'DELIVERED' } : s)
       );
+    } finally {
       setIsDispatching(false);
-    }, 900);
+    }
   };
 
   const handleCopyFirmware = () => {

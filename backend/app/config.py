@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import List
+from typing import List, Union
 
 
 class Settings(BaseSettings):
@@ -40,5 +40,36 @@ class Settings(BaseSettings):
     REQUIRE_API_KEY: bool = False
     AUTHORIZED_NODES: List[str] = ["LG-N01", "LG-N02", "LG-N03", "LG-N04"]
 
+    # SMS Gateway & Cellular Alert Broadcast Settings
+    SMS_ENABLED: bool = True
+    SMS_PROVIDER: str = "auto"  # "auto", "twilio", "fast2sms", "webhook", "simulated"
+    TWILIO_ACCOUNT_SID: str = ""
+    TWILIO_AUTH_TOKEN: str = ""
+    TWILIO_FROM_NUMBER: str = ""
+    FAST2SMS_API_KEY: str = ""
+    CUSTOM_SMS_GATEWAY_URL: str = ""
+    CUSTOM_SMS_API_KEY: str = ""
+    EMERGENCY_PHONE_NUMBERS: Union[List[str], str] = ["+919506758710"]
+
+    # Google Cloud & Blynk Integration Settings
+    BLYNK_AUTH_TOKEN: str = ""
+    GCP_WEBHOOK_URL: str = ""
+
+    @property
+    def emergency_phones(self) -> List[str]:
+        if isinstance(self.EMERGENCY_PHONE_NUMBERS, list):
+            return self.EMERGENCY_PHONE_NUMBERS
+        if isinstance(self.EMERGENCY_PHONE_NUMBERS, str):
+            clean = self.EMERGENCY_PHONE_NUMBERS.strip()
+            if clean.startswith("[") and clean.endswith("]"):
+                try:
+                    import json
+                    return json.loads(clean)
+                except Exception:
+                    pass
+            return [p.strip() for p in clean.split(",") if p.strip()]
+        return ["+919506758710"]
+
 
 settings = Settings()
+
