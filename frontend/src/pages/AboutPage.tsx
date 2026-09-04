@@ -264,14 +264,14 @@ export default function AboutPage() {
             <span className="badge badge-blue">
               Autonomous Early Warning System
             </span>
-            <span className="text-xs text-slate-400 font-medium">Smart India Hackathon</span>
+            <span className="text-xs text-slate-400 dark:text-slate-400 font-medium">Smart India Hackathon</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0f172a] tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0f172a] dark:text-white tracking-tight">
             About LANDGUARD AI
           </h1>
 
-          <p className="text-sm text-slate-600 leading-relaxed font-normal">
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
             An ultra-low-cost, offline-first IoT & Edge AI telemetry system engineered to prevent catastrophic landslide fatalities across mountainous terrain, rail cutting slopes, and vulnerable human settlements.
           </p>
         </div>
@@ -292,10 +292,10 @@ export default function AboutPage() {
       {/* ── Section 2: Core Engineering Pillars ──────────────── */}
       <div>
         <div className="mb-4">
-          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
             Architectural Pillars
           </h2>
-          <p className="text-xs text-slate-500 font-normal">
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
             Four key technical differentiators powering real-time slope hazard forecasting
           </p>
         </div>
@@ -307,21 +307,21 @@ export default function AboutPage() {
               <div key={i} className="card p-5 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pillar #{i + 1}</span>
+                    <span className="text-xs font-bold text-slate-400 dark:text-slate-300 uppercase tracking-wider">Pillar #{i + 1}</span>
                     <div className={clsx("p-2 rounded-xl border", pillar.bg, pillar.color)}>
                       <Icon className="w-4 h-4" />
                     </div>
                   </div>
 
-                  <h3 className="font-bold text-base text-slate-900 mb-1">
+                  <h3 className="font-bold text-base text-slate-900 dark:text-white mb-1">
                     {pillar.title}
                   </h3>
-                  <div className="text-lg font-extrabold text-blue-600 font-mono mb-2">
+                  <div className="text-lg font-extrabold text-blue-600 dark:text-blue-400 font-mono mb-2">
                     {pillar.value}
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-2 border-t border-slate-100 dark:border-white/10">
                   {pillar.desc}
                 </p>
               </div>
@@ -334,10 +334,10 @@ export default function AboutPage() {
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
               Research & Engineering Team
             </h2>
-            <p className="text-xs text-slate-500 font-normal">
+            <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
               Directly type and customize your team roster, roles, and profiles
             </p>
           </div>
@@ -362,22 +362,22 @@ export default function AboutPage() {
                       {member.name.slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="font-bold text-base text-slate-900">{member.name}</h3>
-                      <p className="text-xs font-semibold text-blue-600">{member.role}</p>
+                      <h3 className="font-bold text-base text-slate-900 dark:text-white">{member.name}</h3>
+                      <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">{member.role}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => handleStartEdit(member)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors"
                       title="Edit Member"
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteMember(member.id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors"
                       title="Remove Member"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -385,29 +385,29 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs text-slate-700 mb-3">
-                  <span className="font-bold text-[10.5px] text-slate-400 uppercase tracking-wider block mb-0.5">Specialization:</span>
+                <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-white/10 text-xs text-slate-700 dark:text-slate-200 mb-3">
+                  <span className="font-bold text-[10.5px] text-slate-400 dark:text-slate-300 uppercase tracking-wider block mb-0.5">Specialization:</span>
                   {member.specialization}
                 </div>
 
-                <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                   {member.bio}
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-100 text-xs text-slate-500">
+              <div className="flex items-center gap-2 pt-3 mt-3 border-t border-slate-100 dark:border-white/10 text-xs text-slate-500 dark:text-slate-300">
                 {member.github && (
-                  <a href={member.github} target="_blank" rel="noreferrer" className="hover:text-blue-600 flex items-center gap-1 transition-colors">
+                  <a href={member.github} target="_blank" rel="noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 transition-colors">
                     <Github className="w-3.5 h-3.5" /> <span>GitHub</span>
                   </a>
                 )}
                 {member.linkedin && (
-                  <a href={member.linkedin} target="_blank" rel="noreferrer" className="hover:text-blue-600 flex items-center gap-1 transition-colors">
+                  <a href={member.linkedin} target="_blank" rel="noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 transition-colors">
                     <Linkedin className="w-3.5 h-3.5" /> <span>LinkedIn</span>
                   </a>
                 )}
                 {member.email && (
-                  <a href={`mailto:${member.email}`} className="hover:text-blue-600 flex items-center gap-1 transition-colors">
+                  <a href={`mailto:${member.email}`} className="hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 transition-colors">
                     <Mail className="w-3.5 h-3.5" /> <span>Email</span>
                   </a>
                 )}
@@ -420,10 +420,10 @@ export default function AboutPage() {
       {/* ── Section 4: Previous Engineering Works ────────────── */}
       <div>
         <div className="mb-4">
-          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
             Previous Engineering Works & Research Portfolio
           </h2>
-          <p className="text-xs text-slate-500 font-normal">
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
             Prior biomedical and computer vision systems built by our research team
           </p>
         </div>
@@ -443,22 +443,22 @@ export default function AboutPage() {
                     </div>
                   </div>
 
-                  <h3 className="font-bold text-lg text-slate-900 mb-1 leading-snug">
+                  <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1 leading-snug">
                     {proj.title}
                   </h3>
-                  <p className="text-xs font-semibold text-blue-600 mb-3">{proj.category}</p>
+                  <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">{proj.category}</p>
 
-                  <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
                     {proj.summary}
                   </p>
 
                   {/* Highlights */}
                   <div className="space-y-1.5">
-                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Key Technical Achievements:</span>
-                    <ul className="space-y-1 text-xs text-slate-700">
+                    <span className="text-[11px] font-bold text-slate-400 dark:text-slate-300 uppercase tracking-wider block">Key Technical Achievements:</span>
+                    <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-200">
                       {proj.highlights.map((h, idx) => (
                         <li key={idx} className="flex items-start gap-1.5">
-                          <span className="text-blue-600 font-bold">•</span>
+                          <span className="text-blue-600 dark:text-blue-400 font-bold">•</span>
                           <span>{h}</span>
                         </li>
                       ))}
@@ -473,15 +473,15 @@ export default function AboutPage() {
 
       {/* ── Team Member Form Modal ──────────────────────────── */}
       {isAddingMember && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white border border-[#e5e9f2] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
+          <div className="bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-3">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
                 {editingMemberId ? 'Edit Team Member Profile' : 'Add New Team Member'}
               </h3>
               <button
                 onClick={() => setIsAddingMember(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800"
               >
                 <X size={16} />
               </button>
@@ -489,90 +489,90 @@ export default function AboutPage() {
 
             <form onSubmit={handleSaveMember} className="space-y-3 text-xs font-sans">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Full Name *</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Full Name *</label>
                 <input
                   type="text"
                   required
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="e.g. Aman Nasim Khan"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Role Title</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Role Title</label>
                   <input
                     type="text"
                     value={formRole}
                     onChange={(e) => setFormRole(e.target.value)}
                     placeholder="e.g. IoT Lead"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Specialization</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Specialization</label>
                   <input
                     type="text"
                     value={formSpec}
                     onChange={(e) => setFormSpec(e.target.value)}
                     placeholder="e.g. Embedded C++ & LoRa"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Short Biography & Achievements</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Short Biography & Achievements</label>
                 <textarea
                   rows={3}
                   value={formBio}
                   onChange={(e) => setFormBio(e.target.value)}
                   placeholder="Details of research contributions..."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 leading-relaxed"
+                  className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 leading-relaxed"
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">GitHub URL</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">GitHub URL</label>
                   <input
                     type="url"
                     value={formGithub}
                     onChange={(e) => setFormGithub(e.target.value)}
                     placeholder="https://..."
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">LinkedIn URL</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">LinkedIn URL</label>
                   <input
                     type="url"
                     value={formLinkedin}
                     onChange={(e) => setFormLinkedin(e.target.value)}
                     placeholder="https://..."
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Email Address</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Email Address</label>
                   <input
                     type="email"
                     value={formEmail}
                     onChange={(e) => setFormEmail(e.target.value)}
                     placeholder="name@..."
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl p-2 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex justify-end gap-2">
+              <div className="pt-3 border-t border-slate-100 dark:border-white/10 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddingMember(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs"
                 >
                   Cancel
                 </button>

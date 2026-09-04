@@ -21,7 +21,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'icon', clas
             'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
             theme === 'light'
               ? 'bg-white text-blue-600 shadow-xs'
-              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white'
           )}
           title="Light Theme"
         >
@@ -36,7 +36,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'icon', clas
             'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
             theme === 'dark'
               ? 'bg-blue-600 text-white shadow-xs'
-              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white'
           )}
           title="Dark Mission Control"
         >
@@ -51,7 +51,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'icon', clas
             'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
             theme === 'system'
               ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs'
-              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white'
           )}
           title="Match System Preference"
         >

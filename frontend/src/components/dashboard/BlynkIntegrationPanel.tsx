@@ -206,8 +206,8 @@ void loop() {
             className={clsx(
               "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold shadow-xs transition-all",
               autoSync
-                ? "bg-emerald-50 border-emerald-300 text-emerald-700"
-                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
+                : "bg-white dark:bg-slate-800 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700"
             )}
             title="Auto-sync frames every 6 seconds to Blynk Cloud"
           >
@@ -227,42 +227,42 @@ void loop() {
       </div>
 
       {/* Blynk Credentials Bar */}
-      <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+      <div className="bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-2xl border border-slate-200 dark:border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
         <div>
-          <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+          <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1">
             Blynk Template ID
           </label>
           <input
             type="text"
             value={templateId}
             onChange={(e) => setTemplateId(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl p-2 text-slate-900 font-mono text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl p-2 text-slate-900 dark:text-white font-mono text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
             placeholder="TMPL_LANDGUARD"
           />
         </div>
 
         <div>
-          <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+          <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1">
             Blynk Template Name
           </label>
           <input
             type="text"
             value={templateName}
             onChange={(e) => setTemplateName(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl p-2 text-slate-900 font-mono text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl p-2 text-slate-900 dark:text-white font-mono text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
             placeholder="Landguard AI"
           />
         </div>
 
         <div>
-          <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+          <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1">
             Blynk Device Auth Token
           </label>
           <input
             type="text"
             value={blynkAuthToken}
             onChange={(e) => setBlynkAuthToken(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-xl p-2 text-slate-900 font-mono text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+            className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl p-2 text-slate-900 dark:text-white font-mono text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
             placeholder="e.g. blynk_auth_token_from_console"
           />
         </div>
@@ -270,8 +270,8 @@ void loop() {
 
       {/* Sync Status Banner */}
       {syncStatus && (
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-50/80 border border-blue-200 text-xs text-blue-800 animate-slide-up">
-          <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-50/80 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 text-xs text-blue-800 dark:text-blue-300 animate-slide-up">
+          <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
           <span>{syncStatus}</span>
         </div>
       )}
@@ -279,25 +279,25 @@ void loop() {
       {/* Live Virtual Pin Mapping Grid */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <div className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <div className="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
             Active Blynk Virtual Pin Mapping (V0 – V8 Live Telemetry)
           </div>
-          <span className="text-[10px] text-slate-500 font-medium">Auto-mapped to mobile gauges</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-300 font-medium">Auto-mapped to mobile gauges</span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 gap-2">
           {virtualPins.map((vp) => (
-            <div key={vp.pin} className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+            <div key={vp.pin} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-white/10 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between text-[10px] mb-1">
-                  <span className="px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200 font-mono font-bold">{vp.pin}</span>
+                  <span className="px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 font-mono font-bold">{vp.pin}</span>
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 </div>
-                <div className="text-[11px] font-bold text-slate-900 truncate">{vp.name}</div>
+                <div className="text-[11px] font-bold text-slate-900 dark:text-white truncate">{vp.name}</div>
               </div>
-              <div className="mt-2 pt-1.5 border-t border-slate-200">
-                <div className="text-sm font-bold text-blue-600 font-mono">{vp.value}</div>
-                <div className="text-[9.5px] text-slate-500 truncate mt-0.5">{vp.desc}</div>
+              <div className="mt-2 pt-1.5 border-t border-slate-200 dark:border-white/10">
+                <div className="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">{vp.value}</div>
+                <div className="text-[9.5px] text-slate-500 dark:text-slate-300 truncate mt-0.5">{vp.desc}</div>
               </div>
             </div>
           ))}
@@ -305,8 +305,8 @@ void loop() {
       </div>
 
       {/* Tabbed Integration Guides: Arduino IDE vs USB Serial Gateway vs Webhook */}
-      <div className="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50">
-        <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-2 text-xs">
+      <div className="border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-900/60">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800/90 px-4 py-2 text-xs">
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveCodeTab('arduino')}
@@ -314,7 +314,7 @@ void loop() {
                 "px-3 py-1.5 rounded-xl font-bold transition-all",
                 activeCodeTab === 'arduino'
                   ? "bg-[#2563eb] text-white shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               <Code2 className="w-3.5 h-3.5 inline mr-1" />
@@ -326,7 +326,7 @@ void loop() {
                 "px-3 py-1.5 rounded-xl font-bold transition-all",
                 activeCodeTab === 'serial'
                   ? "bg-[#2563eb] text-white shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               <Terminal className="w-3.5 h-3.5 inline mr-1" />
@@ -338,7 +338,7 @@ void loop() {
                 "px-3 py-1.5 rounded-xl font-bold transition-all",
                 activeCodeTab === 'webhook'
                   ? "bg-[#2563eb] text-white shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               <Globe className="w-3.5 h-3.5 inline mr-1" />
@@ -350,7 +350,7 @@ void loop() {
                 "px-3 py-1.5 rounded-xl font-bold transition-all",
                 activeCodeTab === ('gcp' as any)
                   ? "bg-purple-600 text-white shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               <Zap className="w-3.5 h-3.5 inline mr-1" />
@@ -361,9 +361,9 @@ void loop() {
           {activeCodeTab === 'arduino' && (
             <button
               onClick={handleCopyCode}
-              className="flex items-center gap-1 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors"
+              className="flex items-center gap-1 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied to Clipboard' : 'Copy Firmware Code'}</span>
             </button>
           )}
@@ -372,10 +372,10 @@ void loop() {
         <div className="p-4 text-xs">
           {activeCodeTab === 'arduino' && (
             <div className="space-y-2">
-              <p className="text-slate-600">
+              <p className="text-slate-600 dark:text-slate-300">
                 Flash this complete code to your ESP32 in Arduino IDE. It connects to Wi-Fi, reads MPU6050 + Moisture + Rain sensors, computes Bishop FoS, and pushes real-time telemetry to both Blynk Cloud (V0-V8) and USB Serial:
               </p>
-              <pre className="p-3.5 bg-white border border-slate-200 rounded-xl overflow-x-auto text-[11px] font-mono text-slate-800 max-h-56 leading-relaxed">
+              <pre className="p-3.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl overflow-x-auto text-[11px] font-mono text-slate-800 dark:text-slate-200 max-h-56 leading-relaxed">
                 <code>{arduinoSnippet}</code>
               </pre>
             </div>
@@ -383,13 +383,13 @@ void loop() {
 
           {activeCodeTab === 'serial' && (
             <div className="space-y-2.5">
-              <p className="text-slate-600">
+              <p className="text-slate-600 dark:text-slate-300">
                 Plug your ESP32 into your computer via USB cable. Run the high-speed forwarder bridge to transmit live telemetry from USB Serial to both LandGuard AI local server and Blynk IoT Cloud:
               </p>
-              <div className="p-3 bg-white border border-slate-200 rounded-xl font-mono text-xs text-blue-700 flex items-center justify-between">
+              <div className="p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl font-mono text-xs text-blue-700 dark:text-blue-400 flex items-center justify-between">
                 <code>python3 tools/serial_gateway_bridge.py /dev/tty.usbserial-0001 {blynkAuthToken}</code>
               </div>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 Tip: If no port argument is passed, the tool auto-detects connected ESP32 / CH340 / CP2102 serial ports automatically.
               </p>
             </div>
@@ -397,28 +397,28 @@ void loop() {
 
           {activeCodeTab === 'webhook' && (
             <div className="space-y-2">
-              <p className="text-slate-600">
+              <p className="text-slate-600 dark:text-slate-300">
                 In your Blynk IoT Web Console, navigate to <strong>Settings $\rightarrow$ Webhooks</strong> to forward inbound telemetry directly to your local LANDGUARD AI gateway:
               </p>
-              <div className="p-3 bg-white border border-slate-200 rounded-xl font-mono text-xs text-slate-800 space-y-1">
-                <div>• Webhook URL: <strong className="text-blue-700">http://127.0.0.1:8000/api/blynk/webhook</strong></div>
-                <div>• Method: <strong className="text-emerald-700">POST</strong></div>
-                <div>• Content-Type: <strong className="text-slate-700">application/json</strong></div>
+              <div className="p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl font-mono text-xs text-slate-800 dark:text-slate-200 space-y-1">
+                <div>• Webhook URL: <strong className="text-blue-700 dark:text-blue-400">http://127.0.0.1:8000/api/blynk/webhook</strong></div>
+                <div>• Method: <strong className="text-emerald-700 dark:text-emerald-400">POST</strong></div>
+                <div>• Content-Type: <strong className="text-slate-700 dark:text-slate-300">application/json</strong></div>
               </div>
             </div>
           )}
 
           {activeCodeTab === ('gcp' as any) && (
             <div className="space-y-2.5">
-              <p className="text-slate-600">
+              <p className="text-slate-600 dark:text-slate-300">
                 <strong>Google Cloud ML Pipeline Architecture:</strong> Blynk forwards hardware telemetry to Google Cloud Functions running our XGBoost model. The model computes stability indices, evaluates risk, and transmits to the FastAPI backend. If risk is <strong>CRITICAL</strong>, the system instantly generates an emergency alert and sends an <strong>ACTUAL SMS message</strong>.
               </p>
-              <div className="p-3 bg-white border border-slate-200 rounded-xl font-mono text-xs text-slate-800 space-y-1">
-                <div>• GCP Cloud Function Source: <code className="text-purple-700">cloud/gcp_landguard_function/main.py</code></div>
-                <div>• ML Model: <strong className="text-purple-700">XGBoost 2.0.3 + Bishop Limit Equilibrium (FoS)</strong></div>
-                <div>• Auto-SMS Dispatch: <span className="text-emerald-600 font-bold">Enabled for CRITICAL & HIGH Alerts</span></div>
+              <div className="p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl font-mono text-xs text-slate-800 dark:text-slate-200 space-y-1">
+                <div>• GCP Cloud Function Source: <code className="text-purple-700 dark:text-purple-400">cloud/gcp_landguard_function/main.py</code></div>
+                <div>• ML Model: <strong className="text-purple-700 dark:text-purple-400">XGBoost 2.0.3 + Bishop Limit Equilibrium (FoS)</strong></div>
+                <div>• Auto-SMS Dispatch: <span className="text-emerald-600 dark:text-emerald-400 font-bold">Enabled for CRITICAL & HIGH Alerts</span></div>
               </div>
-              <div className="p-2.5 bg-purple-50 border border-purple-200 rounded-xl text-purple-900 text-[11px] font-mono">
+              <div className="p-2.5 bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800 rounded-xl text-purple-900 dark:text-purple-200 text-[11px] font-mono">
                 Deploy to GCP: <code>cd cloud/gcp_landguard_function && ./deploy.sh YOUR_PROJECT_ID us-central1</code>
               </div>
             </div>

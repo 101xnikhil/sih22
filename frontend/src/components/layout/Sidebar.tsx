@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                   'w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150 relative group',
                   isActive
                     ? 'bg-[#2563eb] text-white shadow-sm shadow-blue-500/30'
-                    : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                    : 'text-slate-400 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 )}
               >
                 <Icon className="w-5 h-5 stroke-[2]" />
@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         <Link
           to="/settings"
           title="Hardware & Settings"
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
         >
           <Settings className="w-5 h-5 stroke-[1.8]" />
         </Link>
@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         <Link
           to="/alerts"
           title="Alerts Center"
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors relative"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-300 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors relative"
         >
           <Bell className="w-5 h-5 stroke-[1.8]" />
           <span className="w-2 h-2 rounded-full bg-[#ef4444] absolute top-2 right-2 ring-2 ring-white dark:ring-[#0f172a]" />

@@ -10,9 +10,12 @@ import {
 import { RISK_COLORS } from '../types';
 import { formatTimeShort } from '../utils/formatters';
 import { BarChart3, TrendingUp, Cpu, Table, Activity } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const AnalyticsPage: React.FC = () => {
   const { state } = useMockTelemetry();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
   
   if (!state) {
     return <LoadingState message="Computing time-series analytics..." />;
@@ -44,10 +47,10 @@ const AnalyticsPage: React.FC = () => {
       <div className="card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-blue-600" />
-            <h1 className="text-xl font-bold text-[#0f172a] tracking-tight">Telemetry Analytics & AI Explainability</h1>
+            <BarChart3 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <h1 className="text-xl font-bold text-[#0f172a] dark:text-white tracking-tight">Telemetry Analytics & AI Explainability</h1>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-300 mt-1">
             Time-series telemetry decomposition, geotechnical limit equilibrium curves, and SHAP feature attributions.
           </p>
         </div>
@@ -56,16 +59,16 @@ const AnalyticsPage: React.FC = () => {
 
       {/* Summary Statistics Table */}
       <div className="card overflow-hidden">
-        <div className="card-header flex items-center justify-between">
-          <div className="flex items-center gap-2 text-slate-800">
-            <Table className="w-4 h-4 text-blue-600" />
+        <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
+          <div className="flex items-center gap-2 text-slate-800 dark:text-white">
+            <Table className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             <span className="font-bold text-xs uppercase tracking-wider">Telemetry Statistics Summary (Buffer: {readingHistory.length} Samples)</span>
           </div>
-          <span className="font-mono text-[10.5px] font-bold text-slate-500">10s Telemetry Interval</span>
+          <span className="font-mono text-[10.5px] font-bold text-slate-500 dark:text-slate-400">10s Telemetry Interval</span>
         </div>
         <div className="p-0 overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-[10px] uppercase text-slate-500 font-bold tracking-wider">
+            <thead className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-white/10 text-[10px] uppercase text-slate-500 dark:text-slate-300 font-bold tracking-wider">
               <tr>
                 <th className="py-3 px-4">Metric / Channel</th>
                 <th className="py-3 px-4">Unit</th>
@@ -76,62 +79,62 @@ const AnalyticsPage: React.FC = () => {
                 <th className="py-3 px-4">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-mono">
-              <tr className="hover:bg-slate-50/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900">Volumetric Soil Moisture</td>
-                <td className="py-3 px-4 text-slate-500">%</td>
-                <td className="py-3 px-4 font-bold text-blue-600">{moistureStats.cur.toFixed(1)}%</td>
-                <td className="py-3 px-4 text-slate-700">{moistureStats.min.toFixed(1)}%</td>
-                <td className="py-3 px-4 text-slate-700">{moistureStats.max.toFixed(1)}%</td>
-                <td className="py-3 px-4 text-slate-700">{moistureStats.avg.toFixed(1)}%</td>
+            <tbody className="divide-y divide-slate-100 dark:divide-white/10 font-mono">
+              <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">Volumetric Soil Moisture</td>
+                <td className="py-3 px-4 text-slate-500 dark:text-slate-400">%</td>
+                <td className="py-3 px-4 font-bold text-blue-600 dark:text-blue-400">{moistureStats.cur.toFixed(1)}%</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{moistureStats.min.toFixed(1)}%</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{moistureStats.max.toFixed(1)}%</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{moistureStats.avg.toFixed(1)}%</td>
                 <td className="py-3 px-4">
                   <span className={moistureStats.cur > 80 ? "badge badge-low" : moistureStats.cur > 50 ? "badge badge-medium" : "badge badge-elite"}>
                     {moistureStats.cur > 80 ? "Critical" : moistureStats.cur > 50 ? "Elevated" : "Nominal"}
                   </span>
                 </td>
               </tr>
-              <tr className="hover:bg-slate-50/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900">24h Rainfall Accumulation</td>
-                <td className="py-3 px-4 text-slate-500">mm</td>
-                <td className="py-3 px-4 font-bold text-blue-600">{rainStats.cur.toFixed(1)} mm</td>
-                <td className="py-3 px-4 text-slate-700">{rainStats.min.toFixed(1)} mm</td>
-                <td className="py-3 px-4 text-slate-700">{rainStats.max.toFixed(1)} mm</td>
-                <td className="py-3 px-4 text-slate-700">{rainStats.avg.toFixed(1)} mm</td>
+              <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">24h Rainfall Accumulation</td>
+                <td className="py-3 px-4 text-slate-500 dark:text-slate-400">mm</td>
+                <td className="py-3 px-4 font-bold text-blue-600 dark:text-blue-400">{rainStats.cur.toFixed(1)} mm</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{rainStats.min.toFixed(1)} mm</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{rainStats.max.toFixed(1)} mm</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{rainStats.avg.toFixed(1)} mm</td>
                 <td className="py-3 px-4">
                   <span className={rainStats.cur > 50 ? "badge badge-low" : "badge badge-elite"}>
                     {rainStats.cur > 50 ? "Heavy" : "Normal"}
                   </span>
                 </td>
               </tr>
-              <tr className="hover:bg-slate-50/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900">Slope Dip Angle</td>
-                <td className="py-3 px-4 text-slate-500">°</td>
-                <td className="py-3 px-4 font-bold text-emerald-600">{tiltStats.cur.toFixed(2)}°</td>
-                <td className="py-3 px-4 text-slate-700">{tiltStats.min.toFixed(2)}°</td>
-                <td className="py-3 px-4 text-slate-700">{tiltStats.max.toFixed(2)}°</td>
-                <td className="py-3 px-4 text-slate-700">{tiltStats.avg.toFixed(2)}°</td>
+              <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">Slope Dip Angle</td>
+                <td className="py-3 px-4 text-slate-500 dark:text-slate-400">°</td>
+                <td className="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">{tiltStats.cur.toFixed(2)}°</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltStats.min.toFixed(2)}°</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltStats.max.toFixed(2)}°</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltStats.avg.toFixed(2)}°</td>
                 <td className="py-3 px-4"><span className="badge badge-elite">Active</span></td>
               </tr>
-              <tr className="hover:bg-slate-50/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900">Tilt Displacement Rate</td>
-                <td className="py-3 px-4 text-slate-500">°/min</td>
-                <td className="py-3 px-4 font-bold text-orange-600">{tiltRateStats.cur.toFixed(3)}</td>
-                <td className="py-3 px-4 text-slate-700">{tiltRateStats.min.toFixed(3)}</td>
-                <td className="py-3 px-4 text-slate-700">{tiltRateStats.max.toFixed(3)}</td>
-                <td className="py-3 px-4 text-slate-700">{tiltRateStats.avg.toFixed(3)}</td>
+              <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">Tilt Displacement Rate</td>
+                <td className="py-3 px-4 text-slate-500 dark:text-slate-400">°/min</td>
+                <td className="py-3 px-4 font-bold text-orange-600 dark:text-orange-400">{tiltRateStats.cur.toFixed(3)}</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltRateStats.min.toFixed(3)}</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltRateStats.max.toFixed(3)}</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltRateStats.avg.toFixed(3)}</td>
                 <td className="py-3 px-4">
                   <span className={Math.abs(tiltRateStats.cur) > 0.05 ? "badge badge-low" : "badge badge-elite"}>
                     {Math.abs(tiltRateStats.cur) > 0.05 ? "Creep Detected" : "Stable"}
                   </span>
                 </td>
               </tr>
-              <tr className="hover:bg-slate-50/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900">Factor of Safety (FoS)</td>
-                <td className="py-3 px-4 text-slate-500">ratio</td>
-                <td className="py-3 px-4 font-bold text-slate-900">{fosStats.cur.toFixed(2)}</td>
-                <td className="py-3 px-4 text-slate-700">{fosStats.min.toFixed(2)}</td>
-                <td className="py-3 px-4 text-slate-700">{fosStats.max.toFixed(2)}</td>
-                <td className="py-3 px-4 text-slate-700">{fosStats.avg.toFixed(2)}</td>
+              <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">Factor of Safety (FoS)</td>
+                <td className="py-3 px-4 text-slate-500 dark:text-slate-400">ratio</td>
+                <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">{fosStats.cur.toFixed(2)}</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{fosStats.min.toFixed(2)}</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{fosStats.max.toFixed(2)}</td>
+                <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{fosStats.avg.toFixed(2)}</td>
                 <td className="py-3 px-4">
                   <span className={fosStats.cur < 1.0 ? "badge badge-low" : fosStats.cur < 1.3 ? "badge badge-medium" : "badge badge-elite"}>
                     {fosStats.cur < 1.0 ? "Failure Imminent" : fosStats.cur < 1.3 ? "Warning" : "Stable"}
@@ -148,19 +151,26 @@ const AnalyticsPage: React.FC = () => {
         {/* Soil Moisture Chart */}
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
               Soil Moisture Time-Series & Thresholds
             </h3>
-            <span className="font-mono text-xs text-blue-600 font-bold">{moistureStats.cur.toFixed(1)}%</span>
+            <span className="font-mono text-xs text-blue-600 dark:text-blue-400 font-bold">{moistureStats.cur.toFixed(1)}%</span>
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                <XAxis dataKey="timestamp" tickFormatter={formatTimeShort} stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} />
-                <YAxis stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} domain={[0, 100]} tickFormatter={(val) => `${val}%`} />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9'} vertical={false} />
+                <XAxis dataKey="timestamp" tickFormatter={formatTimeShort} stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} />
+                <YAxis stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} domain={[0, 100]} tickFormatter={(val) => `${val}%`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a', fontSize: '11px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                  contentStyle={{ 
+                    backgroundColor: isDark ? '#0f172a' : '#ffffff', 
+                    borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#e2e8f0', 
+                    color: isDark ? '#f8fafc' : '#0f172a', 
+                    fontSize: '11px', 
+                    borderRadius: '12px', 
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)' 
+                  }}
                   formatter={(value: number) => [`${value.toFixed(1)}%`, 'Soil Moisture']}
                 />
                 <ReferenceLine y={80} stroke="#ef4444" strokeDasharray="3 3" label={{ value: 'Critical (80%)', fill: '#ef4444', fontSize: 9 }} />
@@ -173,19 +183,26 @@ const AnalyticsPage: React.FC = () => {
         {/* Rainfall Accumulation */}
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
               24-Hour Precipitation Accumulation (mm)
             </h3>
-            <span className="font-mono text-xs text-blue-600 font-bold">{rainStats.cur.toFixed(1)} mm</span>
+            <span className="font-mono text-xs text-blue-600 dark:text-blue-400 font-bold">{rainStats.cur.toFixed(1)} mm</span>
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                <XAxis dataKey="timestamp" tickFormatter={formatTimeShort} stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} />
-                <YAxis stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} tickFormatter={(val) => `${val}mm`} />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9'} vertical={false} />
+                <XAxis dataKey="timestamp" tickFormatter={formatTimeShort} stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} />
+                <YAxis stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} tickFormatter={(val) => `${val}mm`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a', fontSize: '11px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                  contentStyle={{ 
+                    backgroundColor: isDark ? '#0f172a' : '#ffffff', 
+                    borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#e2e8f0', 
+                    color: isDark ? '#f8fafc' : '#0f172a', 
+                    fontSize: '11px', 
+                    borderRadius: '12px', 
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)' 
+                  }}
                   formatter={(value: number) => [`${value.toFixed(1)} mm`, 'Rainfall']}
                 />
                 <ReferenceLine y={50} stroke="#ef4444" strokeDasharray="3 3" label={{ value: 'Heavy Threshold (50mm)', fill: '#ef4444', fontSize: 9 }} />
@@ -201,7 +218,7 @@ const AnalyticsPage: React.FC = () => {
         {/* Risk Probability Trend */}
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
               AI Hazard Risk Score Probability Trajectory
             </h3>
             <span className="font-mono text-xs text-orange-600 font-bold">{(currentRisk.risk_score * 100).toFixed(0)}%</span>
@@ -209,11 +226,18 @@ const AnalyticsPage: React.FC = () => {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                <XAxis dataKey="timestamp" tickFormatter={formatTimeShort} stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} />
-                <YAxis domain={[0, 1]} stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} tickFormatter={(val) => `${(val * 100).toFixed(0)}%`} />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9'} vertical={false} />
+                <XAxis dataKey="timestamp" tickFormatter={formatTimeShort} stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} />
+                <YAxis domain={[0, 1]} stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} tickFormatter={(val) => `${(val * 100).toFixed(0)}%`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a', fontSize: '11px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                  contentStyle={{ 
+                    backgroundColor: isDark ? '#0f172a' : '#ffffff', 
+                    borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#e2e8f0', 
+                    color: isDark ? '#f8fafc' : '#0f172a', 
+                    fontSize: '11px', 
+                    borderRadius: '12px', 
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)' 
+                  }}
                   formatter={(value: number) => [`${(value * 100).toFixed(1)}%`, 'Risk Score']}
                 />
                 <ReferenceLine y={0.75} stroke="#ef4444" strokeDasharray="3 3" label={{ value: 'Critical (0.75)', fill: '#ef4444', fontSize: 9 }} />
@@ -227,7 +251,7 @@ const AnalyticsPage: React.FC = () => {
         {/* Factor of Safety (FoS) */}
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
               Factor of Safety (FoS) Infinite Slope Limit Equilibrium
             </h3>
             <span className="font-mono text-xs text-emerald-600 font-bold">{currentRisk.fos_estimate.toFixed(2)}</span>
@@ -235,11 +259,18 @@ const AnalyticsPage: React.FC = () => {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                <XAxis dataKey="timestamp" tickFormatter={formatTimeShort} stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} />
-                <YAxis stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} domain={[0, 3]} />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9'} vertical={false} />
+                <XAxis dataKey="timestamp" tickFormatter={formatTimeShort} stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} />
+                <YAxis stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} domain={[0, 3]} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a', fontSize: '11px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                  contentStyle={{ 
+                    backgroundColor: isDark ? '#0f172a' : '#ffffff', 
+                    borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#e2e8f0', 
+                    color: isDark ? '#f8fafc' : '#0f172a', 
+                    fontSize: '11px', 
+                    borderRadius: '12px', 
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)' 
+                  }}
                   formatter={(value: number) => [value.toFixed(2), 'FoS Ratio']}
                 />
                 <ReferenceLine y={1.0} stroke="#ef4444" strokeWidth={1.5} strokeDasharray="3 3" label={{ value: 'Limit Equilibrium (1.0)', fill: '#ef4444', fontSize: 9 }} />
@@ -253,21 +284,28 @@ const AnalyticsPage: React.FC = () => {
 
       {/* SHAP Feature Importance Decomposition */}
       <div className="card">
-        <div className="card-header flex items-center justify-between">
-          <div className="flex items-center gap-2 text-slate-800">
-            <Cpu className="w-4 h-4 text-blue-600" />
+        <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
+          <div className="flex items-center gap-2 text-slate-800 dark:text-white">
+            <Cpu className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             <span className="font-bold text-xs uppercase tracking-wider">SHAP Global Feature Attribution Weights</span>
           </div>
-          <span className="font-mono text-[10.5px] font-bold text-slate-500">TreeExplainer Kernel</span>
+          <span className="font-mono text-[10.5px] font-bold text-slate-500 dark:text-slate-400">TreeExplainer Kernel</span>
         </div>
         <div className="card-body h-80">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart layout="vertical" data={currentRisk.shap_values} margin={{ top: 5, right: 30, left: 140, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-              <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} />
-              <YAxis dataKey="display_name" type="category" stroke="#94a3b8" tick={{ fill: '#334155', fontSize: 11, fontWeight: 500 }} width={160} />
+              <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9'} horizontal={false} />
+              <XAxis type="number" stroke="#94a3b8" tick={{ fill: isDark ? '#cbd5e1' : '#64748b', fontSize: 10 }} />
+              <YAxis dataKey="display_name" type="category" stroke="#94a3b8" tick={{ fill: 'currentColor', fontSize: 11, fontWeight: 500 }} className="text-slate-700 dark:text-slate-200" width={160} />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', color: '#0f172a', fontSize: '11px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                contentStyle={{ 
+                  backgroundColor: isDark ? '#0f172a' : '#ffffff', 
+                  borderColor: isDark ? 'rgba(255, 255, 255, 0.15)' : '#e2e8f0', 
+                  color: isDark ? '#f8fafc' : '#0f172a', 
+                  fontSize: '11px', 
+                  borderRadius: '12px', 
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)' 
+                }}
                 formatter={(value: number) => [value > 0 ? `+${value.toFixed(3)}` : value.toFixed(3), 'SHAP Impact']}
               />
               <ReferenceLine x={0} stroke="#94a3b8" />

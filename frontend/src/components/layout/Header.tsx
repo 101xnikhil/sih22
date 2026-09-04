@@ -36,13 +36,13 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
       {/* Right Controls matching the screenshot */}
       <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 font-sans text-xs">
         {/* Teams / Sector Dropdown */}
-        <div className="hidden md:flex items-center gap-2 text-slate-600 dark:text-slate-400 font-medium">
+        <div className="hidden md:flex items-center gap-2 text-slate-600 dark:text-slate-200 font-semibold">
           <span>Sector:</span>
           <div className="relative">
             <select
               value={selectedTeam}
               onChange={(e) => setSelectedTeam(e.target.value)}
-              className="appearance-none bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 hover:border-slate-300 dark:hover:border-slate-600 text-slate-800 dark:text-slate-200 font-semibold py-1.5 pl-3 pr-8 rounded-xl cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="appearance-none bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 hover:border-slate-300 dark:hover:border-slate-600 text-slate-800 dark:text-slate-100 font-semibold py-1.5 pl-3 pr-8 rounded-xl cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="All sectors (2)">All sectors (2)</option>
               <option value="Sector 7 (Shimla NH-5)">Sector 7 (Shimla NH-5)</option>
@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
         </div>
 
         {/* Aggregate by Segmented Control */}
-        <div className="hidden lg:flex items-center gap-2 text-slate-600 dark:text-slate-400 font-medium">
+        <div className="hidden lg:flex items-center gap-2 text-slate-600 dark:text-slate-200 font-semibold">
           <span>Aggregate by:</span>
           <div className="segmented-control">
             <button
@@ -79,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
         </div>
 
         {/* Date Range Pill */}
-        <div className="hidden sm:flex items-center gap-2 bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 px-3.5 py-1.5 rounded-xl font-medium text-slate-700 dark:text-slate-300 shadow-sm">
+        <div className="hidden sm:flex items-center gap-2 bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 px-3.5 py-1.5 rounded-xl font-medium text-slate-700 dark:text-slate-100 shadow-sm">
           <span>01/01/2026 - 28/08/2026</span>
           <Calendar className="w-3.5 h-3.5 text-slate-400" />
         </div>
@@ -90,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
             onClick={() => setMode('DEMO')}
             className={clsx(
               'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all',
-              mode === 'DEMO' ? 'bg-[#2563eb] text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+              mode === 'DEMO' ? 'bg-[#2563eb] text-white shadow-xs' : 'text-slate-500 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white'
             )}
           >
             Lab Sim
@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
             onClick={() => setMode('HARDWARE')}
             className={clsx(
               'px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all',
-              mode === 'HARDWARE' ? 'bg-[#ef4444] text-white shadow-xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+              mode === 'HARDWARE' ? 'bg-[#ef4444] text-white shadow-xs' : 'text-slate-500 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white'
             )}
           >
             ESP32

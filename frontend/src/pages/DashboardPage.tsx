@@ -16,6 +16,7 @@ import AIExplanation from '../components/dashboard/AIExplanation';
 import DeviceHealth from '../components/dashboard/DeviceHealth';
 import SecurityPanel from '../components/dashboard/SecurityPanel';
 import LoadingState from '../components/common/LoadingState';
+import { useTheme } from '../context/ThemeContext';
 
 // Helper for generating smooth weekly curve points based on actual telemetry
 const generateTelemetryCurve = (currentVal: number, variance: number) => {
@@ -49,6 +50,9 @@ const DashboardPage: React.FC = () => {
     simulateReplayAttack,
     simulateUnauthorizedNode,
   } = useMockTelemetry();
+
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
   const [groupBy, setGroupBy] = useState<'Day' | 'Week' | 'Month'>('Week');
   const [showScenarioDrawer, setShowScenarioDrawer] = useState(true);
@@ -113,7 +117,7 @@ const DashboardPage: React.FC = () => {
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
               Geotechnical Status
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
+            <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
               Real-time slope stability indices, pore water pressure, and angular displacement metrics
             </p>
           </div>
@@ -153,9 +157,9 @@ const DashboardPage: React.FC = () => {
           <div className="card p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-600 font-semibold text-xs">
+                <div className="flex items-center gap-1 text-slate-700 dark:text-white font-semibold text-xs">
                   <span>Bishop Factor of Safety</span>
-                  <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
+                  <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', fosStatus.badgeClass)}>
                   {fosStatus.label}
@@ -170,7 +174,7 @@ const DashboardPage: React.FC = () => {
             </div>
 
             {/* 4 Multi-Color Sub-Metric Indicator Bars Underneath */}
-            <div className="mt-4 pt-3 border-t border-slate-100">
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-white/10">
               <div className="grid grid-cols-4 gap-1.5 h-1 rounded-full overflow-hidden mb-2">
                 <div className="bg-[#2563eb] h-full" title="Pore Water Saturation" />
                 <div className="bg-[#ef4444] h-full" title="Angular Creep Velocity" />
@@ -178,22 +182,22 @@ const DashboardPage: React.FC = () => {
                 <div className="bg-[#10b981] h-full" title="Limit Equilibrium Index" />
               </div>
 
-              <div className="grid grid-cols-4 gap-1 text-[9.5px] text-slate-500 font-medium">
+              <div className="grid grid-cols-4 gap-1 text-[9.5px] text-slate-500 dark:text-slate-300 font-medium">
                 <div>
-                  <span className="block text-slate-400">Pore Water</span>
-                  <strong className="text-slate-700">{reading.soil_moisture_pct.toFixed(0)}%</strong>
+                  <span className="block text-slate-400 dark:text-slate-300">Pore Water</span>
+                  <strong className="text-slate-700 dark:text-white font-bold">{reading.soil_moisture_pct.toFixed(0)}%</strong>
                 </div>
                 <div>
-                  <span className="block text-slate-400">Creep Rate</span>
-                  <strong className="text-slate-700">{Math.abs(reading.tilt_rate).toFixed(3)}°</strong>
+                  <span className="block text-slate-400 dark:text-slate-300">Creep Rate</span>
+                  <strong className="text-slate-700 dark:text-white font-bold">{Math.abs(reading.tilt_rate).toFixed(3)}°</strong>
                 </div>
                 <div>
-                  <span className="block text-slate-400">Slope Dip</span>
-                  <strong className="text-slate-700">{reading.tilt_angle.toFixed(1)}°</strong>
+                  <span className="block text-slate-400 dark:text-slate-300">Slope Dip</span>
+                  <strong className="text-slate-700 dark:text-white font-bold">{reading.tilt_angle.toFixed(1)}°</strong>
                 </div>
                 <div>
-                  <span className="block text-slate-400">Stability</span>
-                  <strong className="text-slate-700">{risk.fos_estimate.toFixed(2)}</strong>
+                  <span className="block text-slate-400 dark:text-slate-300">Stability</span>
+                  <strong className="text-slate-700 dark:text-white font-bold">{risk.fos_estimate.toFixed(2)}</strong>
                 </div>
               </div>
             </div>
@@ -203,9 +207,9 @@ const DashboardPage: React.FC = () => {
           <div className="card p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-600 font-semibold text-xs">
+                <div className="flex items-center gap-1 text-slate-700 dark:text-white font-semibold text-xs">
                   <span>Soil Moisture (VWC)</span>
-                  <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
+                  <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', moistureStatus.badgeClass)}>
                   {moistureStatus.label}
@@ -219,7 +223,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 text-xs text-slate-400 font-medium">
+            <div className="mt-4 text-xs text-slate-500 dark:text-slate-200 font-medium">
               <span>{reading.soil_moisture} ADC sensor reading nominal</span>
             </div>
           </div>
@@ -228,9 +232,9 @@ const DashboardPage: React.FC = () => {
           <div className="card p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-600 font-semibold text-xs">
+                <div className="flex items-center gap-1 text-slate-700 dark:text-white font-semibold text-xs">
                   <span>Precipitation (24h)</span>
-                  <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
+                  <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', rainStatus.badgeClass)}>
                   {rainStatus.label}
@@ -244,7 +248,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 text-xs text-slate-400 font-medium">
+            <div className="mt-4 text-xs text-slate-500 dark:text-slate-200 font-medium">
               <span>Rate: {reading.rainfall_pct.toFixed(0)}% ({reading.rain_detected ? 'Precip Active' : 'Dry Condition'})</span>
             </div>
           </div>
@@ -253,9 +257,9 @@ const DashboardPage: React.FC = () => {
           <div className="card p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-600 font-semibold text-xs">
+                <div className="flex items-center gap-1 text-slate-700 dark:text-white font-semibold text-xs">
                   <span>Displacement Velocity</span>
-                  <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
+                  <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', creepStatus.badgeClass)}>
                   {creepStatus.label}
@@ -269,7 +273,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-4 text-xs text-slate-400 font-medium">
+            <div className="mt-4 text-xs text-slate-500 dark:text-slate-200 font-medium">
               <span>{Math.abs(reading.tilt_rate) > 0.05 ? 'Angular creep alert triggered' : '0 displacement anomalies detected'}</span>
             </div>
           </div>
@@ -307,13 +311,13 @@ const DashboardPage: React.FC = () => {
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
               Trends
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
+            <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
               Continuous 52-week geotechnical telemetry evolution & limit equilibrium trajectory
             </p>
           </div>
 
           {/* Group by: Day | Week | Month */}
-          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-medium text-xs">
+          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-200 font-medium text-xs">
             <span>Group by:</span>
             <div className="segmented-control">
               {(['Day', 'Week', 'Month'] as const).map((t) => (
@@ -338,7 +342,7 @@ const DashboardPage: React.FC = () => {
           <div className="lg:col-span-7 card p-5 flex flex-col justify-between min-h-[360px]">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-800 dark:text-slate-200 font-bold text-sm">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-sm">
                   <span>Bishop Stability & Safety Factor</span>
                   <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
                 </div>
@@ -347,8 +351,8 @@ const DashboardPage: React.FC = () => {
                 </span>
               </div>
 
-              <div className="text-xs text-slate-400 font-medium mt-0.5">
-                Current: <strong className="text-slate-700 dark:text-slate-200">{risk.fos_estimate.toFixed(2)} FoS</strong> · Limit Equilibrium Stability
+              <div className="text-xs text-slate-500 dark:text-slate-300 font-medium mt-0.5">
+                Current: <strong className="text-slate-700 dark:text-white font-bold">{risk.fos_estimate.toFixed(2)} FoS</strong> · Limit Equilibrium Stability
               </div>
             </div>
 
@@ -356,10 +360,10 @@ const DashboardPage: React.FC = () => {
             <div className="w-full h-64 mt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={fosCurve} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? 'rgba(255, 255, 255, 0.08)' : '#f1f5f9'} />
                   <XAxis 
                     dataKey="name" 
-                    tick={{ fontSize: 11, fill: '#64748b', fontWeight: 500 }} 
+                    tick={{ fontSize: 11, fill: isDark ? '#cbd5e1' : '#64748b', fontWeight: 500 }} 
                     axisLine={false} 
                     tickLine={false} 
                   />
@@ -367,12 +371,18 @@ const DashboardPage: React.FC = () => {
                     domain={[0, 2.5]}
                     ticks={[0.0, 0.5, 1.0, 1.5, 2.0]} 
                     tickFormatter={(v) => `${v.toFixed(1)}`} 
-                    tick={{ fontSize: 11, fill: '#64748b', fontWeight: 500 }} 
+                    tick={{ fontSize: 11, fill: isDark ? '#cbd5e1' : '#64748b', fontWeight: 500 }} 
                     axisLine={false} 
                     tickLine={false} 
                   />
                   <Tooltip 
-                    contentStyle={{ background: '#ffffff', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                    contentStyle={{ 
+                      background: isDark ? '#0f172a' : '#ffffff', 
+                      borderRadius: '12px', 
+                      border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #e2e8f0', 
+                      color: isDark ? '#f8fafc' : '#0f172a',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.2)' 
+                    }}
                     formatter={(val: number) => [`${val.toFixed(2)} FoS`, 'Factor of Safety']}
                   />
                   <Line 
@@ -393,20 +403,20 @@ const DashboardPage: React.FC = () => {
             {/* Mini Trend 1: Soil Moisture */}
             <div className="card p-3.5 flex flex-col justify-between h-[172px]">
               <div>
-                <div className="flex items-center gap-1 text-slate-800 font-bold text-xs">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
                   <span>Soil Moisture (VWC)</span>
                   <Info className="w-3 h-3 text-slate-400" />
                 </div>
-                <div className="text-[10.5px] text-slate-400 font-medium">
-                  Live: <strong className="text-slate-700">{reading.soil_moisture_pct.toFixed(1)}%</strong>
+                <div className="text-[10.5px] text-slate-500 dark:text-slate-300 font-medium">
+                  Live: <strong className="text-slate-700 dark:text-white font-bold">{reading.soil_moisture_pct.toFixed(1)}%</strong>
                 </div>
               </div>
 
               <div className="w-full h-24">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={moistureCurve} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                    <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <XAxis dataKey="name" tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
                     <Line type="monotone" dataKey="val" stroke="#2563eb" strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -416,20 +426,20 @@ const DashboardPage: React.FC = () => {
             {/* Mini Trend 2: Rain Ingress */}
             <div className="card p-3.5 flex flex-col justify-between h-[172px]">
               <div>
-                <div className="flex items-center gap-1 text-slate-800 font-bold text-xs">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
                   <span>Precipitation (24h)</span>
                   <Info className="w-3 h-3 text-slate-400" />
                 </div>
-                <div className="text-[10.5px] text-slate-400 font-medium">
-                  Live: <strong className="text-slate-700">{reading.rainfall_24h_mm.toFixed(1)} mm</strong>
+                <div className="text-[10.5px] text-slate-500 dark:text-slate-300 font-medium">
+                  Live: <strong className="text-slate-700 dark:text-white font-bold">{reading.rainfall_24h_mm.toFixed(1)} mm</strong>
                 </div>
               </div>
 
               <div className="w-full h-24">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={rainCurve} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                    <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <XAxis dataKey="name" tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
                     <Line type="monotone" dataKey="val" stroke="#2563eb" strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -439,20 +449,20 @@ const DashboardPage: React.FC = () => {
             {/* Mini Trend 3: Slope Incline */}
             <div className="card p-3.5 flex flex-col justify-between h-[172px]">
               <div>
-                <div className="flex items-center gap-1 text-slate-800 font-bold text-xs">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
                   <span>Slope Incline (Dip)</span>
                   <Info className="w-3 h-3 text-slate-400" />
                 </div>
-                <div className="text-[10.5px] text-slate-400 font-medium">
-                  Live: <strong className="text-slate-700">{reading.tilt_angle.toFixed(1)}°</strong>
+                <div className="text-[10.5px] text-slate-500 dark:text-slate-300 font-medium">
+                  Live: <strong className="text-slate-700 dark:text-white font-bold">{reading.tilt_angle.toFixed(1)}°</strong>
                 </div>
               </div>
 
               <div className="w-full h-24">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={tiltCurve} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                    <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <XAxis dataKey="name" tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
                     <Line type="monotone" dataKey="val" stroke="#2563eb" strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -462,20 +472,20 @@ const DashboardPage: React.FC = () => {
             {/* Mini Trend 4: LoRa Telemetry Link */}
             <div className="card p-3.5 flex flex-col justify-between h-[172px]">
               <div>
-                <div className="flex items-center gap-1 text-slate-800 font-bold text-xs">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
                   <span>LoRa 433MHz Telemetry</span>
                   <Info className="w-3 h-3 text-slate-400" />
                 </div>
-                <div className="text-[10.5px] text-slate-400 font-medium">
-                  Live: <strong className="text-slate-700">{reading.rssi_dbm} dBm</strong>
+                <div className="text-[10.5px] text-slate-500 dark:text-slate-300 font-medium">
+                  Live: <strong className="text-slate-700 dark:text-white font-bold">{reading.rssi_dbm} dBm</strong>
                 </div>
               </div>
 
               <div className="w-full h-24">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={loraCurve} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                    <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <XAxis dataKey="name" tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
                     <Line type="monotone" dataKey="val" stroke="#2563eb" strokeWidth={2} dot={false} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -490,7 +500,7 @@ const DashboardPage: React.FC = () => {
           <div className="card p-5 flex flex-col justify-between min-h-[220px]">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-800 font-bold text-xs">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
                   <span>Hazard Probability (XGBoost)</span>
                   <Info className="w-3.5 h-3.5 text-slate-400" />
                 </div>
@@ -498,16 +508,16 @@ const DashboardPage: React.FC = () => {
                   {risk.risk_level}
                 </span>
               </div>
-              <div className="text-xs text-slate-400 font-medium mt-0.5">
-                Current Risk: <strong className="text-slate-700">{(risk.risk_score * 100).toFixed(0)}%</strong> · Conf: {(risk.confidence * 100).toFixed(0)}%
+              <div className="text-xs text-slate-500 dark:text-slate-300 font-medium mt-0.5">
+                Current Risk: <strong className="text-slate-700 dark:text-white font-bold">{(risk.risk_score * 100).toFixed(0)}%</strong> · Conf: {(risk.confidence * 100).toFixed(0)}%
               </div>
             </div>
 
             <div className="w-full h-32 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={hazardCurve} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
                   <Line type="monotone" dataKey="val" stroke="#2563eb" strokeWidth={2} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
@@ -518,7 +528,7 @@ const DashboardPage: React.FC = () => {
           <div className="card p-5 flex flex-col justify-between min-h-[220px]">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-800 font-bold text-xs">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
                   <span>Pore-Water Saturation Index</span>
                   <Info className="w-3.5 h-3.5 text-slate-400" />
                 </div>
@@ -526,16 +536,16 @@ const DashboardPage: React.FC = () => {
                   Matrix
                 </span>
               </div>
-              <div className="text-xs text-slate-400 font-medium mt-0.5">
-                Saturation: <strong className="text-slate-700">{(reading.soil_moisture_pct * 0.45).toFixed(1)} kPa</strong>
+              <div className="text-xs text-slate-500 dark:text-slate-300 font-medium mt-0.5">
+                Saturation: <strong className="text-slate-700 dark:text-white font-bold">{(reading.soil_moisture_pct * 0.45).toFixed(1)} kPa</strong>
               </div>
             </div>
 
             <div className="w-full h-32 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={porePressureCurve} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
                   <Line type="monotone" dataKey="val" stroke="#2563eb" strokeWidth={2} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
@@ -546,7 +556,7 @@ const DashboardPage: React.FC = () => {
           <div className="card p-5 flex flex-col justify-between min-h-[220px]">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-800 font-bold text-xs">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
                   <span>Cell Broadcast & SMS Reach</span>
                   <Info className="w-3.5 h-3.5 text-slate-400" />
                 </div>
@@ -554,16 +564,16 @@ const DashboardPage: React.FC = () => {
                   Active
                 </span>
               </div>
-              <div className="text-xs text-slate-400 font-medium mt-0.5">
-                Estimated Geo-Fence: <strong className="text-slate-700">1,420 Devices</strong>
+              <div className="text-xs text-slate-500 dark:text-slate-300 font-medium mt-0.5">
+                Estimated Geo-Fence: <strong className="text-slate-700 dark:text-white font-bold">1,420 Devices</strong>
               </div>
             </div>
 
             <div className="w-full h-32 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={smsReachCurve} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: isDark ? '#cbd5e1' : '#94a3b8' }} axisLine={false} tickLine={false} />
                   <Line type="monotone" dataKey="val" stroke="#2563eb" strokeWidth={2} dot={false} />
                 </LineChart>
               </ResponsiveContainer>

@@ -37,8 +37,8 @@
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-highlight: #3b82f6;
     --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
+    --text-secondary: #e2e8f0;
+    --text-muted: #a1a1aa;
   }
 
   body {
@@ -154,7 +154,7 @@
   }
 
   .dark .segmented-item {
-    color: #94a3b8;
+    color: #cbd5e1;
   }
 
   .dark .segmented-item:hover {
@@ -210,5 +210,85 @@
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
     color: #f8fafc !important;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  /* ── Leaflet Dark Mode Map Styling (Zero API Keys / Zero Watermarks) ── */
+  .dark .leaflet-container {
+    background-color: #080c14 !important;
+  }
+
+  .dark .leaflet-tile-pane {
+    filter: invert(100%) hue-rotate(180deg) brightness(88%) contrast(92%) grayscale(25%);
+  }
+
+  /* Dark mode zoom buttons */
+  .dark .leaflet-control-zoom {
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 0.75rem !important;
+    overflow: hidden;
+  }
+
+  .dark .leaflet-control-zoom-in,
+  .dark .leaflet-control-zoom-out {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.15s ease;
+  }
+
+  .dark .leaflet-control-zoom-out {
+    border-bottom: none !important;
+  }
+
+  .dark .leaflet-control-zoom-in:hover,
+  .dark .leaflet-control-zoom-out:hover {
+    background-color: #1e293b !important;
+    color: #60a5fa !important;
+  }
+
+  /* Dark mode attribution */
+  .dark .leaflet-container .leaflet-control-attribution {
+    background-color: rgba(15, 23, 42, 0.85) !important;
+    color: #94a3b8 !important;
+    border-top-left-radius: 0.5rem;
+    font-size: 10px !important;
+  }
+
+  .dark .leaflet-container .leaflet-control-attribution a {
+    color: #60a5fa !important;
+  }
+
+  /* Dark mode popups */
+  .dark .leaflet-popup-content-wrapper,
+  .dark .leaflet-popup-tip {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .dark .leaflet-popup-close-button {
+    color: #94a3b8 !important;
+  }
+
+  .dark .leaflet-popup-close-button:hover {
+    color: #ffffff !important;
+  }
+
+  /* Radar Pulse Animation for Critical Slope Monitoring Stations */
+  @keyframes radarPing {
+    0% {
+      transform: scale(0.85);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.9);
+      opacity: 0.25;
+    }
+    100% {
+      transform: scale(2.4);
+      opacity: 0;
+    }
   }
 }

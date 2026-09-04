@@ -471,17 +471,17 @@ export default function VirtualChatbotModal() {
                           {/* Optional Live Telemetry Mini-Card */}
                           {msg.liveTelemetryCard && state && (
                             <div className="mt-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 space-y-1.5 font-mono text-[10px]">
-                              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-sans">
+                              <div className="flex items-center justify-between text-slate-500 dark:text-slate-300 font-sans">
                                 <span>STATION: LG-N01</span>
                                 <span className="text-[#10b981] font-bold">LIVE TELEMETRY</span>
                               </div>
                               <div className="grid grid-cols-2 gap-2 text-center pt-1">
                                 <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
-                                  <span className="text-slate-400 block text-[9px] font-sans">MOISTURE VWC</span>
+                                  <span className="text-slate-500 dark:text-slate-300 block text-[9px] font-sans">MOISTURE VWC</span>
                                   <strong className="text-slate-900 dark:text-slate-100 text-xs">{state.currentReading.soil_moisture_pct.toFixed(1)}%</strong>
                                 </div>
                                 <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
-                                  <span className="text-slate-400 block text-[9px] font-sans">BISHOP FoS</span>
+                                  <span className="text-slate-500 dark:text-slate-300 block text-[9px] font-sans">BISHOP FoS</span>
                                   <strong className={clsx("text-xs", state.currentRisk.fos_estimate < 1.0 ? 'text-red-600' : 'text-emerald-600 dark:text-emerald-400')}>
                                     {state.currentRisk.fos_estimate.toFixed(2)}
                                   </strong>
@@ -506,7 +506,7 @@ export default function VirtualChatbotModal() {
                                 </span>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-2 text-[9.5px] text-slate-500 dark:text-slate-400 font-mono">
+                              <div className="grid grid-cols-2 gap-2 text-[9.5px] text-slate-500 dark:text-slate-300 font-mono">
                                 <div><strong className="text-slate-700 dark:text-slate-200 font-sans">GPS:</strong> {msg.locationCard.coordinates}</div>
                                 <div><strong className="text-slate-700 dark:text-slate-200 font-sans">Elevation:</strong> {msg.locationCard.elevation}</div>
                                 <div><strong className="text-slate-700 dark:text-slate-200 font-sans">Trigger Rain:</strong> {msg.locationCard.triggerRainfallThreshold}</div>
@@ -612,7 +612,7 @@ export default function VirtualChatbotModal() {
                           <MapPin className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                           <span>{loc.name}</span>
                         </div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-mono">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5 font-mono">
                           {loc.state} &middot; {loc.coordinates} ({loc.elevation})
                         </div>
                       </div>
