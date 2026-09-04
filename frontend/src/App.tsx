@@ -9,6 +9,7 @@ import RiskMapPage from './pages/RiskMapPage';
 import SettingsPage from './pages/SettingsPage';
 import AboutPage from './pages/AboutPage';
 import { useMockTelemetry } from './hooks/useMockTelemetry';
+import { ThemeProvider } from './context/ThemeContext';
 import type { Alert } from './types';
 
 const App: React.FC = () => {
@@ -18,9 +19,10 @@ const App: React.FC = () => {
   const isConnected = state ? state.isConnected : false;
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout alertCount={unacknowledgedCount} isConnected={isConnected} />}>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout alertCount={unacknowledgedCount} isConnected={isConnected} />}>
           {/* Primary Routes */}
           <Route path="/" element={<DashboardPage />} />
           <Route path="/sensor" element={<SensorNodePage />} />
@@ -41,7 +43,8 @@ const App: React.FC = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 

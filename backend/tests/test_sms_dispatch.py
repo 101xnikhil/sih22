@@ -23,16 +23,21 @@ def test_format_emergency_sms_message():
 
 def test_sms_channel_dispatch_single():
     async def _run():
-        channel = SMSNotificationChannel()
-        result = await channel.dispatch_single_sms(
-            to_phone="+919506758710",
-            message="Test Emergency Message",
-            severity="CRITICAL",
-        )
-        assert result["recipient"] == "+919506758710"
-        assert result["status"] == "DELIVERED"
-        assert result["message"] == "Test Emergency Message"
-        assert len(channel.dispatched_history) >= 1
+        orig_key = settings.FAST2SMS_API_KEY
+        try:
+            settings.FAST2SMS_API_KEY = ""
+            channel = SMSNotificationChannel()
+            result = await channel.dispatch_single_sms(
+                to_phone="+919506758710",
+                message="Test Emergency Message",
+                severity="CRITICAL",
+            )
+            assert result["recipient"] == "+919506758710"
+            assert result["status"] == "DELIVERED"
+            assert result["message"] == "Test Emergency Message"
+            assert len(channel.dispatched_history) >= 1
+        finally:
+            settings.FAST2SMS_API_KEY = orig_key
     
     asyncio.run(_run())
 

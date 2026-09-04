@@ -29,6 +29,18 @@
     --text-muted: #64748b;
   }
 
+  :root.dark,
+  .dark {
+    --bg-main: #080c14;
+    --bg-surface: #0f172a;
+    --bg-surface-elevated: #1e293b;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-highlight: #3b82f6;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+  }
+
   body {
     background-color: var(--bg-main);
     color: var(--text-primary);
@@ -36,6 +48,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   ::-webkit-scrollbar {
@@ -47,18 +60,30 @@
     background: #f1f5f9;
   }
 
+  .dark ::-webkit-scrollbar-track {
+    background: #080c14;
+  }
+
   ::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 9999px;
   }
 
+  .dark ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+  }
+
   ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #334155;
   }
 }
 
 @layer components {
-  /* Crisp White Cards matching the screenshot */
+  /* Crisp Surface Cards */
   .card {
     background: #ffffff;
     border: 1px solid #e5e9f2;
@@ -67,15 +92,31 @@
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  .dark .card {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+  }
+
   .card:hover {
     border-color: #cbd5e1;
     box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .card:hover {
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.6);
   }
 
   .card-subtle {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 0.75rem;
+  }
+
+  .dark .card-subtle {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .card-header {
@@ -89,6 +130,11 @@
     justify-content: space-between;
   }
 
+  .dark .card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+  }
+
   .card-body {
     padding: 1.25rem;
   }
@@ -98,8 +144,21 @@
     @apply inline-flex items-center p-1 bg-white border border-[#e5e9f2] rounded-xl text-xs font-semibold;
   }
 
+  .dark .segmented-control {
+    background-color: #0f172a;
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
   .segmented-item {
     @apply px-3.5 py-1.5 rounded-lg text-slate-600 font-medium transition-all;
+  }
+
+  .dark .segmented-item {
+    color: #94a3b8;
+  }
+
+  .dark .segmented-item:hover {
+    color: #f8fafc;
   }
 
   .segmented-item-active {
@@ -132,6 +191,10 @@
     @apply text-2xl sm:text-3xl font-extrabold text-[#0f172a] tracking-tight tabular-nums;
   }
 
+  .dark .stat-huge {
+    color: #f8fafc;
+  }
+
   /* Recharts tooltips */
   .recharts-default-tooltip {
     background: #ffffff !important;
@@ -140,5 +203,12 @@
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
     color: #0f172a !important;
     font-size: 11px !important;
+  }
+
+  .dark .recharts-default-tooltip {
+    background: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #f8fafc !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
   }
 }

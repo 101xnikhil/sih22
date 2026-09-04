@@ -110,10 +110,10 @@ const DashboardPage: React.FC = () => {
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
               Geotechnical Status
             </h2>
-            <p className="text-xs text-slate-500 font-normal">
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
               Real-time slope stability indices, pore water pressure, and angular displacement metrics
             </p>
           </div>
@@ -124,11 +124,11 @@ const DashboardPage: React.FC = () => {
               className={clsx(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold shadow-sm transition-all",
                 showScenarioDrawer 
-                  ? "bg-blue-50 border-blue-200 text-blue-700"
-                  : "bg-white border-[#e5e9f2] text-slate-700 hover:text-blue-600"
+                  ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300"
+                  : "bg-white dark:bg-[#0f172a] border-[#e5e9f2] dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
               )}
             >
-              <Sliders className="w-3.5 h-3.5 text-blue-600" />
+              <Sliders className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
               <span>{showScenarioDrawer ? 'Hide Lab Scenarios' : 'Interactive Lab Scenarios'}</span>
             </button>
 
@@ -137,11 +137,11 @@ const DashboardPage: React.FC = () => {
               className={clsx(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold shadow-sm transition-all",
                 showSmsPanel 
-                  ? "bg-blue-50 border-blue-200 text-blue-700"
-                  : "bg-white border-[#e5e9f2] text-slate-700 hover:text-blue-600"
+                  ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300"
+                  : "bg-white dark:bg-[#0f172a] border-[#e5e9f2] dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
               )}
             >
-              <Bluetooth className="w-3.5 h-3.5 text-blue-600" />
+              <Bluetooth className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
               <span>{showSmsPanel ? 'Hide Bluetooth/SMS' : 'Zero-Pairing SMS Hub'}</span>
             </button>
           </div>
@@ -304,16 +304,16 @@ const DashboardPage: React.FC = () => {
       <div>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
               Trends
             </h2>
-            <p className="text-xs text-slate-500 font-normal">
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
               Continuous 52-week geotechnical telemetry evolution & limit equilibrium trajectory
             </p>
           </div>
 
           {/* Group by: Day | Week | Month */}
-          <div className="flex items-center gap-2 text-slate-600 font-medium text-xs">
+          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-medium text-xs">
             <span>Group by:</span>
             <div className="segmented-control">
               {(['Day', 'Week', 'Month'] as const).map((t) => (
@@ -322,7 +322,7 @@ const DashboardPage: React.FC = () => {
                   onClick={() => setGroupBy(t)}
                   className={clsx(
                     'segmented-item',
-                    groupBy === t ? 'segmented-item-active' : 'hover:text-slate-900'
+                    groupBy === t ? 'segmented-item-active' : 'hover:text-slate-900 dark:hover:text-white'
                   )}
                 >
                   {t}
@@ -338,7 +338,7 @@ const DashboardPage: React.FC = () => {
           <div className="lg:col-span-7 card p-5 flex flex-col justify-between min-h-[360px]">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-slate-800 font-bold text-sm">
+                <div className="flex items-center gap-1 text-slate-800 dark:text-slate-200 font-bold text-sm">
                   <span>Bishop Stability & Safety Factor</span>
                   <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
                 </div>
@@ -348,7 +348,7 @@ const DashboardPage: React.FC = () => {
               </div>
 
               <div className="text-xs text-slate-400 font-medium mt-0.5">
-                Current: <strong className="text-slate-700">{risk.fos_estimate.toFixed(2)} FoS</strong> · Limit Equilibrium Stability
+                Current: <strong className="text-slate-700 dark:text-slate-200">{risk.fos_estimate.toFixed(2)} FoS</strong> · Limit Equilibrium Stability
               </div>
             </div>
 

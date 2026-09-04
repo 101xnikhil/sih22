@@ -157,11 +157,14 @@ class AlertService:
             }
             # Schedule asynchronous dispatch
             try:
+                from app.services.sms_service import sms_service
                 loop = asyncio.get_event_loop()
                 if loop.is_running():
                     loop.create_task(alert_dispatcher.broadcast_alert(alert_payload))
+                    loop.create_task(sms_service.send_alert_sms(alert))
                 else:
                     asyncio.run(alert_dispatcher.broadcast_alert(alert_payload))
+                    asyncio.run(sms_service.send_alert_sms(alert))
             except Exception:
                 pass
         except Exception:

@@ -9,6 +9,7 @@ from app.services.websocket_manager import ws_manager, ConnectionManager
 from app.services.alert_service import alert_service, AlertService
 from app.services.telemetry_service import telemetry_service, TelemetryService
 from app.services.mock_generator import mock_generator, MockTelemetryGenerator
+from app.services.sms_service import sms_service, SMSService
 
 __all__ = [
     "risk_engine",
@@ -24,4 +25,6 @@ __all__ = [
     "TelemetryService",
     "mock_generator",
     "MockTelemetryGenerator",
+    "sms_service",
+    "SMSService",
 ]

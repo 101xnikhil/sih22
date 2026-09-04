@@ -144,29 +144,63 @@ class SMSNotificationChannel(BaseNotificationChannel):
         ):
             provider_used = "fast2sms"
             fast2sms_url = "https://www.fast2sms.com/dev/bulkV2"
-            phone_digits = clean_phone.replace("+91", "").replace("+", "").replace(" ", "").replace("-", "")
+            
+            # Normalize Indian 10-digit mobile number for Fast2SMS route 'q'
+            raw_digits = "".join(filter(str.isdigit, clean_phone))
+            if len(raw_digits) >= 10:
+                phone_digits = raw_digits[-10:]
+            else:
+                phone_digits = raw_digits
+
+            # Telecom SMS route 'q' works best with standard GSM-7 text (replace emoji with text tag)
+            sms_body = message.replace("🚨", "[ALERT]").replace("•", "-").strip()
+
             try:
-                async with httpx.AsyncClient(timeout=8.0) as client:
-                    resp = await client.post(
-                        fast2sms_url,
-                        headers={
-                            "authorization": settings.FAST2SMS_API_KEY,
-                            "Content-Type": "application/json",
-                        },
-                        json={
-                            "route": "q",
-                            "message": message,
-                            "language": "english",
-                            "numbers": phone_digits,
-                        },
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    # Method 1: Fast2SMS Dev API GET with query params (as shown on Fast2SMS Dev API console)
+                    params = {
+                        "authorization": settings.FAST2SMS_API_KEY.strip(),
+                        "route": "q",
+                        "message": sms_body,
+                        "language": "english",
+                        "flash": "0",
+                        "numbers": phone_digits,
+                    }
+                    resp = await client.get(fast2sms_url, params=params)
+
+                    # Method 2: Fallback to POST if GET returned error
+                    if resp.status_code != 200:
+                        resp = await client.post(
+                            fast2sms_url,
+                            headers={
+                                "authorization": settings.FAST2SMS_API_KEY.strip(),
+                                "Content-Type": "application/json",
+                            },
+                            json={
+                                "route": "q",
+                                "message": sms_body,
+                                "language": "english",
+                                "numbers": phone_digits,
+                            },
+                        )
+
+                    try:
+                        resp_data = resp.json()
+                    except Exception:
+                        resp_data = {}
+
+                    is_success = (
+                        resp.status_code == 200
+                        and (resp_data.get("return") is True or "sent successfully" in resp.text.lower())
                     )
-                    if resp.status_code == 200 and resp.json().get("return") is True:
+
+                    if is_success:
                         delivery_status = "DELIVERED"
-                        logger.info(f"Fast2SMS message delivered to {phone_digits}")
+                        logger.info(f"Fast2SMS message successfully delivered to {phone_digits}: {resp_data.get('message', 'Delivered')}")
                     else:
                         delivery_status = "FAILED"
                         error_detail = f"Fast2SMS response: {resp.text}"
-                        logger.error(f"Fast2SMS delivery failed: {error_detail}")
+                        logger.error(f"Fast2SMS delivery failed to {phone_digits}: {error_detail}")
             except Exception as e:
                 delivery_status = "FAILED"
                 error_detail = str(e)

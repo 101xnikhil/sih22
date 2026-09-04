@@ -4,7 +4,7 @@ from typing import List, Union
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(".env", "../.env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -51,6 +51,12 @@ class Settings(BaseSettings):
     CUSTOM_SMS_API_KEY: str = ""
     EMERGENCY_PHONE_NUMBERS: Union[List[str], str] = ["+919506758710"]
 
+    # Fast2SMS Quick Route (q) Live Alert Settings
+    ALERT_SMS_RECIPIENTS: Union[List[str], str] = ""
+    SMS_ALERTS_ENABLED: bool = False
+    SMS_MIN_SEVERITY: str = "HIGH"
+    SMS_MAX_PER_DAY: int = 20
+
     # Google Cloud & Blynk Integration Settings
     BLYNK_AUTH_TOKEN: str = ""
     GCP_WEBHOOK_URL: str = ""
@@ -69,6 +75,31 @@ class Settings(BaseSettings):
                     pass
             return [p.strip() for p in clean.split(",") if p.strip()]
         return ["+919506758710"]
+
+    @property
+    def alert_sms_recipients_list(self) -> List[str]:
+        raw_list: List[str] = []
+        if isinstance(self.ALERT_SMS_RECIPIENTS, list):
+            raw_list = self.ALERT_SMS_RECIPIENTS
+        elif isinstance(self.ALERT_SMS_RECIPIENTS, str):
+            clean = self.ALERT_SMS_RECIPIENTS.strip()
+            if clean.startswith("[") and clean.endswith("]"):
+                try:
+                    import json
+                    raw_list = json.loads(clean)
+                except Exception:
+                    raw_list = [p.strip() for p in clean.split(",") if p.strip()]
+            else:
+                raw_list = [p.strip() for p in clean.split(",") if p.strip()]
+
+        clean_numbers = []
+        for item in raw_list:
+            digits = "".join(ch for ch in str(item) if ch.isdigit())
+            if len(digits) >= 10:
+                clean_numbers.append(digits[-10:])
+            elif digits:
+                clean_numbers.append(digits)
+        return clean_numbers
 
 
 settings = Settings()

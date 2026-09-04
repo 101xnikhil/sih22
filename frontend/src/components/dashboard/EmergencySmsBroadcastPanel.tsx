@@ -17,8 +17,10 @@ interface DispatchedSms {
   sector: string;
   severity: 'CRITICAL' | 'HIGH' | 'WARNING';
   message: string;
-  deliveryStatus: 'DELIVERED' | 'DISPATCHING' | 'QUEUED';
+  deliveryStatus: 'DELIVERED' | 'DISPATCHING' | 'QUEUED' | 'FAILED';
   broadcastMode: 'BLE_NON_CONNECTABLE_ADV' | 'SMS_CELL_BROADCAST';
+  provider?: string;
+  error?: string;
 }
 
 interface NearbyBleDevice {
@@ -185,6 +187,7 @@ export default function EmergencySmsBroadcastPanel() {
   ]);
 
   const [latestSmsOnPhone, setLatestSmsOnPhone] = useState<DispatchedSms>(dispatchedHistory[0]);
+  const [dispatchNotice, setDispatchNotice] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const [smsConfig, setSmsConfig] = useState<{ active_mode: string; sms_enabled: boolean } | null>(null);
 
@@ -207,8 +210,10 @@ export default function EmergencySmsBroadcastPanel() {
             sector: 'Sector 7 (Shimla — Solan NH-5 Corridor, HP)',
             severity: (h.severity || 'CRITICAL').toUpperCase() as any,
             message: h.message,
-            deliveryStatus: h.status === 'DELIVERED' ? 'DELIVERED' : 'DISPATCHING',
+            deliveryStatus: (h.status || 'DELIVERED') as any,
             broadcastMode: 'BLE_NON_CONNECTABLE_ADV',
+            provider: h.provider,
+            error: h.error,
           }));
           setDispatchedHistory(mapped);
           setLatestSmsOnPhone(mapped[0]);
@@ -251,6 +256,7 @@ export default function EmergencySmsBroadcastPanel() {
             ...d,
             rssi: newRssi,
             distanceMeters: Math.max(0.8, newDistance),
+            status: newDistance < 5 ? 'IN DANGER ZONE' : newDistance < 15 ? 'PROXIMITY WARNING' : 'PERIMETER',
             lastSeen: 'Just now',
           };
         })
@@ -259,33 +265,11 @@ export default function EmergencySmsBroadcastPanel() {
     return () => clearInterval(interval);
   }, [isBleScanning]);
 
-  // Automated trigger when live risk becomes critical or high
-  useEffect(() => {
-    if (!isAutoBroadcastEnabled || !state) return;
-
-    const riskLevel = state.currentRisk.risk_level;
-    const isCriticalOrHigh = riskLevel === 'CRITICAL' || riskLevel === 'HIGH';
-
-    if (isCriticalOrHigh && dispatchedHistory.length > 0) {
-      const last = dispatchedHistory[0];
-      const timeDiffSeconds = (Date.now() - new Date(`2026-08-28T${last.timestamp}`).getTime()) / 1000;
-      
-      // Auto-dispatch if last dispatch was more than 45 seconds ago
-      if (isNaN(timeDiffSeconds) || timeDiffSeconds > 45) {
-        triggerEmergencyBroadcast(
-          riskLevel as 'CRITICAL' | 'HIGH', 
-          'Automated Geotechnical Threshold Trigger'
-        );
-      }
-    }
-  }, [state?.currentRisk.risk_level, state?.currentRisk.fos_estimate]);
-
-  const triggerEmergencyBroadcast = async (
-    severity: 'CRITICAL' | 'HIGH' | 'WARNING' = 'CRITICAL',
-    triggerSource = 'Zero-Pairing BLE Proximity Push'
-  ) => {
+  // Handle manual / simulated broadcast dispatch
+  const triggerEmergencyBroadcast = async (severity: 'CRITICAL' | 'HIGH' | 'WARNING' = 'CRITICAL', mode: string = 'Manual Push') => {
     setIsDispatching(true);
     playAlertChime();
+    setDispatchNotice(null);
 
     const moisture = state?.currentReading.soil_moisture_pct.toFixed(1) || '84.2';
     const fos = state?.currentRisk.fos_estimate.toFixed(2) || '0.86';
@@ -296,7 +280,7 @@ export default function EmergencySmsBroadcastPanel() {
     const newSms: DispatchedSms = {
       id: `sms-${Date.now()}`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      recipientGroup: `Unpaired Nearby BLE Devices (${bleDevices.length} Passive Phones in ${targetSector.split(' ')[0]})`,
+      recipientGroup: `Target: ${customPhone}`,
       recipientCount: bleDevices.length + 1420,
       sector: targetSector,
       severity,
@@ -307,9 +291,6 @@ export default function EmergencySmsBroadcastPanel() {
 
     setDispatchedHistory((prev) => [newSms, ...prev.slice(0, 7)]);
     setLatestSmsOnPhone(newSms);
-
-    // Mark all nearby devices as alert sent
-    setBleDevices((prev) => prev.map((d) => ({ ...d, alertSent: true, passivePacketReceived: true })));
 
     // Send actual SMS through Backend SMS Gateway API
     try {
@@ -326,14 +307,29 @@ export default function EmergencySmsBroadcastPanel() {
       });
       const data = await resp.json();
       if (resp.ok && data.dispatch_report) {
+        const report = data.dispatch_report;
+        const status = report.status || 'DELIVERED';
         setDispatchedHistory((prev) =>
           prev.map((s) => s.id === newSms.id ? { 
             ...s, 
-            id: data.dispatch_report.id || s.id,
-            deliveryStatus: (data.dispatch_report.status || 'DELIVERED') as any,
-            message: data.dispatch_report.message || s.message,
+            id: report.id || s.id,
+            deliveryStatus: status as any,
+            message: report.message || s.message,
+            provider: report.provider,
+            error: report.error,
           } : s)
         );
+        if (status === 'DELIVERED') {
+          setDispatchNotice({
+            type: 'success',
+            text: `SMS dispatched successfully to ${customPhone} via ${(report.provider || 'Fast2SMS').toUpperCase()}!`,
+          });
+        } else {
+          setDispatchNotice({
+            type: 'error',
+            text: report.error || 'Fast2SMS API rejected the dispatch request.',
+          });
+        }
       } else {
         setDispatchedHistory((prev) =>
           prev.map((s) => s.id === newSms.id ? { ...s, deliveryStatus: 'DELIVERED' } : s)
@@ -374,6 +370,18 @@ export default function EmergencySmsBroadcastPanel() {
                   </span>
                   <span className="text-[10px] font-mono text-cyan-400 font-semibold tracking-wider uppercase">
                     ADV_NONCONN_IND &bull; 2.4GHz CH 37/38/39 &bull; Cell Broadcast Ingress
+                  </span>
+                  <span className={clsx(
+                    "px-2.5 py-0.5 rounded-full text-[9px] font-mono font-bold flex items-center gap-1.5 border",
+                    smsConfig?.active_mode === 'fast2sms_api'
+                      ? "bg-emerald-950/80 text-emerald-300 border-emerald-600/40"
+                      : "bg-slate-900 text-slate-400 border-slate-700"
+                  )}>
+                    <span className={clsx(
+                      "w-1.5 h-1.5 rounded-full",
+                      smsConfig?.active_mode === 'fast2sms_api' ? "bg-emerald-400 animate-pulse" : "bg-slate-400"
+                    )} />
+                    GATEWAY: {smsConfig?.active_mode === 'fast2sms_api' ? 'Fast2SMS API (Active)' : 'Simulated'}
                   </span>
                 </div>
               </div>
@@ -621,6 +629,43 @@ export default function EmergencySmsBroadcastPanel() {
                   </button>
                 </div>
               </div>
+
+              {dispatchNotice && (
+                <div
+                  className={clsx(
+                    'p-3.5 rounded-2xl border text-xs font-mono flex items-start justify-between gap-3 transition-all',
+                    dispatchNotice.type === 'success'
+                      ? 'bg-emerald-950/80 border-emerald-500/60 text-emerald-200'
+                      : 'bg-red-950/80 border-red-500/60 text-red-200'
+                  )}
+                >
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-base leading-none mt-0.5">
+                      {dispatchNotice.type === 'success' ? '✅' : '⚠️'}
+                    </span>
+                    <div className="space-y-1">
+                      <strong className="block font-bold text-white text-xs">
+                        {dispatchNotice.type === 'success' ? 'Emergency SMS Transmitted' : 'SMS Gateway Response'}
+                      </strong>
+                      <p className="text-[11px] leading-relaxed text-slate-300 font-sans">
+                        {dispatchNotice.text}
+                      </p>
+                      {dispatchNotice.text.includes('100 INR') && (
+                        <div className="mt-2 p-2 rounded-xl bg-amber-950/50 border border-amber-500/40 text-amber-200 text-[11px] font-sans">
+                          <strong>Fast2SMS Account Activation:</strong> Fast2SMS provides ₹50 free wallet credits for testing via their web dashboard, but requires a one-time recharge of ₹100 INR to unlock the <strong>Developer API</strong> route. Once recharged via <em>Add Credit</em> on your Fast2SMS dashboard, automated website SMS will deliver instantly to any Indian mobile number!
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setDispatchNotice(null)}
+                    className="text-slate-400 hover:text-white text-sm shrink-0 px-1 py-0.5"
+                    title="Dismiss"
+                  >
+                    &times;
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -662,7 +707,11 @@ export default function EmergencySmsBroadcastPanel() {
                       <span className="text-[10px] text-slate-400">{sms.timestamp}</span>
                       <span className={clsx(
                         'px-2 py-0.2 rounded-full text-[9px] font-bold border',
-                        sms.deliveryStatus === 'DELIVERED' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-orange-950 text-orange-300 border-orange-800 animate-pulse'
+                        sms.deliveryStatus === 'DELIVERED'
+                          ? 'bg-emerald-950 text-emerald-300 border-emerald-800'
+                          : sms.deliveryStatus === 'FAILED'
+                          ? 'bg-red-950 text-red-300 border-red-800'
+                          : 'bg-orange-950 text-orange-300 border-orange-800 animate-pulse'
                       )}>
                         {sms.deliveryStatus}
                       </span>

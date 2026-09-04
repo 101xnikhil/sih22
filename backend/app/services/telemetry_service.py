@@ -149,9 +149,29 @@ class TelemetryService:
                 "severity": new_alert.severity,
                 "title": new_alert.title,
                 "message": new_alert.message,
+                "sms_sent": getattr(new_alert, "sms_sent", False) or False,
+                "sms_sent_at": new_alert.sms_sent_at.isoformat() if getattr(new_alert, "sms_sent_at", None) else None,
+                "sms_error": getattr(new_alert, "sms_error", None),
             } if new_alert else None,
         }
         await ws_manager.broadcast(broadcast_payload)
+
+        # Broadcast standalone alert event if alert was created (API_SPEC.md 2.2)
+        if new_alert:
+            await ws_manager.broadcast({
+                "type": "alert",
+                "data": {
+                    "id": new_alert.id,
+                    "timestamp": new_alert.timestamp.isoformat(),
+                    "severity": new_alert.severity,
+                    "risk_score": new_alert.risk_score,
+                    "risk_level": new_alert.risk_level,
+                    "message": new_alert.message,
+                    "sms_sent": getattr(new_alert, "sms_sent", False) or False,
+                    "sms_sent_at": new_alert.sms_sent_at.isoformat() if getattr(new_alert, "sms_sent_at", None) else None,
+                    "sms_error": getattr(new_alert, "sms_error", None),
+                },
+            })
 
         return telemetry, risk_result, new_alert
 

@@ -2,12 +2,14 @@ import React from 'react';
 import { useMockTelemetry } from '../hooks/useMockTelemetry';
 import LoadingState from '../components/common/LoadingState';
 import PrototypeLabel from '../components/common/PrototypeLabel';
-import { Server, Settings, Database, RefreshCw, AlertTriangle, Cpu, Layers, ShieldCheck, Sliders, Radio, CheckCircle2, Wifi, FlaskConical } from 'lucide-react';
+import { Server, Settings, Database, RefreshCw, AlertTriangle, Cpu, Layers, ShieldCheck, Sliders, Radio, CheckCircle2, Wifi, FlaskConical, MessageSquare, PhoneCall, Sun, Moon, Monitor } from 'lucide-react';
 import { Scenario } from '../mock/generator';
 import clsx from 'clsx';
 import BlynkIntegrationPanel from '../components/dashboard/BlynkIntegrationPanel';
+import { useTheme } from '../context/ThemeContext';
 
 const SettingsPage: React.FC = () => {
+  const { theme, setTheme } = useTheme();
   const { 
     state, 
     scenario, 
@@ -22,6 +24,22 @@ const SettingsPage: React.FC = () => {
     setConnectionState,
   } = useMockTelemetry();
   
+  const [smsStatus, setSmsStatus] = React.useState<{
+    enabled: boolean;
+    recipients_count: number;
+    min_severity: string;
+    sent_today: number;
+    max_per_day: number;
+    quota_remaining: number;
+  } | null>(null);
+
+  React.useEffect(() => {
+    fetch('/api/alerts/sms-status')
+      .then((r) => r.json())
+      .then((data) => setSmsStatus(data))
+      .catch(() => {});
+  }, []);
+  
   if (!state) return <LoadingState message="Loading system configuration..." />;
 
   const isHardware = mode === 'HARDWARE';
@@ -34,14 +52,98 @@ const SettingsPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <Settings className="w-5 h-5 text-blue-600" />
-            <h1 className="text-xl font-bold text-[#0f172a] tracking-tight">Hardware & Ingestion Settings</h1>
+            <h1 className="text-xl font-bold text-[#0f172a] dark:text-white tracking-tight">Hardware & Ingestion Settings</h1>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Configure data ingestion modes: Real ESP32 Sensors via LoRa Gateway, Blynk IoT Cloud Webhooks, or Geotechnical Scenarios.
           </p>
         </div>
         <PrototypeLabel text="Live Telemetry Active" />
       </div>
+
+      {/* Section 0: UI Theme & Mission Control Appearance */}
+      <section className="card p-5">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10 mb-4">
+          <div className="flex items-center gap-2">
+            <Sun className="w-4 h-4 text-amber-500" />
+            <span className="font-bold text-xs uppercase tracking-wider text-slate-800 dark:text-slate-200">
+              Appearance & Interface Theme
+            </span>
+          </div>
+          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+            Active: <strong className="text-slate-800 dark:text-slate-200 uppercase font-mono">{theme}</strong>
+          </span>
+        </div>
+
+        <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          Select your preferred display theme. Dark mode provides an ergonomic, low-light operations room experience with high-contrast safety indicators.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Light Theme */}
+          <button
+            type="button"
+            onClick={() => setTheme('light')}
+            className={clsx(
+              "p-4 rounded-xl border text-left flex flex-col justify-between transition-all",
+              theme === 'light'
+                ? "border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 ring-2 ring-blue-500/20"
+                : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900/50"
+            )}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <Sun className="w-5 h-5 text-amber-500" />
+              {theme === 'light' && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
+            </div>
+            <div>
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">Light Theme</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">High-key daylight visibility</div>
+            </div>
+          </button>
+
+          {/* Dark Theme */}
+          <button
+            type="button"
+            onClick={() => setTheme('dark')}
+            className={clsx(
+              "p-4 rounded-xl border text-left flex flex-col justify-between transition-all",
+              theme === 'dark'
+                ? "border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 ring-2 ring-blue-500/20"
+                : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900/50"
+            )}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <Moon className="w-5 h-5 text-blue-400" />
+              {theme === 'dark' && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
+            </div>
+            <div>
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">Dark Mission Control</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Deep obsidian operations room</div>
+            </div>
+          </button>
+
+          {/* System Default */}
+          <button
+            type="button"
+            onClick={() => setTheme('system')}
+            className={clsx(
+              "p-4 rounded-xl border text-left flex flex-col justify-between transition-all",
+              theme === 'system'
+                ? "border-blue-600 bg-blue-50/50 dark:bg-blue-900/20 ring-2 ring-blue-500/20"
+                : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900/50"
+            )}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <Monitor className="w-5 h-5 text-purple-400" />
+              {theme === 'system' && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
+            </div>
+            <div>
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">System Default</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Synchronized with OS preference</div>
+            </div>
+          </button>
+        </div>
+      </section>
 
       {/* Section 1: Data Source Mode Switcher */}
       <section className="card">
@@ -268,11 +370,88 @@ const SettingsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Section 4: System Runtime Metadata */}
+      {/* Section 4: Fast2SMS Cellular Alerting (Quick SMS Route) */}
       <section className="card">
         <div className="card-header flex items-center justify-between">
           <div className="flex items-center gap-2 text-slate-800">
-            <Cpu className="w-4 h-4 text-blue-600" />
+            <MessageSquare className="w-4 h-4 text-emerald-600" />
+            <span className="font-bold text-xs uppercase tracking-wider">Fast2SMS Live Cellular Alerting (Quick SMS Route)</span>
+          </div>
+          <span className={clsx(
+            "badge text-[10px]",
+            smsStatus?.enabled ? "bg-emerald-100 text-emerald-800 border-emerald-300" : "bg-slate-100 text-slate-600 border-slate-300"
+          )}>
+            {smsStatus?.enabled ? "DISPATCH ACTIVE" : "DISABLED"}
+          </span>
+        </div>
+        <div className="card-body space-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase block font-sans">Status</span>
+              <strong className={clsx("text-sm mt-1 block", smsStatus?.enabled ? "text-emerald-600 dark:text-emerald-400" : "text-slate-600 dark:text-slate-400")}>
+                {smsStatus?.enabled ? "Enabled" : "Disabled"}
+              </strong>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">Automatic push</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase block font-sans">Configured Recipients</span>
+              <strong className="text-sm text-slate-900 dark:text-slate-100 mt-1 block font-mono">
+                {smsStatus ? `${smsStatus.recipients_count} Official${smsStatus.recipients_count === 1 ? '' : 's'}` : "Loading..."}
+              </strong>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">Batch delivered</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase block font-sans">Trigger Severity</span>
+              <strong className="text-sm text-orange-600 dark:text-orange-400 mt-1 block font-mono">
+                &ge; {smsStatus?.min_severity || "HIGH"}
+              </strong>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">HIGH &amp; CRITICAL</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase block font-sans">Daily Free Plan Cap</span>
+              <strong className="text-sm text-blue-600 dark:text-blue-400 mt-1 block font-mono">
+                {smsStatus ? `${smsStatus.sent_today} / ${smsStatus.max_per_day}` : "Loading..."}
+              </strong>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">
+                {smsStatus ? `${smsStatus.quota_remaining} remaining today` : "Resets midnight UTC"}
+              </span>
+            </div>
+          </div>
+
+          {/* Quota Progress Bar */}
+          {smsStatus && (
+            <div className="space-y-1.5 pt-1">
+              <div className="flex justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                <span>Daily Quota Usage ({smsStatus.sent_today} of {smsStatus.max_per_day} sent)</span>
+                <span>{Math.round((smsStatus.sent_today / Math.max(1, smsStatus.max_per_day)) * 100)}%</span>
+              </div>
+              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                <div 
+                  className={clsx(
+                    "h-full rounded-full transition-all duration-500",
+                    smsStatus.sent_today >= smsStatus.max_per_day
+                      ? "bg-red-500"
+                      : smsStatus.sent_today >= smsStatus.max_per_day * 0.75
+                      ? "bg-amber-500"
+                      : "bg-emerald-500"
+                  )}
+                  style={{ width: `${Math.min(100, Math.round((smsStatus.sent_today / Math.max(1, smsStatus.max_per_day)) * 100))}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans leading-relaxed">
+            <strong>Offline-First Best-Effort Delivery:</strong> Fast2SMS Quick SMS is decoupled from primary telemetry processing. In the event of no internet connectivity, gateway failure, or daily quota exhaustion, alerts are still logged to local SQLite and broadcast via WebSockets without blocking.
+          </p>
+        </div>
+      </section>
+
+      {/* Section 5: System Runtime Metadata */}
+      <section className="card">
+        <div className="card-header flex items-center justify-between">
+          <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200">
+            <Cpu className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             <span className="font-bold text-xs uppercase tracking-wider">System Runtime & Architecture</span>
           </div>
           <span className="badge badge-elite text-[10px]">ONLINE</span>
@@ -281,19 +460,19 @@ const SettingsPage: React.FC = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div>
               <span className="text-[10px] font-semibold text-slate-400 uppercase block">Application</span>
-              <span className="text-slate-900 font-bold mt-0.5 block">LANDGUARD AI</span>
+              <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">LANDGUARD AI</span>
             </div>
             <div>
               <span className="text-[10px] font-semibold text-slate-400 uppercase block">Version</span>
-              <span className="text-slate-900 font-bold mt-0.5 block">v0.2.0-modular</span>
+              <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">v0.2.0-modular</span>
             </div>
             <div>
               <span className="text-[10px] font-semibold text-slate-400 uppercase block">AI Model</span>
-              <span className="text-slate-900 font-bold mt-0.5 block">XGBoost 2.0.3</span>
+              <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">XGBoost 2.0.3</span>
             </div>
             <div>
               <span className="text-[10px] font-semibold text-slate-400 uppercase block">Explainer</span>
-              <span className="text-slate-900 font-bold mt-0.5 block">SHAP TreeExplainer</span>
+              <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">SHAP TreeExplainer</span>
             </div>
           </div>
         </div>

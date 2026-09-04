@@ -7,6 +7,7 @@ from app.database import get_db
 from app.schemas.alert import AlertResponse, AlertListResponse, AlertAcknowledgeResponse
 from app.services.alert_service import alert_service
 from app.services.alert_dispatcher import alert_dispatcher
+from app.services.sms_service import sms_service
 from app.config import settings
 
 router = APIRouter(prefix="/alerts", tags=["Alerts"])
@@ -39,6 +40,9 @@ def format_alert_response(alert) -> AlertResponse:
         acknowledged=alert.acknowledged,
         acknowledged_at=alert.acknowledged_at,
         created_at=getattr(alert, "created_at", None) or alert.timestamp,
+        sms_sent=getattr(alert, "sms_sent", False) or False,
+        sms_sent_at=getattr(alert, "sms_sent_at", None),
+        sms_error=getattr(alert, "sms_error", None),
     )
 
 
@@ -155,6 +159,38 @@ def get_sms_gateway_configuration():
             "simulator": True,
         },
         "emergency_contacts": settings.emergency_phones,
+    }
+
+
+@router.get("/sms-status", status_code=status.HTTP_200_OK)
+def get_live_sms_status():
+    """
+    Returns live Fast2SMS Quick Route status and daily quota utilization.
+    Does not expose sensitive API keys or phone numbers.
+    """
+    return sms_service.get_sms_status()
+
+
+@router.post("/test-sms", status_code=status.HTTP_200_OK)
+async def send_test_sms():
+    """
+    Manual dev test endpoint to verify Fast2SMS Quick Route live delivery.
+    Dispatches a single test SMS to ALERT_SMS_RECIPIENTS.
+    """
+    recipients = settings.alert_sms_recipients_list
+    if not recipients:
+        return {
+            "status": "error",
+            "message": "No recipients configured in ALERT_SMS_RECIPIENTS",
+            "recipients_count": 0,
+        }
+
+    test_message = "[LANDGUARD DEV TEST] Fast2SMS Quick Route live test dispatch."
+    dispatch_res = await sms_service.send_sms(numbers=recipients, message=test_message)
+    return {
+        "status": "success" if dispatch_res.get("sent") else "failed",
+        "recipients_count": len(recipients),
+        "result": dispatch_res,
     }
 
 

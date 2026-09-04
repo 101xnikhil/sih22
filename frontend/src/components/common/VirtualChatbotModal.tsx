@@ -316,7 +316,7 @@ export default function VirtualChatbotModal() {
       {/* ── Floating Chatbot Widget Trigger Button ────────────── */}
       <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2">
         {!isOpen && (
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/95 backdrop-blur-md border border-[#e5e9f2] text-xs font-semibold text-slate-800 shadow-xl animate-fade-in">
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xl animate-fade-in">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
             <span>Ask LandGuard GeoBot</span>
           </div>
@@ -340,7 +340,7 @@ export default function VirtualChatbotModal() {
               <Bot className="w-7 h-7 transition-transform group-hover:scale-110" />
               <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-blue-600 border-2 border-white"></span>
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-blue-600 border-2 border-white dark:border-[#0f172a]"></span>
               </span>
             </>
           )}
@@ -349,23 +349,23 @@ export default function VirtualChatbotModal() {
 
       {/* ── Chatbot Modal Window ─────────────────────────────── */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[500px] h-[660px] max-h-[88vh] z-50 bg-white/95 backdrop-blur-2xl border border-[#e5e9f2] rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-slide-up font-sans">
+        <div className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[500px] h-[660px] max-h-[88vh] z-50 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-2xl border border-[#e5e9f2] dark:border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-slide-up font-sans">
           {/* Header */}
-          <div className="p-4 border-b border-slate-100 bg-slate-50/70 flex items-center justify-between">
+          <div className="p-4 border-b border-slate-100 dark:border-white/10 bg-slate-50/70 dark:bg-slate-900/70 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center shadow-xs">
-                <Bot className="w-5 h-5 text-blue-600" />
+              <div className="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 flex items-center justify-center shadow-xs">
+                <Bot className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base text-slate-900 font-bold tracking-tight leading-none">
+                  <h3 className="text-base text-slate-900 dark:text-white font-bold tracking-tight leading-none">
                     LandGuard GeoBot
                   </h3>
-                  <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[9.5px] font-bold">
+                  <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 text-[9.5px] font-bold">
                     AI AUDIENCE COPILOT
                   </span>
                 </div>
-                <p className="text-[10.5px] text-slate-500 mt-0.5 flex items-center gap-1.5 font-medium">
+                <p className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5 font-medium">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Live Geotechnical Intelligence & Location Advisory
                 </p>
@@ -379,17 +379,17 @@ export default function VirtualChatbotModal() {
                 className={clsx(
                   'p-2 rounded-xl border text-xs transition-colors flex items-center gap-1',
                   isTtsEnabled
-                    ? 'bg-blue-50 text-blue-700 border-blue-200'
-                    : 'bg-white text-slate-500 border-slate-200 hover:text-slate-800'
+                    ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700'
+                    : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-800 dark:hover:text-slate-200'
                 )}
                 title={isTtsEnabled ? 'Voice narration active (Click to mute)' : 'Enable voice narration for presentation'}
               >
-                {isTtsEnabled ? <Volume2 className="w-4 h-4 text-blue-600" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+                {isTtsEnabled ? <Volume2 className="w-4 h-4 text-blue-600 dark:text-blue-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
               </button>
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
+                className="p-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-300 transition-colors"
                 title="Close chat"
               >
                 <X className="w-4 h-4" />
@@ -398,14 +398,14 @@ export default function VirtualChatbotModal() {
           </div>
 
           {/* Navigation Sub-Tabs: Chat vs Location Explorer */}
-          <div className="flex items-center border-b border-slate-100 bg-slate-50 px-3 py-1.5 gap-2 text-xs font-sans">
+          <div className="flex items-center border-b border-slate-100 dark:border-white/10 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 gap-2 text-xs font-sans">
             <button
               onClick={() => setActiveTab('chat')}
               className={clsx(
                 'flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all font-bold',
                 activeTab === 'chat'
                   ? 'bg-[#2563eb] text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               )}
             >
               <MessageSquare className="w-3.5 h-3.5" />
@@ -418,7 +418,7 @@ export default function VirtualChatbotModal() {
                 'flex items-center gap-1.5 px-3 py-1 rounded-xl transition-all font-bold',
                 activeTab === 'locations'
                   ? 'bg-[#2563eb] text-white shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               )}
             >
               <Globe className="w-3.5 h-3.5" />
@@ -430,12 +430,12 @@ export default function VirtualChatbotModal() {
           {activeTab === 'chat' && (
             <>
               {/* Preset Question Pills */}
-              <div className="px-3 py-2 border-b border-slate-100 bg-slate-50/50 flex gap-1.5 overflow-x-auto no-scrollbar">
+              <div className="px-3 py-2 border-b border-slate-100 dark:border-white/10 bg-slate-50/50 dark:bg-slate-900/50 flex gap-1.5 overflow-x-auto no-scrollbar">
                 {PRESET_QUESTIONS.map((pq, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSend(pq.prompt)}
-                    className="shrink-0 px-2.5 py-1 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-[10.5px] font-medium text-slate-700 hover:text-blue-600 transition-colors shadow-2xs"
+                    className="shrink-0 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-[10.5px] font-medium text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors shadow-2xs"
                   >
                     {pq.label}
                   </button>
@@ -462,7 +462,7 @@ export default function VirtualChatbotModal() {
                           className={clsx(
                             'p-3.5 rounded-2xl leading-relaxed whitespace-pre-line shadow-xs',
                             isBot
-                              ? 'bg-slate-50 text-slate-800 border border-slate-200/80'
+                              ? 'bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700'
                               : 'bg-[#2563eb] text-white font-medium'
                           )}
                         >
@@ -470,19 +470,19 @@ export default function VirtualChatbotModal() {
 
                           {/* Optional Live Telemetry Mini-Card */}
                           {msg.liveTelemetryCard && state && (
-                            <div className="mt-3 p-3 rounded-xl bg-white border border-slate-200 space-y-1.5 font-mono text-[10px]">
-                              <div className="flex items-center justify-between text-slate-500 font-sans">
+                            <div className="mt-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 space-y-1.5 font-mono text-[10px]">
+                              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-sans">
                                 <span>STATION: LG-N01</span>
                                 <span className="text-[#10b981] font-bold">LIVE TELEMETRY</span>
                               </div>
                               <div className="grid grid-cols-2 gap-2 text-center pt-1">
-                                <div className="p-2 rounded-xl bg-slate-50 border border-slate-100">
+                                <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
                                   <span className="text-slate-400 block text-[9px] font-sans">MOISTURE VWC</span>
-                                  <strong className="text-slate-900 text-xs">{state.currentReading.soil_moisture_pct.toFixed(1)}%</strong>
+                                  <strong className="text-slate-900 dark:text-slate-100 text-xs">{state.currentReading.soil_moisture_pct.toFixed(1)}%</strong>
                                 </div>
-                                <div className="p-2 rounded-xl bg-slate-50 border border-slate-100">
+                                <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
                                   <span className="text-slate-400 block text-[9px] font-sans">BISHOP FoS</span>
-                                  <strong className={clsx("text-xs", state.currentRisk.fos_estimate < 1.0 ? 'text-red-600' : 'text-emerald-600')}>
+                                  <strong className={clsx("text-xs", state.currentRisk.fos_estimate < 1.0 ? 'text-red-600' : 'text-emerald-600 dark:text-emerald-400')}>
                                     {state.currentRisk.fos_estimate.toFixed(2)}
                                   </strong>
                                 </div>
@@ -492,31 +492,31 @@ export default function VirtualChatbotModal() {
 
                           {/* Optional Location Profile Card */}
                           {msg.locationCard && (
-                            <div className="mt-3 p-3.5 rounded-2xl bg-white border border-blue-200 space-y-2 text-[10.5px] text-slate-700 text-left shadow-sm">
-                              <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                                <div className="flex items-center gap-1.5 text-blue-700 font-bold text-xs">
-                                  <MapPin className="w-4 h-4 text-blue-600" />
+                            <div className="mt-3 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900/50 space-y-2 text-[10.5px] text-slate-700 dark:text-slate-300 text-left shadow-sm">
+                              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5">
+                                <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-400 font-bold text-xs">
+                                  <MapPin className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                                   <span>{msg.locationCard.name}</span>
                                 </div>
                                 <span className={clsx(
-                                  'px-2 py-0.5 rounded-full text-[9px] font-bold border',
-                                  msg.locationCard.riskLevel === 'CRITICAL' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-amber-100 text-amber-700 border-amber-200'
+                                   'px-2 py-0.5 rounded-full text-[9px] font-bold border',
+                                  msg.locationCard.riskLevel === 'CRITICAL' ? 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950/40 dark:border-red-800' : 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:border-amber-800'
                                 )}>
                                   {msg.locationCard.riskLevel}
                                 </span>
                               </div>
 
-                              <div className="grid grid-cols-2 gap-2 text-[9.5px] text-slate-500 font-mono">
-                                <div><strong className="text-slate-700 font-sans">GPS:</strong> {msg.locationCard.coordinates}</div>
-                                <div><strong className="text-slate-700 font-sans">Elevation:</strong> {msg.locationCard.elevation}</div>
-                                <div><strong className="text-slate-700 font-sans">Trigger Rain:</strong> {msg.locationCard.triggerRainfallThreshold}</div>
-                                <div><strong className="text-slate-700 font-sans">Recurrence:</strong> {msg.locationCard.recurrencePeriod}</div>
+                              <div className="grid grid-cols-2 gap-2 text-[9.5px] text-slate-500 dark:text-slate-400 font-mono">
+                                <div><strong className="text-slate-700 dark:text-slate-200 font-sans">GPS:</strong> {msg.locationCard.coordinates}</div>
+                                <div><strong className="text-slate-700 dark:text-slate-200 font-sans">Elevation:</strong> {msg.locationCard.elevation}</div>
+                                <div><strong className="text-slate-700 dark:text-slate-200 font-sans">Trigger Rain:</strong> {msg.locationCard.triggerRainfallThreshold}</div>
+                                <div><strong className="text-slate-700 dark:text-slate-200 font-sans">Recurrence:</strong> {msg.locationCard.recurrencePeriod}</div>
                               </div>
 
-                              <div className="text-slate-700 font-sans text-xs pt-1.5 border-t border-slate-100 space-y-1">
-                                <div><strong className="text-blue-700">Geology:</strong> {msg.locationCard.soilType} over {msg.locationCard.bedrock}</div>
-                                <div><strong className="text-blue-700">Disasters:</strong> {msg.locationCard.historicalDisasters}</div>
-                                <div><strong className="text-blue-700">Mitigation:</strong> {msg.locationCard.mitigationStrategy}</div>
+                              <div className="text-slate-700 dark:text-slate-300 font-sans text-xs pt-1.5 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                                <div><strong className="text-blue-700 dark:text-blue-400">Geology:</strong> {msg.locationCard.soilType} over {msg.locationCard.bedrock}</div>
+                                <div><strong className="text-blue-700 dark:text-blue-400">Disasters:</strong> {msg.locationCard.historicalDisasters}</div>
+                                <div><strong className="text-blue-700 dark:text-blue-400">Mitigation:</strong> {msg.locationCard.mitigationStrategy}</div>
                               </div>
                             </div>
                           )}
@@ -528,8 +528,8 @@ export default function VirtualChatbotModal() {
                       </div>
 
                       {!isBot && (
-                        <div className="w-7 h-7 rounded-xl bg-slate-200 flex items-center justify-center shrink-0">
-                          <User className="w-4 h-4 text-slate-600" />
+                        <div className="w-7 h-7 rounded-xl bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                          <User className="w-4 h-4 text-slate-600 dark:text-slate-300" />
                         </div>
                       )}
                     </div>
@@ -544,14 +544,14 @@ export default function VirtualChatbotModal() {
                   e.preventDefault();
                   handleSend();
                 }}
-                className="p-3 border-t border-slate-100 bg-white flex items-center gap-2"
+                className="p-3 border-t border-slate-100 dark:border-white/10 bg-white dark:bg-[#0f172a] flex items-center gap-2"
               >
                 <input
                   type="text"
                   placeholder="Ask about live situation, Wayanad, Shimla, recurring triggers..."
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
-                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-sans"
+                  className="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 font-sans"
                 />
                 <button
                   type="submit"
@@ -577,7 +577,7 @@ export default function VirtualChatbotModal() {
                     placeholder="Search locations, soil, states (e.g. Wayanad, Shimla, Konkan)..."
                     value={locationSearchTerm}
                     onChange={(e) => setLocationSearchTerm(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
 
@@ -590,7 +590,7 @@ export default function VirtualChatbotModal() {
                         'px-3 py-1 rounded-xl border shrink-0 transition-colors font-semibold',
                         selectedRegionFilter === reg
                           ? 'bg-[#2563eb] text-white border-blue-600 shadow-2xs'
-                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                          : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
                       )}
                     >
                       {reg}
@@ -604,39 +604,39 @@ export default function VirtualChatbotModal() {
                 {filteredLocations.map((loc) => (
                   <div
                     key={loc.id}
-                    className="p-4 rounded-2xl bg-white border border-[#e5e9f2] hover:border-blue-400 transition-all space-y-2 group shadow-2xs"
+                    className="p-4 rounded-2xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 hover:border-blue-400 dark:hover:border-blue-500 transition-all space-y-2 group shadow-2xs"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="flex items-center gap-1.5 font-bold text-slate-900 text-xs">
-                          <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                        <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 text-xs">
+                          <MapPin className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                           <span>{loc.name}</span>
                         </div>
-                        <div className="text-[10px] text-slate-500 mt-0.5 font-mono">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-mono">
                           {loc.state} &middot; {loc.coordinates} ({loc.elevation})
                         </div>
                       </div>
 
                       <span className={clsx(
                         'px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase shrink-0',
-                        loc.riskLevel === 'CRITICAL' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-amber-100 text-amber-700 border-amber-200'
+                        loc.riskLevel === 'CRITICAL' ? 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950/40 dark:border-red-800' : 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:border-amber-800'
                       )}>
                         {loc.riskLevel}
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-slate-600 leading-relaxed font-sans">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
                       {loc.recurringCause}
                     </p>
 
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
-                      <span className="text-blue-600 font-semibold">
+                    <div className="pt-2 border-t border-slate-100 dark:border-white/10 flex items-center justify-between text-[10px]">
+                      <span className="text-blue-600 dark:text-blue-400 font-semibold">
                         🌧️ Trigger: {loc.triggerRainfallThreshold}
                       </span>
 
                       <button
                         onClick={() => selectLocationForAnalysis(loc)}
-                        className="flex items-center gap-1 px-3 py-1 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-all border border-blue-200"
+                        className="flex items-center gap-1 px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-bold transition-all border border-blue-200 dark:border-blue-700"
                       >
                         <span>Analyze</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />

@@ -201,6 +201,43 @@ const AlertsPage: React.FC = () => {
                       <span className={clsx("badge font-bold text-[10px]", badge.className)}>
                         {badge.label}
                       </span>
+                      {alert.sms_sent ? (
+                        <span 
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300"
+                          title={alert.sms_sent_at ? `SMS delivered at ${formatDateTime(alert.sms_sent_at)}` : 'SMS delivered to responders'}
+                        >
+                          <Check className="w-3 h-3 text-emerald-600" />
+                          <span>SMS Sent</span>
+                        </span>
+                      ) : alert.sms_error ? (
+                        <span 
+                          className={clsx(
+                            "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border",
+                            alert.sms_error.toLowerCase().includes("quota")
+                              ? "bg-amber-100 text-amber-800 border-amber-300"
+                              : alert.sms_error.toLowerCase().includes("disabled")
+                              ? "bg-slate-100 text-slate-600 border-slate-300"
+                              : "bg-rose-100 text-rose-800 border-rose-300"
+                          )}
+                          title={alert.sms_error}
+                        >
+                          <AlertTriangle className="w-3 h-3" />
+                          <span>
+                            {alert.sms_error.toLowerCase().includes("quota")
+                              ? "SMS Quota Cap"
+                              : alert.sms_error.toLowerCase().includes("disabled")
+                              ? "SMS Disabled"
+                              : "SMS Failed"}
+                          </span>
+                        </span>
+                      ) : (alert.severity === 'critical' || alert.severity === 'high') ? (
+                        <span 
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 text-slate-500 border border-slate-200"
+                          title="SMS alert not triggered or quota exhausted"
+                        >
+                          <span>SMS Not Sent</span>
+                        </span>
+                      ) : null}
                       <h3 className="font-bold text-slate-900 text-sm">
                         {alert.title}
                       </h3>

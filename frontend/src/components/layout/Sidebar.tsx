@@ -5,6 +5,7 @@ import {
   Settings, Bell, Users, Shield, Cpu, Flame, Layers, GitFork
 } from 'lucide-react';
 import clsx from 'clsx';
+import ThemeToggle from '../common/ThemeToggle';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   return (
     <aside
       className={clsx(
-        'fixed top-0 left-0 z-40 h-screen transition-transform bg-white border-r border-[#e5e9f2] flex flex-col justify-between items-center py-4',
+        'fixed top-0 left-0 z-40 h-screen transition-transform bg-white dark:bg-[#0f172a] border-r border-[#e5e9f2] dark:border-white/10 flex flex-col justify-between items-center py-4',
         'w-16 sm:w-16',
         isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       )}
@@ -35,8 +36,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
       <div className="flex flex-col items-center gap-6 w-full">
         <Link to="/" className="group p-1" title="LANDGUARD AI">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#10b981] via-[#06b6d4] to-[#2563eb] p-0.5 shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform">
-            <div className="w-full h-full bg-white rounded-[9px] flex items-center justify-center">
-              <span className="font-extrabold text-sm text-[#2563eb] tracking-tighter">LG</span>
+            <div className="w-full h-full bg-white dark:bg-[#0f172a] rounded-[9px] flex items-center justify-center">
+              <span className="font-extrabold text-sm text-[#2563eb] dark:text-[#38bdf8] tracking-tighter">LG</span>
             </div>
           </div>
         </Link>
@@ -57,13 +58,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                   'w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150 relative group',
                   isActive
                     ? 'bg-[#2563eb] text-white shadow-sm shadow-blue-500/30'
-                    : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
+                    : 'text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60'
                 )}
               >
                 <Icon className="w-5 h-5 stroke-[2]" />
                 
                 {/* Tooltip on hover */}
-                <span className="absolute left-14 bg-slate-900 text-white text-[11px] font-medium px-2 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-md">
+                <span className="absolute left-14 bg-slate-900 dark:bg-slate-800 text-white text-[11px] font-medium px-2 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-md border border-slate-700/50">
                   {item.name}
                 </span>
               </Link>
@@ -72,12 +73,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         </nav>
       </div>
 
-      {/* Bottom Icons (Settings, Notification Bell, User Avatar) */}
-      <div className="flex flex-col items-center gap-4 w-full px-2">
+      {/* Bottom Icons (Theme Toggle, Settings, Notification Bell, User Avatar) */}
+      <div className="flex flex-col items-center gap-3 w-full px-2">
+        <ThemeToggle className="w-10 h-10 rounded-xl" />
+
         <Link
           to="/settings"
           title="Hardware & Settings"
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
         >
           <Settings className="w-5 h-5 stroke-[1.8]" />
         </Link>
@@ -85,15 +88,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         <Link
           to="/alerts"
           title="Alerts Center"
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors relative"
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors relative"
         >
           <Bell className="w-5 h-5 stroke-[1.8]" />
-          <span className="w-2 h-2 rounded-full bg-[#ef4444] absolute top-2 right-2 ring-2 ring-white" />
+          <span className="w-2 h-2 rounded-full bg-[#ef4444] absolute top-2 right-2 ring-2 ring-white dark:ring-[#0f172a]" />
         </Link>
 
         {/* User Avatar Circle */}
         <div 
-          className="w-9 h-9 rounded-full bg-gradient-to-tr from-slate-200 to-slate-300 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 cursor-pointer shadow-sm"
+          className="w-9 h-9 rounded-full bg-gradient-to-tr from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 border border-slate-200 dark:border-slate-600 flex items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer shadow-sm"
           title="LandGuard Operator"
         >
           <span>LG</span>

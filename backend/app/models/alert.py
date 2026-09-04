@@ -27,6 +27,11 @@ class Alert(Base):
     acknowledged_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
+    # SMS Dispatch Status (Fast2SMS Quick Route)
+    sms_sent = Column(Boolean, default=False, nullable=False)
+    sms_sent_at = Column(DateTime, nullable=True)
+    sms_error = Column(Text, nullable=True)
+
     # Relationships
     node = relationship("Node", back_populates="alerts")
     risk_result = relationship("RiskResult", back_populates="alert")

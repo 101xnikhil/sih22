@@ -21,6 +21,9 @@ class AlertResponse(BaseModel):
     acknowledged: bool
     acknowledged_at: Optional[datetime] = None
     created_at: Optional[datetime] = None
+    sms_sent: bool = False
+    sms_sent_at: Optional[datetime] = None
+    sms_error: Optional[str] = None
 
 
 class AlertListResponse(BaseModel):

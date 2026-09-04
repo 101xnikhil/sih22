@@ -137,6 +137,9 @@ export interface Alert {
   trigger_reasons?: string[];
   acknowledged: boolean;
   acknowledged_at?: string;
+  sms_sent?: boolean;
+  sms_sent_at?: string | null;
+  sms_error?: string | null;
 }
 
 // ─── Sensor Node ─────────────────────────────────────────────

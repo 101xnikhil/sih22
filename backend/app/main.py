@@ -34,6 +34,9 @@ async def lifespan(app: FastAPI):
             for col_sql in [
                 "ALTER TABLE alerts ADD COLUMN trigger_reason TEXT;",
                 "ALTER TABLE alerts ADD COLUMN created_at DATETIME;",
+                "ALTER TABLE alerts ADD COLUMN sms_sent BOOLEAN DEFAULT 0;",
+                "ALTER TABLE alerts ADD COLUMN sms_sent_at DATETIME;",
+                "ALTER TABLE alerts ADD COLUMN sms_error TEXT;",
             ]:
                 try:
                     conn.execute(text(col_sql))
@@ -121,6 +124,8 @@ Click the **Authorize 🔓** button above to authenticate interactively!
 
     # Register Routers
     app.include_router(api_router, prefix=settings.API_PREFIX)
+    if settings.API_PREFIX != "/api/v1":
+        app.include_router(api_router, prefix="/api/v1")
     app.include_router(ws_router)
 
     # Root route
