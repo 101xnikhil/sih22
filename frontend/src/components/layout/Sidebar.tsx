@@ -2,7 +2,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   BarChart2, Radio, Map, Target, Handshake, Briefcase, 
-  Settings, Bell, Users, Shield, Cpu, Flame, Layers, GitFork
+  Settings, Bell, Users, Shield, Cpu, Flame, Layers, GitFork,
+  Camera
 } from 'lucide-react';
 import clsx from 'clsx';
 import ThemeToggle from '../common/ThemeToggle';
@@ -19,6 +20,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     { name: 'Metrics', path: '/', icon: BarChart2, tooltip: 'Mission Control & Metrics' },
     { name: 'Station Telemetry', path: '/sensor', icon: GitFork, tooltip: 'Telemetry Nodes' },
     { name: 'Geospatial Sector GIS', path: '/map', icon: Users, tooltip: 'Geospatial Map' },
+    { name: 'Field Reports', path: '/reports', icon: Camera, tooltip: 'Citizen & Field Incident Reports' },
     { name: 'Alerts & Incidents', path: '/alerts', icon: Target, tooltip: 'Alerts & Incidents' },
     { name: 'Geotechnical Analytics', path: '/analytics', icon: Handshake, tooltip: 'Analytics & Physics' },
     { name: 'About LANDGUARD AI', path: '/about', icon: Briefcase, tooltip: 'About & Documentation' },

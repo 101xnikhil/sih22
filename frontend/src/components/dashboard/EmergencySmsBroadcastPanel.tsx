@@ -826,7 +826,7 @@ export default function EmergencySmsBroadcastPanel() {
 
       {/* ── ESP32 BLE Firmware Code Modal ────────────────────── */}
       {showFirmwareModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
           <div className="bg-[#0e1220] border border-white/10 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">

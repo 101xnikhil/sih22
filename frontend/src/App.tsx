@@ -8,6 +8,7 @@ import AnalyticsPage from './pages/AnalyticsPage';
 import RiskMapPage from './pages/RiskMapPage';
 import SettingsPage from './pages/SettingsPage';
 import AboutPage from './pages/AboutPage';
+import CitizenReportsPage from './pages/CitizenReportsPage';
 import { useMockTelemetry } from './hooks/useMockTelemetry';
 import { ThemeProvider } from './context/ThemeContext';
 import type { Alert } from './types';
@@ -29,6 +30,7 @@ const App: React.FC = () => {
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/map" element={<RiskMapPage />} />
+          <Route path="/reports" element={<CitizenReportsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/about" element={<AboutPage />} />
 

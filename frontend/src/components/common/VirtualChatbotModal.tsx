@@ -314,7 +314,7 @@ export default function VirtualChatbotModal() {
   return (
     <>
       {/* ── Floating Chatbot Widget Trigger Button ────────────── */}
-      <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2">
+      <div className="fixed bottom-6 right-6 z-[9998] flex items-center gap-2">
         {!isOpen && (
           <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xl animate-fade-in">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
@@ -349,7 +349,7 @@ export default function VirtualChatbotModal() {
 
       {/* ── Chatbot Modal Window ─────────────────────────────── */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[500px] h-[660px] max-h-[88vh] z-50 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-2xl border border-[#e5e9f2] dark:border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-slide-up font-sans">
+        <div className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[500px] h-[660px] max-h-[88vh] z-[9999] bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-2xl border border-[#e5e9f2] dark:border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-slide-up font-sans">
           {/* Header */}
           <div className="p-4 border-b border-slate-100 dark:border-white/10 bg-slate-50/70 dark:bg-slate-900/70 flex items-center justify-between">
             <div className="flex items-center gap-3">

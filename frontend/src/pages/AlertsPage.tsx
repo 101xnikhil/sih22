@@ -300,7 +300,7 @@ const AlertsPage: React.FC = () => {
 
       {/* Alert Detail Modal */}
       {selectedAlert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs animate-fade-in">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs animate-fade-in">
           <div className="bg-white dark:bg-slate-900 border border-[#e5e9f2] dark:border-white/10 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-3">

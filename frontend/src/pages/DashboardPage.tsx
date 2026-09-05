@@ -16,6 +16,8 @@ import AIExplanation from '../components/dashboard/AIExplanation';
 import DeviceHealth from '../components/dashboard/DeviceHealth';
 import SecurityPanel from '../components/dashboard/SecurityPanel';
 import LoadingState from '../components/common/LoadingState';
+import { WeatherForecastWidget } from '../components/dashboard/WeatherForecastWidget';
+import { DisasterTriagePanel } from '../components/dashboard/DisasterTriagePanel';
 import { useTheme } from '../context/ThemeContext';
 
 // Helper for generating smooth weekly curve points based on actual telemetry
@@ -592,7 +594,24 @@ const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Section 4: Blynk IoT Cloud & Hardware Gateway ─────── */}
+      {/* ── Section 4: North Eastern Region Weather Forecast & Disaster Triage ── */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
+            Weather-Linked Risk Forecast &amp; Emergency Prioritisation
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
+            IMD Doppler Weather Radar feeds, 72h antecedent rainfall accumulation (ARI-7), and disaster response triage for District Authorities (DDMA/SDRF/NDRF)
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <WeatherForecastWidget />
+          <DisasterTriagePanel />
+        </div>
+      </div>
+
+      {/* ── Section 5: Blynk IoT Cloud & Hardware Gateway ─────── */}
       <BlynkIntegrationPanel reading={reading} risk={risk} />
     </div>
   );

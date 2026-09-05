@@ -473,7 +473,7 @@ export default function AboutPage() {
 
       {/* ── Team Member Form Modal ──────────────────────────── */}
       {isAddingMember && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
           <div className="bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/10 pb-3">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">

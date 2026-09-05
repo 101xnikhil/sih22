@@ -200,7 +200,7 @@ export default function AlertPanel({ alerts, onAcknowledge }: Props) {
 
       {/* Alert Detail Modal */}
       {selectedAlert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
           <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-lg w-full p-5 shadow-2xl space-y-4 animate-in fade-in zoom-in duration-150">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">

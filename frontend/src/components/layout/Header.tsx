@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Menu, Calendar, ChevronDown, Bell, Radio, FlaskConical, Cpu, Layers } from 'lucide-react';
+import { Menu, Calendar, ChevronDown, Bell, Radio, FlaskConical, Cpu, Layers, Globe, Wifi, WifiOff, CloudUpload } from 'lucide-react';
 import clsx from 'clsx';
 import { useMockTelemetry } from '../../hooks/useMockTelemetry';
 import ThemeToggle from '../common/ThemeToggle';
+import { useLanguage, SupportedLanguage } from '../../utils/i18n';
+import { useOfflineSync } from '../../utils/offlineSync';
 
 interface HeaderProps {
   title: string;
@@ -13,6 +15,8 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuToggle }) => {
   const { mode, setMode, state } = useMockTelemetry();
+  const { currentLang, changeLanguage, t } = useLanguage();
+  const { isOnline, pendingCount, triggerManualSync } = useOfflineSync();
   const [selectedAggregate, setSelectedAggregate] = useState<'node' | 'selected'>('selected');
   const [selectedTeam, setSelectedTeam] = useState('All sectors (2)');
 
@@ -35,6 +39,56 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
 
       {/* Right Controls matching the screenshot */}
       <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 font-sans text-xs">
+        {/* Multilingual Selector (English / हिन्दी / অসমীয়া) */}
+        <div className="flex items-center gap-1.5 bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 px-2.5 py-1.5 rounded-xl shadow-xs">
+          <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+          <select
+            value={currentLang}
+            onChange={(e) => changeLanguage(e.target.value as SupportedLanguage)}
+            className="bg-transparent text-slate-800 dark:text-slate-200 text-xs font-semibold focus:outline-none cursor-pointer"
+            title="Choose Portal & Alert Language"
+          >
+            <option value="en">English (EN)</option>
+            <option value="hi">हिन्दी (HI)</option>
+            <option value="as">অসমীয়া (AS)</option>
+          </select>
+        </div>
+
+        {/* Offline / Low Network Sync Status */}
+        <button
+          onClick={() => {
+            if (pendingCount > 0) {
+              triggerManualSync();
+            }
+          }}
+          className={clsx(
+            "flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all shadow-xs",
+            !isOnline
+              ? "bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700"
+              : pendingCount > 0
+                ? "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700 cursor-pointer"
+                : "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800"
+          )}
+          title={!isOnline ? "Low Network Mode: Local Buffer Active" : pendingCount > 0 ? "Click to Sync Pending Reports" : "Cloud Synchronized"}
+        >
+          {!isOnline ? (
+            <>
+              <WifiOff className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <span className="hidden sm:inline">Offline Mode</span>
+              {pendingCount > 0 && <span className="px-1.5 py-0.2 bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-white rounded-full text-[10px] font-mono font-bold">{pendingCount}</span>}
+            </>
+          ) : pendingCount > 0 ? (
+            <>
+              <CloudUpload className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 animate-pulse" />
+              <span className="hidden sm:inline">Sync ({pendingCount})</span>
+            </>
+          ) : (
+            <>
+              <Wifi className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span className="hidden sm:inline">Online</span>
+            </>
+          )}
+        </button>
         {/* Teams / Sector Dropdown */}
         <div className="hidden md:flex items-center gap-2 text-slate-600 dark:text-slate-200 font-semibold">
           <span>Sector:</span>
